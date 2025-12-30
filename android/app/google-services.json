@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "216385826090",
+    "project_id": "myvegiz-a3615",
+    "storage_bucket": "myvegiz-a3615.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216385826090:android:a82dac0d381d21e4670253",
+        "android_client_info": {
+          "package_name": "com.delivery.myvegiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkm6u4b3Q4kzUaUlhD02Xe61oU5-iIhx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216385826090:android:ba1f79fc644ecf6d670253",
+        "android_client_info": {
+          "package_name": "com.fooddelivery.myvegiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkm6u4b3Q4kzUaUlhD02Xe61oU5-iIhx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216385826090:android:f85cf367891ed0f4670253",
+        "android_client_info": {
+          "package_name": "com.fooddelivery.myvegizdeliverytracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkm6u4b3Q4kzUaUlhD02Xe61oU5-iIhx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216385826090:android:1f31135dc0a16971670253",
+        "android_client_info": {
+          "package_name": "com.myvegizvendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkm6u4b3Q4kzUaUlhD02Xe61oU5-iIhx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216385826090-hjq0brb5kfepk46bu7l639bnqemkd68c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

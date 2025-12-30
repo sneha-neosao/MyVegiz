@@ -1,0 +1,15 @@
+{
+  "title": "MYVEGIZ",
+  "log_in_or_sign_up": "Log In or Sign Up",
+  "credential_note": "For order the food or grocery please enter your credentials",
+  "mobile_number": "Mobile Number",
+  "enter_mobile_number": "Enter Mobile Number",
+  "continue": "Continue",
+  "otp_verification": "OTP Verification",
+  "we_have_sent_otp": "We have sent a verification code to",
+  "verify": "Verify",
+  "didnt_receive_code": "Didn't receive the code?",
+  "resend": " Resend",
+  "please_enter_mobile_number": "Please enter mobile number",
+  "please_enter_valid_mobile_number": "Please enter valid mobile number"
+}

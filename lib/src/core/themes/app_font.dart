@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 class AppFont {
   AppFont._();
 
-  static TextStyle normal = GoogleFonts.inter(fontWeight: FontWeight.normal);
-  static TextStyle bold = GoogleFonts.inter(fontWeight: FontWeight.bold);
+  static TextStyle normal = GoogleFonts.openSans(fontWeight: FontWeight.normal);
+  static TextStyle bold = GoogleFonts.openSans(fontWeight: FontWeight.bold);
 }
 
 extension AppFontSize on TextStyle {

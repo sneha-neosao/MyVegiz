@@ -3,11 +3,17 @@
 class ApiUrl {
   const ApiUrl._();
 
-  static const baseUrl = "";
+  static const baseUrl = "https://myvegiz.com/Apiv1_8/";
 
-  static const domainWebsite = "https://engagereward.com/";
+  static const environment = "TEST";//"PRODCTION";
 
-  static const privacy_url="";
+  static const domainUrl = "https://myvegiz.com";
 
-  static const terms_condition_url="";
+  static const privacyUrl="";
+
+  static const termsConditionUrl="";
+
+  static const getOtp = "Api/sendRegisterOTP";
+
+  static const verifyOtp = "Api/verifyRegisterOTP";
 }

@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -29,12 +30,24 @@ void configureDepedencies() {
   //       () => BottomNavFourBloc(),
   // );
 
-  // getIt.registerFactory(
-  //       () => SplashBloc(),
-  // );
+  getIt.registerFactory(
+        () => SplashBloc(),
+  );
 
   /// Other API Configuration
 
+  getIt.registerFactory(
+        () => SignInBloc(getIt<GetOtpUseCase>()),
+  );
+  getIt.registerFactory(
+        () => GetOtpUseCase(getIt<AuthRepositoryImpl>()),
+  );
+  getIt.registerFactory(
+        () => GetOtpFormBloc(),
+  );
+
+  
+  
   /// API Helper
 
   getIt.registerLazySingleton(

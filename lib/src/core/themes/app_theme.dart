@@ -21,15 +21,15 @@ class AppTheme {
         ),
       ),
       cardColor: Colors.white,
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: isDark ? AppColor.orange : AppColor.orange,
-        foregroundColor: isDark ? Colors.black:Colors.white ,
-        elevation: 2.h,
-        extendedTextStyle: AppFont.normal.s14,
-      ),
+      // floatingActionButtonTheme: FloatingActionButtonThemeData(
+      //   backgroundColor: isDark ? AppColor.orange : AppColor.orange,
+      //   foregroundColor: isDark ? Colors.black:Colors.white ,
+      //   elevation: 2.h,
+      //   extendedTextStyle: AppFont.normal.s14,
+      // ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDark ? AppColor.navy_gradient_start : AppColor.teal_gradient_end,
+          backgroundColor: isDark ? AppColor.green : AppColor.green,
           elevation: 2.h,
           textStyle: AppFont.normal.s14.copyWith(
             color: isDark ? Colors.black:Colors.white,
@@ -40,7 +40,7 @@ class AppTheme {
         ),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: GoogleFonts.poppins().fontFamily,
+      fontFamily: GoogleFonts.openSans().fontFamily,
       textTheme: TextTheme(
         bodySmall: AppFont.normal.s12.copyWith(
           color: isDark ? Colors.white : Colors.black,

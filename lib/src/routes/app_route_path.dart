@@ -1,25 +1,8 @@
 enum AppRoute {
   splash(path: "/"),
-  login(path: "/login"),
-  forgotpassword(path: "/forgotpassword"),
-  resetpassword(path: "/reset-password"),
-  createaccountstepone(path: "/createaccountstepone"),
-  invitation(path: "/invitation"),
-  createaccountsteptwo(path: "/createaccountsteptwo/:memberId/:from"),
-  createaccountstepthree(path: "/createaccountstepthree/:memberId"),
-  emailverification(path: "/emailverification/:email"),
-  home(path: "/home"),
-  profile(path: "/profile"),
-  editprofile(path: "/editprofile"),
-  topchart(path: "/topchart"),
-  rewardredemption(path: "/rewardredemption/:fromPage"),
-  leaderboard(path: "/leaderboard"),
-  changepassword(path: "/changepassword"),
-  notification(path: "/notification"),
-  claimedrewards(path: "/claimedrewards"),
-  pointstransaction(path: "/pointstransaction"),
-  socialconnections(path: "/socialconnections"),
-  reward(path: "/reward");
+  loginScreen(path: "/login_screen"),
+  otpVerificationScreen(path: "/otp_verification_screen"),
+  homeScreen(path: "/home_screen");
 
   /// Enum defining all named app routes and their associated path patterns for navigation throughout the application.
 

@@ -11,25 +11,31 @@ class AppRouteConf {
   late final _router = GoRouter(
     initialLocation: "/",
     debugLogDiagnostics: true,
-    // redirect: (context, state) {
-    //   final uri = state.uri;
-    //   // 👇 Detect your auth redirect
-    //   if (uri.scheme == "engagerewardauth") {
-    //     // Send to a handler route instead of splash
-    //     final code = uri.queryParameters['code'];
-    //     // redirect to /auth-callback route, passing code as query param
-    //     return "/auth-callback?code=$code";
-    //   }
-    //   return null; // default, stay on splash
-    // },
-
     /// Each GoRoute defines a route path, name, and a page builder
     routes: [
-      // GoRoute(
-      //   path: AppRoute.splash.path,
-      //   name: AppRoute.splash.name,
-      //   pageBuilder: (context, state) => _fadePage(const SplashScreen()),
-      // ),
+      GoRoute(
+        path: AppRoute.splash.path,
+        name: AppRoute.splash.name,
+        pageBuilder: (context, state) => _fadePage(const SplashScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.loginScreen.path,
+        name: AppRoute.loginScreen.name,
+        pageBuilder: (context, state) => _fadePage(const LoginScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.otpVerificationScreen.path,
+        name: AppRoute.otpVerificationScreen.name,
+        pageBuilder: (context, state) => _fadePage(const OtpVerificationScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.homeScreen.path,
+        name: AppRoute.homeScreen.name,
+        pageBuilder: (context, state) => _fadePage(const HomeScreen()),
+      ),
     ],
   );
 }

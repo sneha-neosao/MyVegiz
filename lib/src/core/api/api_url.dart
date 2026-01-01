@@ -16,4 +16,8 @@ class ApiUrl {
   static const getOtp = "Api/sendRegisterOTP";
 
   static const verifyOtp = "Api/verifyRegisterOTP";
+
+  static const homeSliderImages = "Api/homeSliderImages";
+
+  static const vegetableCategories = "Api/categoryList";
 }

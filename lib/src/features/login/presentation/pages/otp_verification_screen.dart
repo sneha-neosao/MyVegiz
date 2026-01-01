@@ -9,7 +9,9 @@ import 'package:myvegiz_flutter/src/features/widgets/app_button_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
-  const OtpVerificationScreen({super.key});
+  final String contactNumber;
+
+  const OtpVerificationScreen({super.key, required this.contactNumber});
 
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
@@ -40,7 +42,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             ),
             4.hS,
             Text(
-              '+91-9876543214',
+              "+91-${widget.contactNumber}",
               style: GoogleFonts.mavenPro(
                   color: AppColor.black,fontSize: 14, fontWeight: FontWeight.w300),
             ),
@@ -49,7 +51,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             22.hS,
             AppButtonWidget(
                 onPressed: (){
-                  context.pushNamed(AppRoute.otpVerificationScreen.name);
+                  context.pushNamed(AppRoute.homeContentScreen.name);
                 },
                 label: "verify".tr()
             ),

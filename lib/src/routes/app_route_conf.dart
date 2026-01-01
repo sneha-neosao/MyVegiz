@@ -28,13 +28,58 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.otpVerificationScreen.path,
         name: AppRoute.otpVerificationScreen.name,
-        pageBuilder: (context, state) => _fadePage(const OtpVerificationScreen()),
+        pageBuilder: (context, state) {
+          final contactNumber = state.extra as String;
+          return _fadePage(
+            OtpVerificationScreen(contactNumber: contactNumber),
+          );
+        },
+      ),
+
+      ShellRoute(
+          builder: (context, state, child) {
+            return HomeScreen(child: child,);
+          },
+          routes: [
+            GoRoute(
+              path: AppRoute.homeContentScreen.path,
+              name: AppRoute.homeContentScreen.name,
+              pageBuilder: (context, state) => _fadePage(const HomeContentScreen()),
+            ),
+            GoRoute(
+              path: AppRoute.searchScreen.path,
+              name: AppRoute.searchScreen.name,
+              pageBuilder: (context, state) => _fadePage(const SearchScreen()),
+            ),
+            GoRoute(
+              path: AppRoute.cartScreen.path,
+              name: AppRoute.cartScreen.name,
+              pageBuilder: (context, state) => _fadePage(const CartScreen()),
+            ),
+            GoRoute(
+              path: AppRoute.myAccountScreen.path,
+              name: AppRoute.myAccountScreen.name,
+              pageBuilder: (context, state) => _fadePage(const MyAccountScreen()),
+            ),
+          ]
       ),
 
       GoRoute(
-        path: AppRoute.homeScreen.path,
-        name: AppRoute.homeScreen.name,
-        pageBuilder: (context, state) => _fadePage(const HomeScreen()),
+        path: AppRoute.editProfileScreen.path,
+        name: AppRoute.editProfileScreen.name,
+        pageBuilder: (context, state) => _fadePage(const EditProfileScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.myWishlistScreen.path,
+        name: AppRoute.myWishlistScreen.name,
+        pageBuilder: (context, state) => _fadePage(const MyWishListScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.vegetablesAndGroceryScreen.path,
+        name: AppRoute.vegetablesAndGroceryScreen.name,
+        pageBuilder: (context, state) => _fadePage(const VegetablesAndGroceryScreen()),
       ),
     ],
   );

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
-import 'package:myvegiz_flutter/src/core/services/firebase_auth_service.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/login/widgets/login_input_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_button_widget.dart';
@@ -23,11 +22,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String enteredPhone = '';
 
   /// Handles the login action by dispatching an event to the AuthLoginBloc.
   void _getOtp(BuildContext context) {
     primaryFocus?.unfocus();
     final authForm = context.read<GetOtpFormBloc>().state;
+    enteredPhone = authForm.phone.trim(); // 👈 STORE HERE
 
     context.read<SignInBloc>().add(
       GetOtpEvent(authForm.phone.trim(), false),
@@ -102,10 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppLoadingWidget();
                       } else if (state is GetOtpFailureState) {
                         appSnackBar(context, AppColor.brightRed, state.message);
-                        context.pushNamed(AppRoute.otpVerificationScreen.name);
                       } else if (state is GetOtpSuccessState) {
                         appSnackBar(context, AppColor.green, state.data.message);
-                        context.pushNamed(AppRoute.otpVerificationScreen.name);
+                        context.pushNamed(AppRoute.otpVerificationScreen.name,extra: enteredPhone);
                       }
                     },
                     builder: (context, state) {

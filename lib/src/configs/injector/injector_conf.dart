@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'injector.dart';
 
@@ -46,6 +47,12 @@ void configureDepedencies() {
         () => GetOtpFormBloc(),
   );
 
+  getIt.registerFactory(
+        () => HomeSliderBloc(getIt<HomeSliderUseCase>()),
+  );
+  getIt.registerFactory(
+        () => HomeSliderUseCase(getIt<AuthRepositoryImpl>()),
+  );
   
   
   /// API Helper

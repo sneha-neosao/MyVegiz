@@ -10,3 +10,4 @@ export 'package:myvegiz_flutter/src/routes/app_route_conf.dart';
 export '../../features/splash/bloc/splash_bloc.dart';
 export '../../features/login/bloc/sign_in_bloc/sign_in_bloc.dart';
 export '../../features/login/bloc/get_otp_form_bloc/get_otp_form_bloc.dart';
+export '../../features/home/bloc/home_slider_bloc/home_slider_bloc.dart';

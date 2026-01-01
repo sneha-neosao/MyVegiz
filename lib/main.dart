@@ -39,30 +39,7 @@ Future<void> main() async {
 
 
   // // ✅ Initialize Firebase
-  // await Firebase.initializeApp();
-  //
-  // // ✅ Configure Firebase Messaging
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  //
-  // // ✅ Ensure HydratedBloc is initialized before using it
-  // HydratedBloc.storage = await HydratedStorage.build(
-  //   storageDirectory: kIsWeb
-  //       ? HydratedStorageDirectory.web
-  //       : HydratedStorageDirectory((await getTemporaryDirectory()).path),
-  // );
-
-  // ✅ Request notification permissions
-  // await NoficationService.requestNotificationPermission();
-
-  // // ✅ Get the FCM token
-  // final firebasetoken = await NoficationService.getToken();
-  // SessionManager.saveFirebaseToken(firebasetoken);
-
-  // ✅ Initialize local notifications
-  // NoficationService.initLocalNotifications();
-
-  // ✅ Initialize notification listener
-  // NoficationService.initNotificationListener();
+  await Firebase.initializeApp();
 
   // ✅ Initialize GETIt service locators, and to define all services
   configureDepedencies();

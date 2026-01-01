@@ -1,9 +1,12 @@
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -15,9 +18,13 @@ sealed class RemoteDataSource {
   /// Authentication
   Future<GetOtpResponse> getOtp(GetOtpParams params);
   Future<OtpVerifyResponse> verifyOtp(VerifyOtpParams params);
+  Future<RegistrationResponse> registration(RegistrationParams params);
 
   /// Home Slider
   Future<HomeSliderResponse> homeSlider();
+
+  /// Home Slider
+  Future<CityListResponse> cityList();
 
   Future<void> logout();
 }
@@ -95,6 +102,42 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
+  Future<RegistrationResponse> registration(RegistrationParams params) async {
+    try {
+      var data = {
+        "name": params.name,
+        "contactNumber": params.contactNumber,
+        "emailId": params.emailId,
+        "cityCode": params.cityCode
+      };
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.registration,
+        data: data,
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = RegistrationResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
   Future<HomeSliderResponse> homeSlider() async {
     try {
 
@@ -107,6 +150,35 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = HomeSliderResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CityListResponse> cityList() async {
+    try {
+
+      final response = await _helper.execute(
+        method: Method.get,
+        url: ApiUrl.cityList,
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CityListResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

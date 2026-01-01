@@ -2,36 +2,32 @@ import 'dart:convert';
 
 import 'package:myvegiz_flutter/src/remote/models/user_model/user_model.dart';
 
-class OtpVerifyResponse {
+class RegistrationResponse {
   final String status;
   final String message;
-  final int accountExists;
   final Result? result;
 
-  OtpVerifyResponse({
+  RegistrationResponse({
     required this.status,
     required this.message,
-    required this.accountExists,
     this.result,
   });
 
-  factory OtpVerifyResponse.fromRawJson(String str) =>
-      OtpVerifyResponse.fromJson(json.decode(str));
+  factory RegistrationResponse.fromRawJson(String str) =>
+      RegistrationResponse.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory OtpVerifyResponse.fromJson(Map<String, dynamic> json) =>
-      OtpVerifyResponse(
+  factory RegistrationResponse.fromJson(Map<String, dynamic> json) =>
+      RegistrationResponse(
         status: json["status"] ?? "",
         message: json["message"] ?? "",
-        accountExists: json["accountExists"] ?? 0,
         result: json["result"] != null ? Result.fromJson(json["result"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
     "status": status,
     "message": message,
-    "accountExists": accountExists,
     "result": result?.toJson(),
   };
 }

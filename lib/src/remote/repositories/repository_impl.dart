@@ -8,10 +8,13 @@ import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import '../../configs/injector/injector_conf.dart';
 import '../../core/api/api_url.dart';
 
@@ -22,10 +25,13 @@ abstract class Repository {
   /// Authentication
   Future<Either<Failure, GetOtpResponse>> get_otp(GetOtpParams params);
   Future<Either<Failure, OtpVerifyResponse>> verify_otp(VerifyOtpParams params);
+  Future<Either<Failure, RegistrationResponse>> registration(RegistrationParams params);
 
   /// Home Slider
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params);
 
+  /// Home Slider
+  Future<Either<Failure, CityListResponse>> city_list(NoParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -46,11 +52,7 @@ class AuthRepositoryImpl implements Repository {
         try {
           final respData = await _remoteDataSource.getOtp(params);
 
-          if (respData.status == "200") {
-            return Right(respData);
-          } else {
-            return Left(ApiFailure(respData.message!));
-          }
+          return Right(respData);
         } on ServerException {
           return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
         } catch (e) {
@@ -78,11 +80,39 @@ class AuthRepositoryImpl implements Repository {
         try {
           final respData = await _remoteDataSource.verifyOtp(params);
 
-          if (respData.status == 200) {
+          if (respData.status == "200") {
             return Right(respData);
           } else {
             return Left(ApiFailure(respData.message!));
           }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, RegistrationResponse>> registration(RegistrationParams params) {
+    return _networkInfo.check<RegistrationResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.registration(params);
+
+          return Right(respData);
         } on ServerException {
           return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
         } catch (e) {
@@ -109,6 +139,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.homeSlider();
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CityListResponse>> city_list(NoParams params) {
+    return _networkInfo.check<CityListResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.cityList();
 
           if (respData.status == "200") {
             return Right(respData);

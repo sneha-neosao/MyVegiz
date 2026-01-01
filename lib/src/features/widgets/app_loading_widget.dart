@@ -14,8 +14,8 @@ class AppLoadingWidget extends StatelessWidget {
         size: 41,
         strokeWidth: 6,
         colors: [
-          AppColor.orange,
-          AppColor.orangeDark,
+          AppColor.green,
+          AppColor.darkGreen,
         ],
       ),
     );

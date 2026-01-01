@@ -39,8 +39,8 @@ class GetOtpResponse {
 }
 
 class SmsResponse {
-  final bool status;
-  final String msg;
+  final bool? status;
+  final String? msg;
 
   SmsResponse({required this.status, required this.msg});
 

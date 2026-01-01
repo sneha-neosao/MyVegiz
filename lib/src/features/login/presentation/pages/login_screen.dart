@@ -99,24 +99,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   16.hS,
                   BlocConsumer<SignInBloc, SignInState>(
                     listener: (_, state) {
-                      if (state is GetOtpLoadingState) {
-                        AppLoadingWidget();
-                      } else if (state is GetOtpFailureState) {
+                      if (state is GetOtpFailureState) {
                         appSnackBar(context, AppColor.brightRed, state.message);
                       } else if (state is GetOtpSuccessState) {
-                        appSnackBar(context, AppColor.green, state.data.message);
+                        // appSnackBar(context, AppColor.green, state.data.message);
                         context.pushNamed(AppRoute.otpVerificationScreen.name,extra: enteredPhone);
                       }
                     },
                     builder: (context, state) {
+                      if (state is GetOtpLoadingState) {
+                        return Center(child: AppLoadingWidget());
+                      }
+
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: AppButtonWidget(
                             onPressed: (){
                               _getOtp(context);
-                              // FirebaseOtpService.sendOtp();
                             },
-                            label: "continue".tr()
+                            label: "get_otp".tr()
                         ),
                       );
                     },

@@ -4,7 +4,7 @@
   "credential_note": "For order the food or grocery please enter your credentials",
   "mobile_number": "Mobile Number",
   "enter_mobile_number": "Enter Mobile Number",
-  "continue": "Continue",
+  "get_otp": "Get OTP",
   "otp_verification": "OTP Verification",
   "we_have_sent_otp": "We have sent a verification code to",
   "verify": "Verify",
@@ -45,7 +45,16 @@
   "enter_name": "Enter Your Name",
   "enter_email": "Enter Your Email",
   "city": "City",
-  "enter_city": "Enter Your City",
+  "select_city": "Select Your City",
   "update_profile": "Update Profile",
-  "wishlist": "Wishlist"
+  "wishlist": "Wishlist",
+  "create_account": "Create Account",
+  "continue": "Continue",
+  "otp_sent_successfully": "OTP sent successfully to your mobile number",
+  "otp_not_sent_yet": "OTP not yet sent. Please wait or resend",
+  "invalid_otp": "Invalid OTP, Please enter a valid OTP",
+  "please_enter_email": "PLease enter email",
+  "please_enter_valid_email": "Please enter valid email",
+  "please_enter_name": "Please enter name",
+  "please_select_city": "Please select city"
 }

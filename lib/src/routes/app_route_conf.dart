@@ -81,6 +81,12 @@ class AppRouteConf {
         name: AppRoute.vegetablesAndGroceryScreen.name,
         pageBuilder: (context, state) => _fadePage(const VegetablesAndGroceryScreen()),
       ),
+
+      GoRoute(
+        path: AppRoute.registerScreen.path,
+        name: AppRoute.registerScreen.name,
+        pageBuilder: (context, state) => _fadePage(const RegisterScreen()),
+      ),
     ],
   );
 }

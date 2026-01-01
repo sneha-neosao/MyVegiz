@@ -21,18 +21,17 @@ class GetOtpEvent extends SignInEvent {
   List<Object?> get props => [contactNumber,resend];
 }
 
-// /// Event for verify otp.
-//
-// class VerifyOtpEvent extends SignInEvent {
-//   final String phone;
-//   final String otp;
-//
-//   const VerifyOtpEvent(this.phone,this.otp);
-//
-//   @override
-//   List<Object?> get props => [phone,otp];
-// }
-//
+/// Event for verify otp.
+
+class VerifyOtpEvent extends SignInEvent {
+  final String contactNumber;
+
+  const VerifyOtpEvent(this.contactNumber,);
+
+  @override
+  List<Object?> get props => [contactNumber,];
+}
+
 // /// Event to check login status.
 //
 // class AuthCheckSignInStatusEvent extends SignInEvent {}

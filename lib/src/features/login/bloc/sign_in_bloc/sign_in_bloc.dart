@@ -2,7 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import '../../../../core/utils/logger.dart';
 
 part 'sign_in_event.dart';
@@ -12,16 +14,16 @@ part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final GetOtpUseCase _getOtpUseCase;
-  // final VerifyOtpUseCase _verifyOtpUseCase;
+  final VerifyOtpUseCase _verifyOtpUseCase;
   // final DeleteAccountUseCase _deleteAccountUseCase;
 
   SignInBloc(
     this._getOtpUseCase,
-    // this._verifyOtpUseCase,
+    this._verifyOtpUseCase,
     // this._deleteAccountUseCase
   ) : super(AuthSigInInitialState()) {
     on<GetOtpEvent>(_getOtp);
-    // on<VerifyOtpEvent>(_verifyOtp);
+    on<VerifyOtpEvent>(_verifyOtp);
     // on<AuthCheckSignInStatusEvent>(_checkSignInStatus);
     // on<AuthSignOutEvent>(_SignOut);
     // on<AccountDeleteGetEvent>(_accountDelete);
@@ -45,23 +47,22 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     );
   }
 
-  // /// - **[_verifyOtp]:** Handles [VerifyOtpEvent] → calls [GetOtpUseCase]
-  //
-  // Future _verifyOtp(VerifyOtpEvent event, Emitter emit) async {
-  //   emit(VerifyOtpLoadingState());
-  //
-  //   final result = await _verifyOtpUseCase.call(
-  //     VerifyOtpParams(
-  //       phone: event.phone,
-  //       otp: event.otp
-  //     ),
-  //   );
-  //
-  //   result.fold(
-  //         (l) => emit(VerifyOtpFailureState(l.message)),
-  //         (r) => emit(VerifyOtpSuccessState(r)),
-  //   );
-  // }
+  /// - **[_verifyOtp]:** Handles [VerifyOtpEvent] → calls [GetOtpUseCase]
+
+  Future _verifyOtp(VerifyOtpEvent event, Emitter emit) async {
+    emit(VerifyOtpLoadingState());
+
+    final result = await _verifyOtpUseCase.call(
+      VerifyOtpParams(
+        contactNumber: event.contactNumber,
+      ),
+    );
+
+    result.fold(
+          (l) => emit(VerifyOtpFailureState(l.message)),
+          (r) => emit(VerifyOtpSuccessState(r)),
+    );
+  }
   //
   // /// - **Check Sign-In Status:** Handles [AuthCheckSignInStatusEvent] → checks [SessionManager]
   // Future<Either<Failure, SignInResponse>> checkSignInStatus() async {

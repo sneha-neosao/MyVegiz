@@ -5,13 +5,16 @@ import 'package:pinput/pinput.dart';
 import '../../../configs/injector/injector.dart';
 
 class OtpInputWidget extends StatelessWidget {
-  const OtpInputWidget({super.key});
+  final TextEditingController otpController;
+
+  const OtpInputWidget({super.key, required this.otpController});
 
   @override
   Widget build(BuildContext context) {
     return Pinput(
       length: 6,
       keyboardType: TextInputType.number,
+      controller: otpController,
 
       /// update OTP in BLoC
       onChanged: (value) {

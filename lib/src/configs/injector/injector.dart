@@ -11,3 +11,6 @@ export '../../features/splash/bloc/splash_bloc.dart';
 export '../../features/login/bloc/sign_in_bloc/sign_in_bloc.dart';
 export '../../features/login/bloc/get_otp_form_bloc/get_otp_form_bloc.dart';
 export '../../features/home/bloc/home_slider_bloc/home_slider_bloc.dart';
+export '../../features/register/bloc/city_list_bloc/city_list_bloc.dart';
+export '../../features/register/bloc/registration_bloc/registration_bloc.dart';
+export '../../features/register/bloc/registration_form_bloc/registration_form_bloc.dart';

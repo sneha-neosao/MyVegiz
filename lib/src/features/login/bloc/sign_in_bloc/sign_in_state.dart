@@ -30,27 +30,27 @@ class GetOtpFailureState extends SignInState {
   List<Object?> get props => [message];
 }
 
-// /// States like loading, success and failure representing verify otp.
-//
-// class VerifyOtpLoadingState extends SignInState {}
-//
-// class VerifyOtpSuccessState extends SignInState {
-//   final SignInResponse data;
-//
-//   const VerifyOtpSuccessState(this.data);
-//
-//   @override
-//   List<Object?> get props => [data];
-// }
-//
-// class VerifyOtpFailureState extends SignInState {
-//   final String message;
-//
-//   const VerifyOtpFailureState(this.message);
-//
-//   @override
-//   List<Object?> get props => [message];
-// }
+/// States like loading, success and failure representing verify otp.
+
+class VerifyOtpLoadingState extends SignInState {}
+
+class VerifyOtpSuccessState extends SignInState {
+  final OtpVerifyResponse data;
+
+  const VerifyOtpSuccessState(this.data);
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class VerifyOtpFailureState extends SignInState {
+  final String message;
+
+  const VerifyOtpFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
 //
 // /// States like loading, success and failure representing login status.
 //

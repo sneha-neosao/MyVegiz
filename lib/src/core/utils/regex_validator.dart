@@ -4,5 +4,5 @@
 class RegexValidator {
   RegexValidator._();
   static final mobile = RegExp(r"^[6-9]\d{9}$");
-  static final password = RegExp(r'^.{8,}$');
+  static final email = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',);
 }

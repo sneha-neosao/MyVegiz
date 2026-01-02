@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
+import 'package:myvegiz_flutter/src/remote/models/user_model/user_model.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 class UserInfoCustomWidget extends StatelessWidget {
-  const UserInfoCustomWidget({super.key});
+  final UserModel? userData;
+
+  const UserInfoCustomWidget({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class UserInfoCustomWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Sneha Jadhav",
+                    userData!.name,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColor.black,
                         fontWeight: FontWeight.bold,fontSize: 16
@@ -33,7 +36,7 @@ class UserInfoCustomWidget extends StatelessWidget {
                   ),
                   6.hS,
                   Text(
-                    "8551939455",
+                    userData!.mobile,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColor.gray,
                         fontWeight: FontWeight.bold,fontSize: 14

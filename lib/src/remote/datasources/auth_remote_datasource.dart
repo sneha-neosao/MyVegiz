@@ -1,10 +1,12 @@
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import '../../core/api/api_exception.dart';
@@ -23,8 +25,11 @@ sealed class RemoteDataSource {
   /// Home Slider
   Future<HomeSliderResponse> homeSlider();
 
-  /// Home Slider
+  /// City List
   Future<CityListResponse> cityList();
+
+  /// Account Delete
+  Future<CommonResponse> accountDelete(AccountDeleteParams params);
 
   Future<void> logout();
 }
@@ -179,6 +184,40 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = CityListResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CommonResponse> accountDelete(AccountDeleteParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.accountDelete,
+        data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CommonResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

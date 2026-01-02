@@ -3,6 +3,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'injector.dart';
@@ -41,13 +42,16 @@ void configureDepedencies() {
   /// Other API Configuration
 
   getIt.registerFactory(
-        () => SignInBloc(getIt<GetOtpUseCase>(),getIt<VerifyOtpUseCase>()),
+        () => SignInBloc(getIt<GetOtpUseCase>(),getIt<VerifyOtpUseCase>(),getIt<AccountDeleteUseCase>()),
   );
   getIt.registerFactory(
         () => GetOtpUseCase(getIt<AuthRepositoryImpl>()),
   );
   getIt.registerFactory(
         () => VerifyOtpUseCase(getIt<AuthRepositoryImpl>()),
+  );
+  getIt.registerFactory(
+        () => AccountDeleteUseCase(getIt<AuthRepositoryImpl>()),
   );
   getIt.registerFactory(
         () => GetOtpFormBloc(),

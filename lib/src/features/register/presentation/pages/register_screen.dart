@@ -135,13 +135,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         appSnackBar(context, AppColor.brightRed, state.message);
                       }else if(state is RegistrationSuccessState){
                         appSnackBar(context, AppColor.green, state.data.message);
-                        context.pushNamed(AppRoute.registerScreen.name);
+                        context.pushNamed(AppRoute.homeContentScreen.name);
                       }
                     },
-                    builder: (context , state){
-                      // if(state is RegistrationLoadingState){
-                      //   return Center(child: AppLoadingWidget(),);
-                      // }
+                    builder: (context, state) {
+                      if (state is RegistrationLoadingState) {
+                        return Center(child: AppLoadingWidget());
+                      }
+
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.0),
                         child: AppButtonWidget(

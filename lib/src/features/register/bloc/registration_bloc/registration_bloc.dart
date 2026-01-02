@@ -19,14 +19,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   RegistrationBloc(
     this._registrationUseCase,
-  ) : super(RegistrationLoadingState()) {
+  ) : super(RegistrationInitialState()) {
     on<RegistrationGetEvent>(_registration);
   }
 
   /// - **[_registration]:** Handles [RegistrationGetEvent] → calls [GetOtpUseCase]
 
   Future _registration(RegistrationGetEvent event, Emitter emit) async {
-    emit(RegistrationLoadingState());
+    emit(RegistrationInitialState());
 
     final result = await _registrationUseCase.call(
       RegistrationParams(

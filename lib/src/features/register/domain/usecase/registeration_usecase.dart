@@ -18,7 +18,7 @@ class RegistrationUseCase implements UseCase<RegistrationResponse, RegistrationP
   Future<Either<Failure, RegistrationResponse>> call(RegistrationParams params) async {
 
     if (params.name.isEmpty) {
-      return Left(EmptyFailure("please_enter_mobile_number".tr()));
+      return Left(EmptyFailure("please_enter_name".tr()));
     }
 
     if (params.contactNumber.isEmpty) {

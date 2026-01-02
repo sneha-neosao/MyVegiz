@@ -7,6 +7,7 @@ sealed class RegistrationState extends Equatable {
 }
 
 /// States like loading, success and failure creating account.
+class RegistrationInitialState extends RegistrationState {}
 
 class RegistrationLoadingState extends RegistrationState {}
 

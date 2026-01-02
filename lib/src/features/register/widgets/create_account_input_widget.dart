@@ -34,6 +34,7 @@ class _CreateAccountInputWidgetState extends State<CreateAccountInputWidget> {
         CreateAccountTextField<RegistrationFormBloc>(
             label: "mobile_number".tr(),
             hint: "enter_mobile_number".tr(),
+            keyboardType: TextInputType.number,
             onChanged: (val){
               print("mobile entered: ${val}");
               formBloc.add(RegistrationFormContactNumberChangedEvent(val));

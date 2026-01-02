@@ -13,3 +13,4 @@ export '../features/myAccount/presentation/pages/edit_profile_screen.dart';
 export '../features/myAccount/presentation/pages/my_wishlist_screen.dart';
 export '../features/vegetablesAndGrocery/presentation/pages/vegetables_and_grocery_screen.dart';
 export '../features/register/presentation/pages/register_screen.dart';
+export '../features/location/presentation/pages/select_location_screen.dart';

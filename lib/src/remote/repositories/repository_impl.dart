@@ -4,15 +4,18 @@ import 'package:myvegiz_flutter/src/core/api/api_exception.dart';
 import 'package:myvegiz_flutter/src/core/errors/exceptions.dart';
 import 'package:myvegiz_flutter/src/core/errors/failures.dart';
 import 'package:myvegiz_flutter/src/core/network/network_checker.dart';
+import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import '../../configs/injector/injector_conf.dart';
@@ -30,8 +33,11 @@ abstract class Repository {
   /// Home Slider
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params);
 
-  /// Home Slider
+  /// City List
   Future<Either<Failure, CityListResponse>> city_list(NoParams params);
+
+  /// Account Delete
+  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -81,7 +87,16 @@ class AuthRepositoryImpl implements Repository {
           final respData = await _remoteDataSource.verifyOtp(params);
 
           if (respData.status == "200") {
+
+            SessionManager.saveLoginStatus(true);
+            SessionManager.saveUserSessionInfo(respData.result!.userData);
+
+            // 👇 Print session info right after saving
+            final sessionInfo = await SessionManager.getUserSessionInfo();
+            print("➡️ Saved Session Info: ${sessionInfo.toJson()}");
+
             return Right(respData);
+
           } else {
             return Left(ApiFailure(respData.message!));
           }
@@ -171,6 +186,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.cityList();
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.accountDelete(params);
 
           if (respData.status == "200") {
             return Right(respData);

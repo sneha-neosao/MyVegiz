@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class UserModel {
   final String code;
   final String name;
@@ -56,4 +58,9 @@ class UserModel {
     "cityName": cityName,
     "isCodEnabled": isCodEnabled,
   };
+
+  @override
+  String toString() {
+    return jsonEncode(toJson());
+  }
 }

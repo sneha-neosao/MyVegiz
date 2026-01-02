@@ -24,4 +24,6 @@ class ApiUrl {
   static const cityList = "Api/cityList";
 
   static const registration = "Api/registration";
+
+  static const accountDelete = "Api/deleteUser";
 }

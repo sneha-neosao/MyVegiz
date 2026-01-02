@@ -32,20 +32,21 @@ class VerifyOtpEvent extends SignInEvent {
   List<Object?> get props => [contactNumber,];
 }
 
-// /// Event to check login status.
-//
-// class AuthCheckSignInStatusEvent extends SignInEvent {}
-//
-// /// Event for logout.
-//
-// class AuthSignOutEvent extends SignInEvent {}
-//
-// /// Event to delete user account .
-//
-// class AccountDeleteGetEvent extends SignInEvent {
-//
-//   const AccountDeleteGetEvent();
-//
-//   @override
-//   List<Object?> get props => [];
-// }
+/// Event to check login status.
+
+class AuthCheckLoginStatusEvent extends SignInEvent {}
+
+/// Event for logout.
+
+class AuthLogOutEvent extends SignInEvent {}
+
+/// Event to delete user account .
+
+class AccountDeleteGetEvent extends SignInEvent {
+  final String clientCode;
+
+  const AccountDeleteGetEvent(this.clientCode);
+
+  @override
+  List<Object?> get props => [clientCode];
+}

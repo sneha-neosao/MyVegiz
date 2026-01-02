@@ -56,5 +56,12 @@
   "please_enter_email": "PLease enter email",
   "please_enter_valid_email": "Please enter valid email",
   "please_enter_name": "Please enter name",
-  "please_select_city": "Please select city"
+  "please_select_city": "Please select city",
+  "logout_successfully": "LogOut Successfully",
+  "log_out_message": "Do you really want to log out?",
+  "log_out_now": "Logout Now",
+  "delete_account_message": "Do you really want to delete account?",
+  "delete_now": "Delete Now",
+  "cancel": "Cancel",
+  "invalid_mobile_number": "Please enter valid number"
 }

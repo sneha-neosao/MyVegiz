@@ -26,4 +26,6 @@ class ApiUrl {
   static const registration = "Api/registration";
 
   static const accountDelete = "Api/deleteUser";
+
+  static const vegetableSliderImages = "Api/sliderImages";
 }

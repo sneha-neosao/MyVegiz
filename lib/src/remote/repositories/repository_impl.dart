@@ -11,6 +11,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
@@ -18,6 +19,7 @@ import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_slider_response.dart';
 import '../../configs/injector/injector_conf.dart';
 import '../../core/api/api_url.dart';
 
@@ -38,6 +40,9 @@ abstract class Repository {
 
   /// Account Delete
   Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
+
+  /// Vegetable Slider
+  Future<Either<Failure, VegetableSliderResponse>> vegetable_slider(VegetableSliderParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -218,6 +223,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.accountDelete(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, VegetableSliderResponse>> vegetable_slider(VegetableSliderParams params) {
+    return _networkInfo.check<VegetableSliderResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.vegetableSlider(params);
 
           if (respData.status == "200") {
             return Right(respData);

@@ -79,7 +79,10 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.vegetablesAndGroceryScreen.path,
         name: AppRoute.vegetablesAndGroceryScreen.name,
-        pageBuilder: (context, state) => _fadePage(const VegetablesAndGroceryScreen()),
+        pageBuilder: (context, state) {
+          final cityCode = state.extra as String ;
+          return _fadePage( VegetablesAndGroceryScreen(cityCode: cityCode,));
+        },
       ),
 
       GoRoute(

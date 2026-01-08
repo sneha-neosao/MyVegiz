@@ -7,7 +7,9 @@ import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 class RestaurantVegetableWidget extends StatelessWidget {
-  const RestaurantVegetableWidget({super.key});
+  final String cityCode;
+
+  const RestaurantVegetableWidget({super.key, required this.cityCode});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class RestaurantVegetableWidget extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: (){
-                        context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name);
+                        context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name, extra: cityCode);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

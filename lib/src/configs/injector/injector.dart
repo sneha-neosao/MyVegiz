@@ -14,3 +14,5 @@ export '../../features/home/bloc/home_slider_bloc/home_slider_bloc.dart';
 export '../../features/register/bloc/city_list_bloc/city_list_bloc.dart';
 export '../../features/register/bloc/registration_bloc/registration_bloc.dart';
 export '../../features/register/bloc/registration_form_bloc/registration_form_bloc.dart';
+export '../../features/vegetablesAndGrocery/bloc/vegetable_slider_bloc/vegetable_slider_bloc.dart';
+export '../../features/vegetablesAndGrocery/bloc/vegetable_category_bloc/vegetable_category_bloc.dart';

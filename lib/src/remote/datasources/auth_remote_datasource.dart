@@ -3,6 +3,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
@@ -10,6 +11,7 @@ import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_category_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_slider_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
@@ -35,6 +37,9 @@ sealed class RemoteDataSource {
 
   /// Vegetable Slider
   Future<VegetableSliderResponse> vegetableSlider(VegetableSliderParams params);
+
+  /// Vegetable Category
+  Future<VegetableCategoryResponse> vegetableCategory(VegetableCategoryParams params);
 
   Future<void> logout();
 }
@@ -243,15 +248,56 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   Future<VegetableSliderResponse> vegetableSlider(VegetableSliderParams params) async {
     try {
 
+      var data = {
+        "cityCode": params.cityCode,
+        "mainCategoryCode": params.mainCategoryCode
+      };
+
       final response = await _helper.execute(
-        method: Method.get,
+        method: Method.post,
         url: ApiUrl.vegetableSliderImages,
+        data: data
       );
 
       logger.d('📨 Raw API response:');
       logger.d(response);
 
       final user = VegetableSliderResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<VegetableCategoryResponse> vegetableCategory(VegetableCategoryParams params) async {
+    try {
+
+      var data = {
+        "offset": params.offset,
+        "mainCategoryCode": params.mainCategoryCode
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.vegetableCategories,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = VegetableCategoryResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

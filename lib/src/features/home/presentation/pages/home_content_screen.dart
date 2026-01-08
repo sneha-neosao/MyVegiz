@@ -12,6 +12,7 @@ import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../configs/injector/injector_conf.dart';
+import '../../../../remote/models/user_model/user_model.dart';
 
 class HomeContentScreen extends StatefulWidget {
   const HomeContentScreen({super.key});
@@ -23,13 +24,22 @@ class HomeContentScreen extends StatefulWidget {
 class _HomeContentScreenState extends State<HomeContentScreen> {
   late HomeSliderBloc _homeSliderBloc;
   String? _currentAddress;
+  String? _cityCode;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getLocation();
+    _getCityCode();   // 👈 call here
     _homeSliderBloc = getIt<HomeSliderBloc>()..add(HomeSliderGetEvent());
+  }
+
+  void _getCityCode() async {
+    final user = await SessionManager.getUserSessionInfo() as UserModel;
+    setState(() {
+      _cityCode = user.cityCode;
+    });
+    print("City code: $_cityCode");
   }
 
   void _getLocation() async {
@@ -79,7 +89,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                   ),
                 ),
                 20.hS,
-                RestaurantVegetableWidget(),
+                RestaurantVegetableWidget(cityCode: _cityCode ?? "",),
                 30.hS,
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14.0),

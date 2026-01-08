@@ -6,6 +6,8 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_use
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -81,7 +83,21 @@ void configureDepedencies() {
         () => RegistrationFormBloc(),
   );
 
-  
+  getIt.registerFactory(
+        () => VegetableSliderBloc(getIt<VegetableSliderUseCase>()),
+  );
+  getIt.registerFactory(
+        () => VegetableSliderUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+  getIt.registerFactory(
+        () => VegetableCategoryBloc(getIt<VegetableCategoryUseCase>()),
+  );
+  getIt.registerFactory(
+        () => VegetableCategoryUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+
   /// API Helper
 
   getIt.registerLazySingleton(

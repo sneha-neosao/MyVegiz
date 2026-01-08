@@ -63,5 +63,6 @@
   "delete_account_message": "Do you really want to delete account?",
   "delete_now": "Delete Now",
   "cancel": "Cancel",
-  "invalid_mobile_number": "Please enter valid number"
+  "invalid_mobile_number": "Please enter valid number",
+  "vegetables_fruits": "Vegetables/Fruits"
 }

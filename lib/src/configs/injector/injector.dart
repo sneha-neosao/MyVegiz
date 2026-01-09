@@ -16,3 +16,4 @@ export '../../features/register/bloc/registration_bloc/registration_bloc.dart';
 export '../../features/register/bloc/registration_form_bloc/registration_form_bloc.dart';
 export '../../features/vegetablesAndGrocery/bloc/slider_bloc/slider_bloc.dart';
 export '../../features/vegetablesAndGrocery/bloc/category_bloc/category_bloc.dart';
+export '../../features/vegetablesAndGrocery/bloc/category_and_product_bloc/category_and_product_bloc.dart';

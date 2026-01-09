@@ -27,6 +27,7 @@ class GroceryTabWidget extends StatefulWidget {
 class _GroceryTabWidgetState extends State<GroceryTabWidget> {
   late CategoryBloc _vegetableCategoryBloc;
   late SliderBloc _vegetableSliderBloc;
+  late CategoryAndProductBloc _categoryAndProductBloc;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
     super.initState();
     _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_2"));
     _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_2"));
+    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_2", widget.cityCode));
   }
 
   @override
@@ -41,7 +43,8 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => _vegetableSliderBloc),
-        BlocProvider(create: (_) => _vegetableCategoryBloc)
+        BlocProvider(create: (_) => _vegetableCategoryBloc),
+        BlocProvider(create: (_) => _categoryAndProductBloc)
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),

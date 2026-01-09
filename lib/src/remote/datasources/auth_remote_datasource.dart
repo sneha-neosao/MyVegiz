@@ -2,10 +2,12 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
@@ -40,6 +42,8 @@ sealed class RemoteDataSource {
   /// Category
   Future<CategoryResponse> category(CategoryParams params);
 
+  /// Category And Product
+  Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params);
   Future<void> logout();
 }
 
@@ -62,8 +66,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data,
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = GetOtpResponse.fromJson(response);
       return user;
@@ -95,8 +99,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data,
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = OtpVerifyResponse.fromJson(response);
       return user;
@@ -131,8 +135,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data,
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = RegistrationResponse.fromJson(response);
       return user;
@@ -160,8 +164,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         url: ApiUrl.homeSliderImages,
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = HomeSliderResponse.fromJson(response);
       return user;
@@ -189,8 +193,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         url: ApiUrl.cityList,
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = CityListResponse.fromJson(response);
       return user;
@@ -223,8 +227,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = CommonResponse.fromJson(response);
       return user;
@@ -258,8 +262,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data
       );
 
-      logger.d('📨 Raw API response:');
-      logger.d(response);
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
 
       final user = SliderResponse.fromJson(response);
       return user;
@@ -293,10 +297,46 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           data: data
       );
 
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
+
+      final user = CategoryResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params) async {
+    try {
+
+      var data = {
+        "cityCode": params.cityCode,
+        "offset": params.offset,
+        "mainCategoryCode": params.mainCategoryCode
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.productCategoryList,
+          data: data
+      );
+
       logger.d('📨 Raw API response:');
       logger.d(response);
 
-      final user = CategoryResponse.fromJson(response);
+      final user = CategoryAndProductResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

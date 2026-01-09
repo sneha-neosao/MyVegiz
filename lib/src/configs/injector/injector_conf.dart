@@ -6,6 +6,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_use
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'injector.dart';
@@ -96,6 +97,15 @@ void configureDepedencies() {
   getIt.registerFactory(
         () => CategoryUseCase(getIt<AuthRepositoryImpl>()),
   );
+
+  getIt.registerFactory(
+        () => CategoryAndProductBloc(getIt<CategoryAndProductUseCase>()),
+  );
+  getIt.registerFactory(
+        () => CategoryAndProductUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+
 
 
   /// API Helper

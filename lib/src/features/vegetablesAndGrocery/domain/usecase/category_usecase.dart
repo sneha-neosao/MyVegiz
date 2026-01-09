@@ -5,7 +5,7 @@ import '../../../../configs/injector/injector.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 
-/// Domain layer use case for getting vegetable categories, validates inputs and calls repository method.
+/// Domain layer use case for getting categories, validates inputs and calls repository method.
 
 class CategoryUseCase implements UseCase<CategoryResponse, CategoryParams> {
   final Repository _authRepository;

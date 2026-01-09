@@ -94,30 +94,31 @@ class _VegetablesAndGroceryScreenState extends State<VegetablesAndGroceryScreen>
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: TabBar(
-                            dividerColor: Colors.transparent,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            indicator: BoxDecoration(
-                              color: AppColor.orangeDark,
-                              borderRadius: BorderRadius.circular(8),
+                          child: PreferredSize(
+                            preferredSize: Size.fromHeight(10),
+                            child: TabBar(
+                              dividerColor: Colors.transparent,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: BoxDecoration(
+                                color: AppColor.orangeDark,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              labelColor: AppColor.white,
+                              unselectedLabelColor: AppColor.gray,
+                              // indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
+                              tabs: const [
+                                Tab(
+                                  child: SizedBox(
+                                    child: Center(child: Text("Vegetable")),
+                                  ),
+                                ),
+                                Tab(
+                                  child: SizedBox(
+                                    child: Center(child: Text("Grocery")),
+                                  ),
+                                ),
+                              ],
                             ),
-                            labelColor: AppColor.white,
-                            unselectedLabelColor: AppColor.gray,
-                            // indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
-                            tabs: const [
-                              Tab(
-                                child: SizedBox(
-                                  height: 36,
-                                  child: Center(child: Text("Vegetable")),
-                                ),
-                              ),
-                              Tab(
-                                child: SizedBox(
-                                  height: 36,
-                                  child: Center(child: Text("Grocery")),
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ),

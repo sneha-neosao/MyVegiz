@@ -27,6 +27,7 @@ class VegetableTabWidget extends StatefulWidget {
 class _VegetableTabWidgetState extends State<VegetableTabWidget> {
   late CategoryBloc _vegetableCategoryBloc;
   late SliderBloc _vegetableSliderBloc;
+  late CategoryAndProductBloc _categoryAndProductBloc;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
     super.initState();
     _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_1"));
     _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_1"));
+    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_1", widget.cityCode));
   }
 
   @override
@@ -41,7 +43,8 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => _vegetableSliderBloc),
-        BlocProvider(create: (_) => _vegetableCategoryBloc)
+        BlocProvider(create: (_) => _vegetableCategoryBloc),
+        BlocProvider(create: (_) => _categoryAndProductBloc)
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),
@@ -117,7 +120,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                 builder: (context, state) {
                   if (state is CategoryLoadingState) {
                     return SizedBox(
-                      height: 200.h,
+                      height: 120.h,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         // padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -153,7 +156,143 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                   }
                   return const SizedBox.shrink();
                 }
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColor.black,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Onion-Kanda-Pyaj",
+                        style: GoogleFonts.mavenPro(
+                            color: AppColor.black,fontSize: 14, fontWeight: FontWeight.w700),
+                      ),
+                      6.hS,
+                      Container(
+                        width: 115,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: AppColor.brightRed.withOpacity(0.1),
+                          border: Border.all(
+                            width: 1,
+                            color: AppColor.orangeDark
+                          )
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "1 KG",
+                                style: GoogleFonts.mavenPro(
+                                    color: AppColor.gray,fontSize: 12, fontWeight: FontWeight.normal),
+                              ),
+                              Icon(Icons.keyboard_arrow_down,color: AppColor.black,size: 24,)
+                            ],
+                          ),
+                        ),
+                      ),
+                      4.hS,
+                      Text(
+                        "₹40.00",
+                        style: GoogleFonts.mavenPro(
+                            color: AppColor.grayShade,fontSize: 13, fontWeight: FontWeight.w600,decoration: TextDecoration.lineThrough
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "₹35.00",
+                            style: GoogleFonts.mavenPro(
+                                color: AppColor.black,fontSize: 16, fontWeight: FontWeight.w600
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColor.orangeDark,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                "13% Off",
+                                style: GoogleFonts.mavenPro(
+                                    color: AppColor.white,fontSize: 8, fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             )
+            // BlocConsumer<CategoryAndProductBloc, CategoryAndProductState>(
+            //     listener: (context, state) {
+            //       if (state is CategoryAndProductFailureState) {
+            //         appSnackBar(context, AppColor.brightRed, state.message);
+            //       }
+            //     },
+            //     builder: (context, state) {
+            //       if (state is CategoryAndProductLoadingState) {
+            //         return SizedBox(
+            //           height: 200.h,
+            //           child: ListView.separated(
+            //             scrollDirection: Axis.horizontal,
+            //             // padding: EdgeInsets.symmetric(horizontal: 6.w),
+            //             itemCount: 6, // number of shimmer placeholders
+            //             itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
+            //             separatorBuilder: (_, __) => SizedBox(width: 8.w), // same spacing as your listview
+            //           ),
+            //         );
+            //       } else if (state is CategoryAndProductSuccessState) {
+            //         final categoryAndProductList = state.data;
+            //
+            //         if (categoryAndProductList.result.categories.isEmpty) {
+            //           return Container(
+            //             height: 30,
+            //             child: Center(
+            //               child: Text(
+            //                 'no_matching_data_found'.tr(),
+            //                 style: Theme
+            //                     .of(context)
+            //                     .textTheme
+            //                     .bodyMedium
+            //                     ?.copyWith(
+            //                   color: Colors.grey,
+            //                   fontStyle: FontStyle.italic,
+            //                 ),
+            //               ),
+            //             ),
+            //           );
+            //         }
+            //
+            //         return VegetableCategoryListWidget(categoryResponse: vegetableCategoryList);
+            //
+            //       }
+            //       return const SizedBox.shrink();
+            //     }
+            // )
           ],
         ),
       ),

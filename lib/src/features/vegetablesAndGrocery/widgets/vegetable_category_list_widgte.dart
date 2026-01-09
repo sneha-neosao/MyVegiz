@@ -20,7 +20,7 @@ class _VegetableCategoryListWidgetState extends State<VegetableCategoryListWidge
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200, // adjust height as needed
+      height: 120, // adjust height as needed
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         // padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -74,7 +74,7 @@ class _VegetableCategoryListWidgetState extends State<VegetableCategoryListWidge
                 Text(
                   category.categoryName,
                   style: GoogleFonts.mavenPro(
-                      color: AppColor.black,fontSize: 12, fontWeight: FontWeight.w700),
+                      color: AppColor.black,fontSize: 10, fontWeight: FontWeight.w700),
                 ),
               ],
             ),

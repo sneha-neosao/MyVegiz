@@ -12,7 +12,7 @@ import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_category_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';

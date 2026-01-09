@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
-import 'package:myvegiz_flutter/src/features/search/widgets/search_text_field_widget.dart';
+import 'package:myvegiz_flutter/src/features/widgets/search_text_field_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

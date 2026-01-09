@@ -25,6 +25,8 @@ class ApiUrl {
 
   static const accountDelete = "Api/deleteUser";
 
+  // static const mainCategoryList = "Api/getMainCategoryList";
+
   static const vegetableSliderImages = "Api/sliderImages";
 
   static const vegetableCategories = "Api/categoryList";

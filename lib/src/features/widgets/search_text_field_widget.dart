@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/string_validator_extension.dart';
-import '../../../core/extensions/integer_sizedbox_extension.dart';
-import '../../../core/themes/app_color.dart';
+import '../../core/extensions/integer_sizedbox_extension.dart';
+import '../../core/themes/app_color.dart';
 
 
 class SearchTextField<T> extends StatefulWidget {

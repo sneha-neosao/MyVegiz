@@ -3,7 +3,7 @@ import 'dart:convert';
 class VegetableSliderResponse {
   final String status;
   final String message;
-  final HomeSliderResult? result;
+  final SliderResult? result;
 
   VegetableSliderResponse({
     required this.status,
@@ -21,7 +21,7 @@ class VegetableSliderResponse {
         status: json["status"] ?? "",
         message: json["message"] ?? "",
         result: json["result"] != null
-            ? HomeSliderResult.fromJson(json["result"])
+            ? SliderResult.fromJson(json["result"])
             : null,
       );
 
@@ -32,13 +32,13 @@ class VegetableSliderResponse {
   };
 }
 
-class HomeSliderResult {
+class SliderResult {
   final List<VegetableImage> sliderImages;
 
-  HomeSliderResult({required this.sliderImages});
+  SliderResult({required this.sliderImages});
 
-  factory HomeSliderResult.fromJson(Map<String, dynamic> json) =>
-      HomeSliderResult(
+  factory SliderResult.fromJson(Map<String, dynamic> json) =>
+      SliderResult(
         sliderImages: json["sliderImages"] != null
             ? List<VegetableImage>.from(
             json["sliderImages"].map((x) => VegetableImage.fromJson(x)))

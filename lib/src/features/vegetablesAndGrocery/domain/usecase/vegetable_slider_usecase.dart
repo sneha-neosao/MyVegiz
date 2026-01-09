@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
 import '../../../../configs/injector/injector.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/usecases/usecase.dart';

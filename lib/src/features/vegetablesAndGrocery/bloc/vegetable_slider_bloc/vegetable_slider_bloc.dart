@@ -4,7 +4,7 @@ import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
 import '../../../../core/utils/logger.dart';
 
 part 'vegetable_slider_event.dart';

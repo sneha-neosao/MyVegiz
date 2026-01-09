@@ -1,4 +1,3 @@
-import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
@@ -11,8 +10,8 @@ import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_category_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -36,10 +35,10 @@ sealed class RemoteDataSource {
   Future<CommonResponse> accountDelete(AccountDeleteParams params);
 
   /// Vegetable Slider
-  Future<VegetableSliderResponse> vegetableSlider(VegetableSliderParams params);
+  Future<SliderResponse> vegetableSlider(VegetableSliderParams params);
 
   /// Vegetable Category
-  Future<VegetableCategoryResponse> vegetableCategory(VegetableCategoryParams params);
+  Future<CategoryResponse> vegetableCategory(VegetableCategoryParams params);
 
   Future<void> logout();
 }
@@ -245,7 +244,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<VegetableSliderResponse> vegetableSlider(VegetableSliderParams params) async {
+  Future<SliderResponse> vegetableSlider(VegetableSliderParams params) async {
     try {
 
       var data = {
@@ -255,14 +254,14 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       final response = await _helper.execute(
         method: Method.post,
-        url: ApiUrl.vegetableSliderImages,
+        url: ApiUrl.sliderImages,
         data: data
       );
 
       logger.d('📨 Raw API response:');
       logger.d(response);
 
-      final user = VegetableSliderResponse.fromJson(response);
+      final user = SliderResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();
@@ -280,7 +279,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<VegetableCategoryResponse> vegetableCategory(VegetableCategoryParams params) async {
+  Future<CategoryResponse> vegetableCategory(VegetableCategoryParams params) async {
     try {
 
       var data = {
@@ -290,14 +289,14 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       final response = await _helper.execute(
           method: Method.post,
-          url: ApiUrl.vegetableCategories,
+          url: ApiUrl.categoriesList,
           data: data
       );
 
       logger.d('📨 Raw API response:');
       logger.d(response);
 
-      final user = VegetableCategoryResponse.fromJson(response);
+      final user = CategoryResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-class VegetableSliderResponse {
+class SliderResponse {
   final String status;
   final String message;
   final SliderResult? result;
 
-  VegetableSliderResponse({
+  SliderResponse({
     required this.status,
     required this.message,
     required this.result,
   });
 
-  factory VegetableSliderResponse.fromRawJson(String str) =>
-      VegetableSliderResponse.fromJson(json.decode(str));
+  factory SliderResponse.fromRawJson(String str) =>
+      SliderResponse.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory VegetableSliderResponse.fromJson(Map<String, dynamic> json) =>
-      VegetableSliderResponse(
+  factory SliderResponse.fromJson(Map<String, dynamic> json) =>
+      SliderResponse(
         status: json["status"] ?? "",
         message: json["message"] ?? "",
         result: json["result"] != null

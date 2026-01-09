@@ -13,7 +13,7 @@ class VegetableSliderInitialState extends VegetableSliderState {}
 class VegetableSliderLoadingState extends VegetableSliderState {}
 
 class VegetableSliderSuccessState extends VegetableSliderState {
-  final VegetableSliderResponse data;
+  final SliderResponse data;
 
   const VegetableSliderSuccessState(this.data);
 

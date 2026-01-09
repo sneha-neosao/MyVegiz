@@ -13,7 +13,7 @@ class VegetableCategoryInitialState extends VegetableCategoryState {}
 class VegetableCategoryLoadingState extends VegetableCategoryState {}
 
 class VegetableCategorySuccessState extends VegetableCategoryState {
-  final VegetableCategoryResponse data;
+  final CategoryResponse data;
 
   const VegetableCategorySuccessState(this.data);
 

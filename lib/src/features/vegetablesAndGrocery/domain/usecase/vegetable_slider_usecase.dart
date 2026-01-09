@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
 import '../../../../configs/injector/injector.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 
 /// Domain layer use case for getting vegetable slider images, validates inputs and calls repository method.
 
-class VegetableSliderUseCase implements UseCase<VegetableSliderResponse, VegetableSliderParams> {
+class VegetableSliderUseCase implements UseCase<SliderResponse, VegetableSliderParams> {
   final Repository _authRepository;
   const VegetableSliderUseCase(this._authRepository);
 
   @override
-  Future<Either<Failure, VegetableSliderResponse>> call(VegetableSliderParams params) async {
+  Future<Either<Failure, SliderResponse>> call(VegetableSliderParams params) async {
 
     final result = await _authRepository.vegetable_slider(params);
 

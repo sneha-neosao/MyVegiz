@@ -20,10 +20,8 @@ import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_category_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/slider_response.dart';
-import '../../configs/injector/injector_conf.dart';
-import '../../core/api/api_url.dart';
+import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
+import '../models/category_model/category_response.dart';
 
 /// Abstract Repository interface defining all data operations for the app
 
@@ -44,10 +42,10 @@ abstract class Repository {
   Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
 
   /// Vegetable Slider
-  Future<Either<Failure, VegetableSliderResponse>> vegetable_slider(VegetableSliderParams params);
+  Future<Either<Failure, SliderResponse>> vegetable_slider(VegetableSliderParams params);
 
   /// Vegetable Category
-  Future<Either<Failure, VegetableCategoryResponse>> vegetable_category(VegetableCategoryParams params);
+  Future<Either<Failure, CategoryResponse>> vegetable_category(VegetableCategoryParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -255,8 +253,8 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, VegetableSliderResponse>> vegetable_slider(VegetableSliderParams params) {
-    return _networkInfo.check<VegetableSliderResponse>(
+  Future<Either<Failure, SliderResponse>> vegetable_slider(VegetableSliderParams params) {
+    return _networkInfo.check<SliderResponse>(
       connected: () async {
         try {
           final respData = await _remoteDataSource.vegetableSlider(params);
@@ -287,8 +285,8 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, VegetableCategoryResponse>> vegetable_category(VegetableCategoryParams params) {
-    return _networkInfo.check<VegetableCategoryResponse>(
+  Future<Either<Failure, CategoryResponse>> vegetable_category(VegetableCategoryParams params) {
+    return _networkInfo.check<CategoryResponse>(
       connected: () async {
         try {
           final respData = await _remoteDataSource.vegetableCategory(params);

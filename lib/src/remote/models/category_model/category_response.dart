@@ -1,20 +1,20 @@
 import 'dart:convert';
 
-class VegetableCategoryResponse {
+class CategoryResponse {
   final String status;
   final String? message;
   final int totalRecords;
   final Result result;
 
-  VegetableCategoryResponse({
+  CategoryResponse({
     required this.status,
     required this.message,
     required this.totalRecords,
     required this.result,
   });
 
-  factory VegetableCategoryResponse.fromJson(Map<String, dynamic> json) {
-    return VegetableCategoryResponse(
+  factory CategoryResponse.fromJson(Map<String, dynamic> json) {
+    return CategoryResponse(
       status: json['status'] ?? '',
       message: json["message"] ?? "",
       totalRecords: json['totalRecords'] ?? 0,

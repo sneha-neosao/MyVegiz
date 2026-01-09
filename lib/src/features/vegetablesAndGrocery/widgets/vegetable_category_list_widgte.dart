@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
-import 'package:myvegiz_flutter/src/remote/models/vegetable_slider_model/vegetable_category_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../core/themes/app_color.dart';
 
 class VegetableCategoryListWidget extends StatefulWidget {
-  final VegetableCategoryResponse categoryResponse;
+  final CategoryResponse categoryResponse;
 
   const VegetableCategoryListWidget({super.key, required this.categoryResponse});
 

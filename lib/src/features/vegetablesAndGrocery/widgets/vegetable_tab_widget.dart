@@ -25,15 +25,15 @@ class VegetableTabWidget extends StatefulWidget {
 }
 
 class _VegetableTabWidgetState extends State<VegetableTabWidget> {
-  late VegetableCategoryBloc _vegetableCategoryBloc;
-  late VegetableSliderBloc _vegetableSliderBloc;
+  late CategoryBloc _vegetableCategoryBloc;
+  late SliderBloc _vegetableSliderBloc;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _vegetableSliderBloc = getIt<VegetableSliderBloc>()..add(VegetableSliderGetEvent(widget.cityCode, "MCAT_1"));
-    _vegetableCategoryBloc = getIt<VegetableCategoryBloc>()..add(VegetableCategoryGetEvent("0", "MCAT_1"));
+    _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_1"));
+    _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_1"));
   }
 
   @override
@@ -59,14 +59,14 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                 onChanged: (val){}
             ),
             16.hS,
-            BlocConsumer<VegetableSliderBloc, VegetableSliderState>(
+            BlocConsumer<SliderBloc, SliderState>(
               listener: (context, state) {
-                if (state is VegetableSliderFailureState) {
+                if (state is SliderFailureState) {
                   appSnackBar(context, AppColor.brightRed, state.message);
                 }
               },
               builder: (context, state) {
-                if (state is VegetableSliderLoadingState) {
+                if (state is SliderLoadingState) {
                   return Column(
                     children: [
                       Padding(
@@ -85,7 +85,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                       ),
                     ],
                   );
-                } else if (state is VegetableSliderSuccessState) {
+                } else if (state is SliderSuccessState) {
                   final result = state.data.result;
 
                   if (result == null || result.sliderImages.isEmpty) {
@@ -108,14 +108,14 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
               },
             ),
             22.hS,
-            BlocConsumer<VegetableCategoryBloc, VegetableCategoryState>(
+            BlocConsumer<CategoryBloc, CategoryState>(
                 listener: (context, state) {
-                  if (state is VegetableCategoryFailureState) {
+                  if (state is CategoryFailureState) {
                     appSnackBar(context, AppColor.brightRed, state.message);
                   }
                 },
                 builder: (context, state) {
-                  if (state is VegetableCategoryLoadingState) {
+                  if (state is CategoryLoadingState) {
                     return SizedBox(
                       height: 200.h,
                       child: ListView.separated(
@@ -126,7 +126,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                         separatorBuilder: (_, __) => SizedBox(width: 8.w), // same spacing as your listview
                       ),
                     );
-                  } else if (state is VegetableCategorySuccessState) {
+                  } else if (state is CategorySuccessState) {
                     final vegetableCategoryList = state.data;
 
                     if (vegetableCategoryList.result.categories.isEmpty) {

@@ -7,24 +7,24 @@ import '../../../../core/usecases/usecase.dart';
 
 /// Domain layer use case for getting vegetable slider images, validates inputs and calls repository method.
 
-class VegetableSliderUseCase implements UseCase<SliderResponse, VegetableSliderParams> {
+class SliderUseCase implements UseCase<SliderResponse, SliderParams> {
   final Repository _authRepository;
-  const VegetableSliderUseCase(this._authRepository);
+  const SliderUseCase(this._authRepository);
 
   @override
-  Future<Either<Failure, SliderResponse>> call(VegetableSliderParams params) async {
+  Future<Either<Failure, SliderResponse>> call(SliderParams params) async {
 
-    final result = await _authRepository.vegetable_slider(params);
+    final result = await _authRepository.slider(params);
 
     return result;
   }
 }
 
-class VegetableSliderParams extends Equatable {
+class SliderParams extends Equatable {
   final String cityCode;
   final String mainCategoryCode;
 
-  const VegetableSliderParams({
+  const SliderParams({
     required this.cityCode,
     required this.mainCategoryCode,
   });

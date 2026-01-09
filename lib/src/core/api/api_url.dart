@@ -31,4 +31,6 @@ class ApiUrl {
 
   static const categoriesList = "Api/categoryList";
 
+  static const productCategoryList = "Api/categoryAndProduct";
+
 }

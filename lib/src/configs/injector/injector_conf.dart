@@ -6,8 +6,8 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_use
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_category_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -84,17 +84,17 @@ void configureDepedencies() {
   );
 
   getIt.registerFactory(
-        () => VegetableSliderBloc(getIt<VegetableSliderUseCase>()),
+        () => SliderBloc(getIt<SliderUseCase>()),
   );
   getIt.registerFactory(
-        () => VegetableSliderUseCase(getIt<AuthRepositoryImpl>()),
+        () => SliderUseCase(getIt<AuthRepositoryImpl>()),
   );
 
   getIt.registerFactory(
-        () => VegetableCategoryBloc(getIt<VegetableCategoryUseCase>()),
+        () => CategoryBloc(getIt<CategoryUseCase>()),
   );
   getIt.registerFactory(
-        () => VegetableCategoryUseCase(getIt<AuthRepositoryImpl>()),
+        () => CategoryUseCase(getIt<AuthRepositoryImpl>()),
   );
 
 

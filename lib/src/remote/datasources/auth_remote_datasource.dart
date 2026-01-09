@@ -2,8 +2,8 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_category_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
@@ -34,11 +34,11 @@ sealed class RemoteDataSource {
   /// Account Delete
   Future<CommonResponse> accountDelete(AccountDeleteParams params);
 
-  /// Vegetable Slider
-  Future<SliderResponse> vegetableSlider(VegetableSliderParams params);
+  /// Slider
+  Future<SliderResponse> slider(SliderParams params);
 
-  /// Vegetable Category
-  Future<CategoryResponse> vegetableCategory(VegetableCategoryParams params);
+  /// Category
+  Future<CategoryResponse> category(CategoryParams params);
 
   Future<void> logout();
 }
@@ -244,7 +244,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<SliderResponse> vegetableSlider(VegetableSliderParams params) async {
+  Future<SliderResponse> slider(SliderParams params) async {
     try {
 
       var data = {
@@ -279,7 +279,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<CategoryResponse> vegetableCategory(VegetableCategoryParams params) async {
+  Future<CategoryResponse> category(CategoryParams params) async {
     try {
 
       var data = {

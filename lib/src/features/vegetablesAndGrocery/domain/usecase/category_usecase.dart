@@ -7,24 +7,24 @@ import '../../../../core/usecases/usecase.dart';
 
 /// Domain layer use case for getting vegetable categories, validates inputs and calls repository method.
 
-class VegetableCategoryUseCase implements UseCase<CategoryResponse, VegetableCategoryParams> {
+class CategoryUseCase implements UseCase<CategoryResponse, CategoryParams> {
   final Repository _authRepository;
-  const VegetableCategoryUseCase(this._authRepository);
+  const CategoryUseCase(this._authRepository);
 
   @override
-  Future<Either<Failure, CategoryResponse>> call(VegetableCategoryParams params) async {
+  Future<Either<Failure, CategoryResponse>> call(CategoryParams params) async {
 
-    final result = await _authRepository.vegetable_category(params);
+    final result = await _authRepository.category(params);
 
     return result;
   }
 }
 
-class VegetableCategoryParams extends Equatable {
+class CategoryParams extends Equatable {
   final String offset;
   final String mainCategoryCode;
 
-  const VegetableCategoryParams({
+  const CategoryParams({
     required this.offset,
     required this.mainCategoryCode,
   });

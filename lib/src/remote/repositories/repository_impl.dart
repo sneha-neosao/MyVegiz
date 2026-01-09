@@ -11,8 +11,8 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_category_usecase.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/vegetable_slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
@@ -41,11 +41,11 @@ abstract class Repository {
   /// Account Delete
   Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
 
-  /// Vegetable Slider
-  Future<Either<Failure, SliderResponse>> vegetable_slider(VegetableSliderParams params);
+  /// Slider
+  Future<Either<Failure, SliderResponse>> slider(SliderParams params);
 
   /// Vegetable Category
-  Future<Either<Failure, CategoryResponse>> vegetable_category(VegetableCategoryParams params);
+  Future<Either<Failure, CategoryResponse>> category(CategoryParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -253,11 +253,11 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, SliderResponse>> vegetable_slider(VegetableSliderParams params) {
+  Future<Either<Failure, SliderResponse>> slider(SliderParams params) {
     return _networkInfo.check<SliderResponse>(
       connected: () async {
         try {
-          final respData = await _remoteDataSource.vegetableSlider(params);
+          final respData = await _remoteDataSource.slider(params);
 
           if (respData.status == "200") {
             return Right(respData);
@@ -285,11 +285,11 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CategoryResponse>> vegetable_category(VegetableCategoryParams params) {
+  Future<Either<Failure, CategoryResponse>> category(CategoryParams params) {
     return _networkInfo.check<CategoryResponse>(
       connected: () async {
         try {
-          final respData = await _remoteDataSource.vegetableCategory(params);
+          final respData = await _remoteDataSource.category(params);
 
           if (respData.status == "200") {
             return Right(respData);

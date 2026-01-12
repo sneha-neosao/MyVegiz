@@ -19,7 +19,11 @@ class AppColor {
   static const green = Color(0xFF188510);
   static const colorPrimary = Color(0xFF9EC746);
 
-  static const startColorButton = Color(0xFFFF7F50);
-  static const middleColorButton = Color(0xFFD75429);
-  static const endColorButton = Color(0xFFD75429);
+  static const startOrangeButton = Color(0xFFFF7F50);
+  static const middleOrangeButton = Color(0xFFD75429);
+  static const endOrangeButton = Color(0xFFD75429);
+
+  static const startGreenButton = Color(0xFF3DA536);
+  static const middleGreenButton = Color(0xFF315C2E);
+  static const endGreenButton = Color(0xFF315C2E);
 }

@@ -100,7 +100,15 @@ class _VegetablesAndGroceryScreenState extends State<VegetablesAndGroceryScreen>
                               dividerColor: Colors.transparent,
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
-                                color: AppColor.orangeDark,
+                                gradient: const LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    AppColor.startOrangeButton,
+                                    AppColor.middleOrangeButton,
+                                    AppColor.endOrangeButton,
+                                  ],
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               labelColor: AppColor.white,
@@ -144,6 +152,64 @@ class _VegetablesAndGroceryScreenState extends State<VegetablesAndGroceryScreen>
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          color: AppColor.white,
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "1 Items",
+                      style: GoogleFonts.mavenPro(
+                          color: AppColor.black,fontSize: 14, fontWeight: FontWeight.w600
+                      ),
+                    ),
+                    Text(
+                      "₹40.00",
+                      style: GoogleFonts.mavenPro(
+                          color: AppColor.black,fontSize: 18, fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 46,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        AppColor.startGreenButton,
+                        AppColor.middleGreenButton,
+                        AppColor.endGreenButton,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.0,horizontal: 30),
+                      child: Text(
+                        "View Cart",
+                        style: GoogleFonts.mavenPro(
+                          color: AppColor.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

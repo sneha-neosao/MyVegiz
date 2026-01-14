@@ -66,5 +66,11 @@
   "invalid_mobile_number": "Please enter valid number",
   "vegetables_fruits": "Vegetables/Fruits",
   "grocery": "Grocery",
-  "search_product_by_name": "Search product by name"
+  "search_product_by_name": "Search product by name",
+  "search_location_here": "Search Location Here",
+  "current_location": "Current Location",
+  "using_gps": "Using GPS",
+  "change": "Change",
+  "view_cart": "View cart",
+  "confirm_location": "CONFIRM LOCATION"
 }

@@ -96,6 +96,13 @@ class AppRouteConf {
         name: AppRoute.selectLocationScreen.name,
         pageBuilder: (context, state) => _fadePage(const SelectLocationScreen()),
       ),
+
+      GoRoute(
+        path: AppRoute.confirmLocationScreen.path,
+        name: AppRoute.confirmLocationScreen.name,
+        pageBuilder: (context, state) => _fadePage(const ConfirmLocationScreen()),
+      ),
+
     ],
   );
 }

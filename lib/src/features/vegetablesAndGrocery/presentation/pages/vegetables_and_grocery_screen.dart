@@ -197,7 +197,7 @@ class _VegetablesAndGroceryScreenState extends State<VegetablesAndGroceryScreen>
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 6.0,horizontal: 30),
                       child: Text(
-                        "View Cart",
+                        "view_cart".tr(),
                         style: GoogleFonts.mavenPro(
                           color: AppColor.white,
                           fontSize: 18,

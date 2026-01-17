@@ -18,6 +18,7 @@ class SearchTextField<T> extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool? readOnly;
   final TextCapitalization? textCapitalization;
+  final TextEditingController? controller; // ✅ NEW
 
   const SearchTextField({
     super.key,
@@ -29,6 +30,7 @@ class SearchTextField<T> extends StatefulWidget {
     this.initialValue,
     this.keyboardType,
     this.textCapitalization,
+    this.controller, // ✅ NEW
   });
 
   @override
@@ -37,6 +39,23 @@ class SearchTextField<T> extends StatefulWidget {
 
 class _SearchTextFieldState<T> extends State<SearchTextField<T>> {
   bool _isVisible = true;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = widget.controller ??
+        TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
 
   void _toggleVisibility() {
     setState(() {
@@ -46,66 +65,50 @@ class _SearchTextFieldState<T> extends State<SearchTextField<T>> {
 
   @override
   Widget build(BuildContext context) {
-    // final formBloc = context.read<T>();
-    return  Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 4.h,
-        ),
-        child:TextFormField(
-          initialValue: widget.initialValue,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          obscureText: widget.isSecure ?? false ? _isVisible : false,
-          cursorColor: AppColor.green,
-          onChanged: widget.onChanged,
-          style:Theme.of(context).textTheme.bodyMedium,
-          textCapitalization: widget.textCapitalization??TextCapitalization.none,
-          inputFormatters: widget.inputFormat,
-          keyboardType: widget.keyboardType,
-          readOnly: widget.readOnly??false,
-          // validator: (val) {
-          //   if (formBloc is GetOtpFormBloc) {
-          //     if(widget.label == "mobile_number".tr() &&
-          //         val!.isEmpty) {
-          //       return "please_enter_mobile_number".tr();
-          //     }else if (widget.label == "mobile_number".tr() &&
-          //         !val!.isMobileNumberValid){
-          //       return "please_enter_valid_mobile_number".tr();
-          //     }
-          //   }
-          //
-          //   return null;
-          // },
-          decoration: InputDecoration(
-            errorMaxLines: 3,
-            errorStyle:Theme.of(context).textTheme.bodySmall?.copyWith(fontSize:10,fontStyle:FontStyle.italic,fontWeight: FontWeight.w300,color: AppColor.brightRed),
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            label: Text(widget.hint,style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColor.hintText)),
-            hintStyle: Theme.of(context).textTheme.bodyMedium,
-            prefixIcon: Icon(Icons.search_rounded, color: AppColor.hintText),
-            suffixIcon: widget.isSecure ?? false
-                ? IconButton(
-              onPressed: () {
-                _toggleVisibility();
-              },
-              icon: Icon(
-                _isVisible
-                    ? Icons.visibility_rounded
-                    : Icons.visibility_off_rounded,
-              ),
-              splashRadius: 20.r,
-            )
-                : null,
-            filled: true,
-            fillColor: AppColor.white,
-            border: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
-            enabledBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
-            focusedBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
-            disabledBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
-            errorBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
-            focusedErrorBorder: OutlineInputBorder( borderRadius: BorderRadius.circular(8.r), borderSide: BorderSide.none, ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      child: TextFormField(
+        controller: _controller, // ✅ USE CONTROLLER
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        obscureText: widget.isSecure ?? false ? _isVisible : false,
+        cursorColor: AppColor.green,
+        onChanged: widget.onChanged,
+        style: Theme.of(context).textTheme.bodyMedium,
+        textCapitalization:
+        widget.textCapitalization ?? TextCapitalization.none,
+        inputFormatters: widget.inputFormat,
+        keyboardType: widget.keyboardType,
+        readOnly: widget.readOnly ?? false,
+        decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          label: Text(
+            widget.hint,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: AppColor.hintText),
+          ),
+          prefixIcon:
+          Icon(Icons.search_rounded, color: AppColor.hintText),
+          suffixIcon: widget.isSecure ?? false
+              ? IconButton(
+            onPressed: _toggleVisibility,
+            icon: Icon(
+              _isVisible
+                  ? Icons.visibility_rounded
+                  : Icons.visibility_off_rounded,
+            ),
+          )
+              : null,
+          filled: true,
+          fillColor: AppColor.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+            borderSide: BorderSide.none,
           ),
         ),
+      ),
     );
   }
 }
+

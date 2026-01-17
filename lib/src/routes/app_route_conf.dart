@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'app_route_path.dart';
 import 'routes.dart';
 
@@ -100,7 +101,12 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.confirmLocationScreen.path,
         name: AppRoute.confirmLocationScreen.name,
-        pageBuilder: (context, state) => _fadePage(const ConfirmLocationScreen()),
+        pageBuilder: (context, state) {
+          final latLng = state.extra as LatLng?;
+          return _fadePage(
+            ConfirmLocationScreen(initialLatLng: latLng),
+          );
+        },
       ),
 
     ],

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/home/widgets/home_slider_selection_widget.dart';
+import 'package:myvegiz_flutter/src/features/home/widgets/location_notifier.dart';
 import 'package:myvegiz_flutter/src/features/home/widgets/restaurant_vegetable_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
@@ -33,9 +35,21 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
   @override
   void initState() {
     super.initState();
-    _getLocation(); // existing logic preserved
+    _loadSavedLocation();
+    LocationNotifier.refresh.addListener(_onLocationChanged);
+    // _getLocation(); // existing logic preserved
     _getCityCode();
     _homeSliderBloc = getIt<HomeSliderBloc>()..add(HomeSliderGetEvent());
+  }
+
+  void _onLocationChanged() {
+    _loadSavedLocation();
+  }
+
+  @override
+  void dispose() {
+    LocationNotifier.refresh.removeListener(_onLocationChanged);
+    super.dispose();
   }
 
   void _getCityCode() async {
@@ -45,60 +59,21 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
     });
   }
 
-  void _getLocation() async {
+  Future<void> _loadSavedLocation() async {
     final saved = await SessionManager.getLiveLocation();
-
-    _getAccurateLiveLocation(); // fallback to GPS
-
-    // if (saved.address != null && saved.address!.isNotEmpty) {
-    //   setState(() {
-    //     _currentAddress = saved.address;
-    //   });
-    // } else {
-    //   _getAccurateLiveLocation(); // fallback to GPS
-    // }
-  }
-
-  Future<void> _getAccurateLiveLocation() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) return;
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.deniedForever) return;
-
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation,
-        forceAndroidLocationManager: true,
-        timeLimit: const Duration(seconds: 10),
-      );
-
-      final placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
-
-        final exactAddress = [
-          // place.name,
-          place.street,
-          place.subLocality,
-          place.locality,
-          place.postalCode,
-        ].where((e) => e != null && e.isNotEmpty).join(', ');
-
-        setState(() {
-          _currentAddress = exactAddress;
-        });
-      }
-      print("location : ${_currentAddress}");
-    } catch (e) {
-      debugPrint("Location error: $e");
+    if (saved.lat != null && saved.lng != null) {
+      setState(() {
+        // 👇 Construct detailed address from saved fields
+        _currentAddress = [
+          saved.street,
+          saved.subLocality,
+          saved.locality,
+          saved.postalCode,
+          saved.address, // fallback or extra line
+        ]
+            .where((e) => e != null && e.isNotEmpty)
+            .join(", ");
+      });
     }
   }
 
@@ -145,8 +120,8 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                               overflow: TextOverflow.visible,
                               style: GoogleFonts.mavenPro(
                                 color: AppColor.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),

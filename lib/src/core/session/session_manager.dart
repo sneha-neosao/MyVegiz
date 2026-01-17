@@ -48,22 +48,49 @@ class SessionManager {
     required double latitude,
     required double longitude,
     required String address,
+    String? street,
+    String? subLocality,
+    String? locality,
+    String? postalCode,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("latitude", latitude.toString());
     await prefs.setString("longitude", longitude.toString());
-    await prefs.setString("address", address); }
+    await prefs.setString("address", address);
+    if (street != null)
+      await prefs.setString("street", street);
+    if (subLocality != null)
+      await prefs.setString("subLocality", subLocality);
+    if (locality != null)
+      await prefs.setString("locality", locality);
+    if (postalCode != null)
+      await prefs.setString("postalCode", postalCode);
+  }
 
   /// Get saved live location
-  static Future<({double? lat, double? lng, String? address})> getLiveLocation() async {
+  static Future<({
+  double? lat,
+  double? lng,
+  String? address,
+  String? street,
+  String? subLocality,
+  String? locality,
+  String? postalCode})>
+  getLiveLocation() async {
     final prefs = await SharedPreferences.getInstance();
     final latStr = prefs.getString("latitude");
     final lngStr = prefs.getString("longitude");
     final address = prefs.getString("address");
+
     return (
     lat: latStr != null ? double.tryParse(latStr) : null,
     lng: lngStr != null ? double.tryParse(lngStr) : null,
-    address: address );
+    address: address ,
+    street: prefs.getString("street"),
+    subLocality: prefs.getString("subLocality"),
+    locality: prefs.getString("locality"),
+    postalCode: prefs.getString("postalCode"),
+    );
   }
 
   static Future<Either<Failure, void>> clear() async {

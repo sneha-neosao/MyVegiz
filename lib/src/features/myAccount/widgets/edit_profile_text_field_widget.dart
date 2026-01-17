@@ -48,7 +48,7 @@ class _EditProfileTextFieldState<T> extends State<EditProfileTextField<T>> {
 
   @override
   Widget build(BuildContext context) {
-    // final formBloc = context.read<T>();
+    final formBloc = context.read<T>();
     return  Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 12.w,

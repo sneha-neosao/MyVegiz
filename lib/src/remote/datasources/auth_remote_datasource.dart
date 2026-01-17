@@ -1,6 +1,7 @@
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
@@ -44,6 +45,10 @@ sealed class RemoteDataSource {
 
   /// Category And Product
   Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params);
+
+  /// Edit Profile
+  Future<CommonResponse> editProfile(EditProfileParams params);
+
   Future<void> logout();
 }
 
@@ -337,6 +342,43 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = CategoryAndProductResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CommonResponse> editProfile(EditProfileParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+        "name": params.name,
+        "emailId": params.emailId,
+        "cityCode": params.cityCode
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.editProfile,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CommonResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

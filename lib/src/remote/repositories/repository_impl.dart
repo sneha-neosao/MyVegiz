@@ -10,6 +10,7 @@ import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
@@ -51,6 +52,9 @@ abstract class Repository {
 
   /// Category And Product
   Future<Either<Failure, CategoryAndProductResponse>> category_and_product(CategoryAndProductParams params);
+
+  /// Edit Profile
+  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -327,6 +331,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.categoryAndProduct(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.editProfile(params);
 
           if (respData.status == "200") {
             return Right(respData);

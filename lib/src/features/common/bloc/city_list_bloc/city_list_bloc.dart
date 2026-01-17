@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_usecase.dart';
-import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/common/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import '../../../../core/utils/logger.dart';

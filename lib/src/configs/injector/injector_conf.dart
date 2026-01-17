@@ -4,7 +4,8 @@ import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_use
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
-import 'package:myvegiz_flutter/src/features/register/domain/usecase/city_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
+import 'package:myvegiz_flutter/src/features/common/domain/usecase/city_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
@@ -105,6 +106,15 @@ void configureDepedencies() {
         () => CategoryAndProductUseCase(getIt<AuthRepositoryImpl>()),
   );
 
+  getIt.registerFactory(
+        () => EditProfileBloc(getIt<EditProfileUseCase>()),
+  );
+  getIt.registerFactory(
+        () => EditProfileUseCase(getIt<AuthRepositoryImpl>()),
+  );
+  getIt.registerFactory(
+        () => EditProfileFormBloc(),
+  );
 
 
 

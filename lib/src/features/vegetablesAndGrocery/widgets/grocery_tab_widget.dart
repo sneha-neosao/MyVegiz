@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_category_list_widgte.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/grocery_category_list_widget.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_slider_selection_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/search_text_field_widget.dart';
@@ -151,7 +151,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                       );
                     }
 
-                    return VegetableCategoryListWidget(categoryResponse: vegetableCategoryList);
+                    return GroceryCategoryListWidget(categoryResponse: vegetableCategoryList);
 
                   }
                   return const SizedBox.shrink();

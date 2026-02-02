@@ -36,7 +36,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
     super.initState();
     _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_1"));
     _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_1"));
-    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_1", widget.cityCode));
+    // _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_1", widget.cityCode));
   }
 
   @override
@@ -49,117 +49,119 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),
-        child: Column(
-          crossAxisAlignment : CrossAxisAlignment.start,
-          children: [
-            Text(
-              'vegetables_fruits'.tr(),
-              style: GoogleFonts.mavenPro(
-                  color: AppColor.black,fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            16.hS,
-            SearchTextField(
-                hint: "search_product_by_name".tr(),
-                onChanged: (val){}
-            ),
-            16.hS,
-            BlocConsumer<SliderBloc, SliderState>(
-              listener: (context, state) {
-                if (state is SliderFailureState) {
-                  appSnackBar(context, AppColor.brightRed, state.message);
-                }
-              },
-              builder: (context, state) {
-                if (state is SliderLoadingState) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 14.0),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[400]!,
-                          highlightColor: Colors.grey[50]!,
-                          child: Container(
-                            height: 186,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(13),
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                } else if (state is SliderSuccessState) {
-                  final result = state.data.result;
-
-                  if (result == null || result.sliderImages.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'no_matching_data_found'.tr(),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    );
-                  }
-
-                  // Convert List<HomeSliderImage> → List<String>
-                  final bannerUrls = result.sliderImages.map((e) => e.imagePath).toList();
-                  return VegetableBannerCarouselSection(bannerUrls: bannerUrls);
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            22.hS,
-            BlocConsumer<CategoryBloc, CategoryState>(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment : CrossAxisAlignment.start,
+            children: [
+              Text(
+                'vegetables_fruits'.tr(),
+                style: GoogleFonts.mavenPro(
+                    color: AppColor.black,fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              16.hS,
+              SearchTextField(
+                  hint: "search_product_by_name".tr(),
+                  onChanged: (val){}
+              ),
+              16.hS,
+              BlocConsumer<SliderBloc, SliderState>(
                 listener: (context, state) {
-                  if (state is CategoryFailureState) {
+                  if (state is SliderFailureState) {
                     appSnackBar(context, AppColor.brightRed, state.message);
                   }
                 },
                 builder: (context, state) {
-                  if (state is CategoryLoadingState) {
-                    return SizedBox(
-                      height: 120.h,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        // padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        itemCount: 6, // number of shimmer placeholders
-                        itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
-                        separatorBuilder: (_, __) => SizedBox(width: 8.w), // same spacing as your listview
-                      ),
-                    );
-                  } else if (state is CategorySuccessState) {
-                    final vegetableCategoryList = state.data;
-
-                    if (vegetableCategoryList.result.categories.isEmpty) {
-                      return Container(
-                        height: 30,
-                        child: Center(
-                          child: Text(
-                            'no_matching_data_found'.tr(),
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                              color: Colors.grey,
-                              fontStyle: FontStyle.italic,
+                  if (state is SliderLoadingState) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[400]!,
+                            highlightColor: Colors.grey[50]!,
+                            child: Container(
+                              height: 186,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(13),
+                                color: Colors.white,
+                              ),
                             ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else if (state is SliderSuccessState) {
+                    final result = state.data.result;
+          
+                    if (result == null || result.sliderImages.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'no_matching_data_found'.tr(),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       );
                     }
-
-                    return VegetableCategoryListWidget(categoryResponse: vegetableCategoryList);
-
+          
+                    // Convert List<HomeSliderImage> → List<String>
+                    final bannerUrls = result.sliderImages.map((e) => e.imagePath).toList();
+                    return VegetableBannerCarouselSection(bannerUrls: bannerUrls);
                   }
                   return const SizedBox.shrink();
-                }
-            ),
-            CategoryProductCardWidget()
-          ],
+                },
+              ),
+              22.hS,
+              BlocConsumer<CategoryBloc, CategoryState>(
+                  listener: (context, state) {
+                    if (state is CategoryFailureState) {
+                      appSnackBar(context, AppColor.brightRed, state.message);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is CategoryLoadingState) {
+                      return SizedBox(
+                        height: 120.h,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          // padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          itemCount: 6, // number of shimmer placeholders
+                          itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
+                          separatorBuilder: (_, __) => SizedBox(width: 8.w), // same spacing as your listview
+                        ),
+                      );
+                    } else if (state is CategorySuccessState) {
+                      final vegetableCategoryList = state.data;
+          
+                      if (vegetableCategoryList.result.categories.isEmpty) {
+                        return Container(
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              'no_matching_data_found'.tr(),
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+          
+                      return VegetableCategoryListWidget(categoryResponse: vegetableCategoryList, cityCode: widget.cityCode,);
+          
+                    }
+                    return const SizedBox.shrink();
+                  }
+              ),
+              // CategoryProductCardWidget(product: null,)
+            ],
+          ),
         ),
       ),
     );

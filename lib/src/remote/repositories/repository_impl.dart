@@ -14,11 +14,13 @@ import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profi
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/category_by_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
@@ -52,6 +54,9 @@ abstract class Repository {
 
   /// Category And Product
   Future<Either<Failure, CategoryAndProductResponse>> category_and_product(CategoryAndProductParams params);
+
+  /// Product By Category
+  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(ProductByCategoryParams params);
 
   /// Edit Profile
   Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
@@ -331,6 +336,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.categoryAndProduct(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(ProductByCategoryParams params) {
+    return _networkInfo.check<ProductByCategoryResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.productByCategory(params);
 
           if (respData.status == "200") {
             return Right(respData);

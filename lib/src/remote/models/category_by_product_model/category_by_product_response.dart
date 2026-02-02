@@ -1,24 +1,22 @@
-import 'dart:convert';
-
-class CategoryAndProductResponse {
+class ProductByCategoryResponse {
   final String status;
   final String? message;
   final int totalRecords;
-  final Result result;
+  final ProductResult result;
 
-  CategoryAndProductResponse({
+  ProductByCategoryResponse({
     required this.status,
     this.message,
     required this.totalRecords,
     required this.result,
   });
 
-  factory CategoryAndProductResponse.fromJson(Map<String, dynamic> json) {
-    return CategoryAndProductResponse(
+  factory ProductByCategoryResponse.fromJson(Map<String, dynamic> json) {
+    return ProductByCategoryResponse(
       status: json['status'] ?? '',
       message: json["message"],
       totalRecords: json['totalRecords'] ?? 0,
-      result: Result.fromJson(json['result']),
+      result: ProductResult.fromJson(json['result']),
     );
   }
 
@@ -30,75 +28,14 @@ class CategoryAndProductResponse {
   };
 }
 
-class Result {
-  final List<Category> categories;
-
-  Result({required this.categories});
-
-  factory Result.fromJson(Map<String, dynamic> json) {
-    var list = json['categories'] as List? ?? [];
-    return Result(
-      categories: list.map((e) => Category.fromJson(e)).toList(),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'categories': categories.map((e) => e.toJson()).toList(),
-  };
-}
-
-class Category {
-  final String id;
-  final String code;
-  final String categoryName;
-  final String categorySName;
-  final String categoryImage;
-  final String isActive;
-  final ProductList? productList;
-
-  Category({
-    required this.id,
-    required this.code,
-    required this.categoryName,
-    required this.categorySName,
-    required this.categoryImage,
-    required this.isActive,
-    this.productList,
-  });
-
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      id: json['id'] ?? '',
-      code: json['code'] ?? '',
-      categoryName: json['categoryName'] ?? '',
-      categorySName: json['categorySName'] ?? '',
-      categoryImage: json['categoryImage'] ?? '',
-      isActive: json['isActive'] ?? '',
-      productList: json['productList'] != null
-          ? ProductList.fromJson(json['productList'])
-          : null,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'code': code,
-    'categoryName': categoryName,
-    'categorySName': categorySName,
-    'categoryImage': categoryImage,
-    'isActive': isActive,
-    'productList': productList?.toJson(),
-  };
-}
-
-class ProductList {
+class ProductResult {
   final List<Product> products;
 
-  ProductList({required this.products});
+  ProductResult({required this.products});
 
-  factory ProductList.fromJson(Map<String, dynamic> json) {
+  factory ProductResult.fromJson(Map<String, dynamic> json) {
     var list = json['products'] as List? ?? [];
-    return ProductList(
+    return ProductResult(
       products: list.map((e) => Product.fromJson(e)).toList(),
     );
   }
@@ -111,8 +48,30 @@ class ProductList {
 class Product {
   final String id;
   final String code;
+  final String hsnCode;
+  final String taxPercent;
   final String productName;
+  final String productDescription;
+  final String minimumSellingQuantity;
+  final String productUom;
+  final String productRegularPrice;
+  final String productSellingPrice;
+  final String productStatus;
+  final String cityCode;
   final String regularPrice;
+  final String sellingUnit;
+  final String quantity;
+  final String isActive;
+  final String tagCode;
+  final String tagTitle;
+  final String tagColor;
+  final String variantsCode;
+  final String isMainVariant;
+  final String subCategoryId;
+  final bool isInCart;
+  final int cartQuantity;
+  final String cartCode;
+  final bool isInWishlist;
   final String sellingPrice;
   final List<String> images;
   final List<RateVariant> rateVariants;
@@ -120,8 +79,30 @@ class Product {
   Product({
     required this.id,
     required this.code,
+    required this.hsnCode,
+    required this.taxPercent,
     required this.productName,
+    required this.productDescription,
+    required this.minimumSellingQuantity,
+    required this.productUom,
+    required this.productRegularPrice,
+    required this.productSellingPrice,
+    required this.productStatus,
+    required this.cityCode,
     required this.regularPrice,
+    required this.sellingUnit,
+    required this.quantity,
+    required this.isActive,
+    required this.tagCode,
+    required this.tagTitle,
+    required this.tagColor,
+    required this.variantsCode,
+    required this.isMainVariant,
+    required this.subCategoryId,
+    required this.isInCart,
+    required this.cartQuantity,
+    required this.cartCode,
+    required this.isInWishlist,
     required this.sellingPrice,
     required this.images,
     required this.rateVariants,
@@ -133,8 +114,30 @@ class Product {
     return Product(
       id: json['id'] ?? '',
       code: json['code'] ?? '',
+      hsnCode: json['hsnCode'] ?? '',
+      taxPercent: json['taxPercent'] ?? '',
       productName: json['productName'] ?? '',
+      productDescription: json['productDescription'] ?? '',
+      minimumSellingQuantity: json['minimumSellingQuantity'] ?? '',
+      productUom: json['productUom'] ?? '',
+      productRegularPrice: json['productRegularPrice'] ?? '',
+      productSellingPrice: json['productSellingPrice'] ?? '',
+      productStatus: json['productStatus'] ?? '',
+      cityCode: json['cityCode'] ?? '',
       regularPrice: json['regularPrice'] ?? '',
+      sellingUnit: json['sellingUnit'] ?? '',
+      quantity: json['quantity'] ?? '',
+      isActive: json['isActive'] ?? '',
+      tagCode: json['tagCode'] ?? '',
+      tagTitle: json['tagTitle'] ?? '',
+      tagColor: json['tagColor'] ?? '',
+      variantsCode: json['variantsCode'] ?? '',
+      isMainVariant: json['isMainVariant'] ?? '',
+      subCategoryId: json['subCategoryId'] ?? '',
+      isInCart: json['isInCart'] ?? false,
+      cartQuantity: json['cartQuantity'] ?? 0,
+      cartCode: json['cartCode'] ?? '',
+      isInWishlist: json['isInWishlist'] ?? false,
       sellingPrice: json['sellingPrice'] ?? '',
       images: imgList.map((e) => e.toString()).toList(),
       rateVariants: variantList.map((e) => RateVariant.fromJson(e)).toList(),
@@ -144,8 +147,30 @@ class Product {
   Map<String, dynamic> toJson() => {
     'id': id,
     'code': code,
+    'hsnCode': hsnCode,
+    'taxPercent': taxPercent,
     'productName': productName,
+    'productDescription': productDescription,
+    'minimumSellingQuantity': minimumSellingQuantity,
+    'productUom': productUom,
+    'productRegularPrice': productRegularPrice,
+    'productSellingPrice': productSellingPrice,
+    'productStatus': productStatus,
+    'cityCode': cityCode,
     'regularPrice': regularPrice,
+    'sellingUnit': sellingUnit,
+    'quantity': quantity,
+    'isActive': isActive,
+    'tagCode': tagCode,
+    'tagTitle': tagTitle,
+    'tagColor': tagColor,
+    'variantsCode': variantsCode,
+    'isMainVariant': isMainVariant,
+    'subCategoryId': subCategoryId,
+    'isInCart': isInCart,
+    'cartQuantity': cartQuantity,
+    'cartCode': cartCode,
+    'isInWishlist': isInWishlist,
     'sellingPrice': sellingPrice,
     'images': images,
     'rate_variants': rateVariants.map((e) => e.toJson()).toList(),
@@ -158,9 +183,9 @@ class RateVariant {
   final String sellingUnit;
   final String quantity;
   final String productStatus;
-  final int sellingPrice;
-  final int regularPrice;
-  final int productDiscount;
+  final String sellingPrice;
+  final String regularPrice;
+  final String productDiscount;
   final String isMainVariant;
   final bool isInCart;
   final int cartQuantity;
@@ -213,5 +238,3 @@ class RateVariant {
     'cartCode': cartCode,
   };
 }
-
-

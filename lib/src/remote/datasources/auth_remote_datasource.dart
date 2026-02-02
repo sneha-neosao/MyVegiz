@@ -5,10 +5,12 @@ import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profi
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/category_by_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
@@ -45,6 +47,9 @@ sealed class RemoteDataSource {
 
   /// Category And Product
   Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params);
+
+  /// Product By Category
+  Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params);
 
   /// Edit Profile
   Future<CommonResponse> editProfile(EditProfileParams params);
@@ -342,6 +347,43 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = CategoryAndProductResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params) async {
+    try {
+
+      var data = {
+        "offset": params.offset,
+        "mainCategoryCode": params.mainCategoryCode,
+        "cityCode": params.cityCode,
+        "categorySName": params.categorySName
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.productByCategory,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = ProductByCategoryResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

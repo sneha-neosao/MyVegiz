@@ -109,6 +109,22 @@ class AppRouteConf {
         },
       ),
 
+      GoRoute(
+        path: AppRoute.vegetableProductListScreen.path,
+        name: AppRoute.vegetableProductListScreen.name,
+        pageBuilder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final cityCode = extras['cityCode'].toString();
+          final categorySName = extras['categorySName'] ?? '';
+          return _fadePage(
+            VegetablesProductList(
+              cityCode: cityCode,
+              categorySName: categorySName,
+            ),
+          );
+        },
+      ),
+
     ],
   );
 }

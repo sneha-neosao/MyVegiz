@@ -19,3 +19,4 @@ export '../../features/vegetablesAndGrocery/bloc/category_bloc/category_bloc.dar
 export '../../features/vegetablesAndGrocery/bloc/category_and_product_bloc/category_and_product_bloc.dart';
 export '../../features/myAccount/bloc/edit_profile_bloc/edit_profile_bloc.dart';
 export '../../features/myAccount/bloc/edit_profile_form_bloc/edit_profile_form_bloc.dart';
+export '../../features/vegetablesAndGrocery/bloc/product_by_category_bloc/product_by_category_bloc.dart';

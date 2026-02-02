@@ -9,17 +9,17 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/themes/app_color.dart';
 
-class VegetableCategoryListWidget extends StatefulWidget {
+class GroceryCategoryListWidget extends StatefulWidget {
   final CategoryResponse categoryResponse;
-  final String cityCode;
+  // final String cityCode;
 
-  const VegetableCategoryListWidget({super.key, required this.categoryResponse, required this.cityCode});
+  const GroceryCategoryListWidget({super.key, required this.categoryResponse, /*required this.cityCode*/});
 
   @override
-  State<VegetableCategoryListWidget> createState() => _VegetableCategoryListWidgetState();
+  State<GroceryCategoryListWidget> createState() => _GroceryCategoryListWidgetState();
 }
 
-class _VegetableCategoryListWidgetState extends State<VegetableCategoryListWidget> {
+class _GroceryCategoryListWidgetState extends State<GroceryCategoryListWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -34,13 +34,12 @@ class _VegetableCategoryListWidgetState extends State<VegetableCategoryListWidge
           return GestureDetector(
             onTap: () {
 
-              context.pushNamed(
-                AppRoute.vegetableProductListScreen.name,
-                extra: {
-                  'cityCode': widget.cityCode,
-                  'categorySName': widget.categoryResponse.result.categories[i].categorySName
-                },
-              );
+              // context.pushNamed(
+              //   AppRoute.vegetableProductListScreen.name,
+              //   extra: {
+              //     'cityCode': widget.cityCode
+              //   },
+              // );
 
             },
             child: Column(

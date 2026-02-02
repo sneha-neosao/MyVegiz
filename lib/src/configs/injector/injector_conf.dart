@@ -9,6 +9,7 @@ import 'package:myvegiz_flutter/src/features/common/domain/usecase/city_list_use
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'injector.dart';
 
@@ -115,6 +116,21 @@ void configureDepedencies() {
   getIt.registerFactory(
         () => EditProfileFormBloc(),
   );
+
+  getIt.registerFactory(
+        () => ProductByCategoryBloc(getIt<ProductByCategoryUseCase>()),
+  );
+  getIt.registerFactory(
+        () => ProductByCategoryUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+
+
+
+
+
+
+
 
 
 

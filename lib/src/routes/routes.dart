@@ -15,3 +15,4 @@ export '../features/vegetablesAndGrocery/presentation/pages/vegetables_and_groce
 export '../features/register/presentation/pages/register_screen.dart';
 export '../features/location/presentation/pages/select_location_screen.dart';
 export '../features/location/presentation/pages/confirm_location_screen.dart';
+export '../features/vegetablesAndGrocery/presentation/pages/vegetables_product_list.dart';

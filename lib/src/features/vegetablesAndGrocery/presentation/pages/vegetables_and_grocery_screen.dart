@@ -1,22 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/grocery_tab_widget.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_category_list_widgte.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_slider_selection_widget.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_tab_widget.dart';
-import 'package:myvegiz_flutter/src/features/widgets/vegetable_category_shimmer_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../../../../configs/injector/injector_conf.dart';
-import '../../../widgets/app_snackbar_widget.dart';
 
 class VegetablesAndGroceryScreen extends StatefulWidget {
   final String cityCode;

@@ -23,6 +23,8 @@ class ApiUrl {
 
   static const registration = "Api/registration";
 
+  static const editProfile = "Api/updateProfile";
+
   static const accountDelete = "Api/deleteUser";
 
   // static const mainCategoryList = "Api/getMainCategoryList";
@@ -37,6 +39,6 @@ class ApiUrl {
 
   static const addProductToWishList = "Api/addToWishlist";
 
-  static const editProfile = "Api/updateProfile";
+  static const wishList = "Api/getWishList";
 
 }

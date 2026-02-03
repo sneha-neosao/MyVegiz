@@ -11,6 +11,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/wish_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/add_to_wishlist_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
@@ -27,6 +28,7 @@ import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
 import '../models/category_model/category_response.dart';
 
 /// Abstract Repository interface defining all data operations for the app
@@ -38,14 +40,15 @@ abstract class Repository {
   Future<Either<Failure, OtpVerifyResponse>> verify_otp(VerifyOtpParams params);
   Future<Either<Failure, RegistrationResponse>> registration(RegistrationParams params);
 
+  /// User
+  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
+  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
+
   /// Home Slider
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params);
 
   /// City List
   Future<Either<Failure, CityListResponse>> city_list(NoParams params);
-
-  /// Account Delete
-  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
 
   /// Slider
   Future<Either<Failure, SliderResponse>> slider(SliderParams params);
@@ -59,11 +62,10 @@ abstract class Repository {
   /// Product By Category
   Future<Either<Failure, ProductByCategoryResponse>> product_by_category(ProductByCategoryParams params);
 
-  /// Add To Wish List
+  /// Wish List
   Future<Either<Failure, CommonResponse>> add_to_wish_list(AddToWishListParams params);
+  Future<Either<Failure, WishlistResponse>> wish_list(WishListParams params);
 
-  /// Edit Profile
-  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -175,6 +177,70 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
+  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.editProfile(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.accountDelete(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params) {
     return _networkInfo.check<HomeSliderResponse>(
       connected: () async {
@@ -212,38 +278,6 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.cityList();
-
-          if (respData.status == "200") {
-            return Right(respData);
-          } else {
-            return Left(ApiFailure(respData.message!));
-          }
-        } on ServerException {
-          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
-        } catch (e) {
-          if (e is ApiException) {
-            return Left(ApiFailure(e.message)); // rethrow as-is
-          }
-          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
-        }
-      },
-      notConnected: () async {
-        try {
-          return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
-        } on CacheException {
-          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
-        }
-      },
-    );
-  }
-
-  @override
-  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params) {
-    return _networkInfo.check<CommonResponse>(
-      connected: () async {
-        try {
-          final respData = await _remoteDataSource.accountDelete(params);
 
           if (respData.status == "200") {
             return Right(respData);
@@ -431,11 +465,11 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params) {
-    return _networkInfo.check<CommonResponse>(
+  Future<Either<Failure, WishlistResponse>> wish_list(WishListParams params) {
+    return _networkInfo.check<WishlistResponse>(
       connected: () async {
         try {
-          final respData = await _remoteDataSource.editProfile(params);
+          final respData = await _remoteDataSource.wishList(params);
 
           if (respData.status == "200") {
             return Right(respData);

@@ -6,13 +6,21 @@ import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 class MyWishlistCustomWidget extends StatelessWidget {
-  const MyWishlistCustomWidget({super.key});
+  final String cityCode;
+  final String clientCode;
+
+  const MyWishlistCustomWidget({super.key, required this.cityCode, required this.clientCode});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        context.pushNamed(AppRoute.myWishlistScreen.name);
+        context.pushNamed(AppRoute.myWishlistScreen.name,
+          extra: {
+          'cityCode': cityCode,
+          'clientcode': clientCode
+          }
+        );
       },
       child: Container(
           width: double.infinity,

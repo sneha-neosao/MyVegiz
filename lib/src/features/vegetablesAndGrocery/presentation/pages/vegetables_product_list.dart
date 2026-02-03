@@ -84,10 +84,10 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                               const SizedBox(height: 28, width: 28),
                             ],
                           ),
-                          20.hS,
                         ],
                       ),
                     ),
+                    16.hS,
                     BlocConsumer<ProductByCategoryBloc, ProductByCategoryState>(
                       listener: (context, state) {
                         if (state is ProductByCategoryFailureState) {

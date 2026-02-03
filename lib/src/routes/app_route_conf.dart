@@ -74,7 +74,17 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.myWishlistScreen.path,
         name: AppRoute.myWishlistScreen.name,
-        pageBuilder: (context, state) => _fadePage(const MyWishListScreen()),
+        pageBuilder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final cityCode = extras['cityCode'].toString();
+          final clientcode = extras['clientcode'] ?? '';
+          return _fadePage(
+            MyWishListScreen(
+              clientCode: clientcode,
+              cityCode: cityCode,
+            ),
+          );
+        },
       ),
 
       GoRoute(

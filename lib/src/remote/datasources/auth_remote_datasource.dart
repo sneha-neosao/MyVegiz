@@ -2,6 +2,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/wish_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/add_to_wishlist_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
@@ -18,6 +19,7 @@ import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -31,14 +33,15 @@ sealed class RemoteDataSource {
   Future<OtpVerifyResponse> verifyOtp(VerifyOtpParams params);
   Future<RegistrationResponse> registration(RegistrationParams params);
 
+  /// User
+  Future<CommonResponse> editProfile(EditProfileParams params);
+  Future<CommonResponse> accountDelete(AccountDeleteParams params);
+
   /// Home Slider
   Future<HomeSliderResponse> homeSlider();
 
   /// City List
   Future<CityListResponse> cityList();
-
-  /// Account Delete
-  Future<CommonResponse> accountDelete(AccountDeleteParams params);
 
   /// Slider
   Future<SliderResponse> slider(SliderParams params);
@@ -52,11 +55,9 @@ sealed class RemoteDataSource {
   /// Product By Category
   Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params);
 
-  /// Product By Category
+  /// Wish List
   Future<CommonResponse> addToWishList(AddToWishListParams params);
-
-  /// Edit Profile
-  Future<CommonResponse> editProfile(EditProfileParams params);
+  Future<WishlistResponse> wishList(WishListParams params);
 
   Future<void> logout();
 }
@@ -170,6 +171,77 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
+  Future<CommonResponse> editProfile(EditProfileParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+        "name": params.name,
+        "emailId": params.emailId,
+        "cityCode": params.cityCode
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.editProfile,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CommonResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CommonResponse> accountDelete(AccountDeleteParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.accountDelete,
+          data: data
+      );
+
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
+
+      final user = CommonResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
   Future<HomeSliderResponse> homeSlider() async {
     try {
 
@@ -211,40 +283,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       // logger.d(response);
 
       final user = CityListResponse.fromJson(response);
-      return user;
-    } on EmptyException {
-      throw AuthException();
-    } catch (e) {
-      logger.e(e);
-      if (e.toString() == noElement) {
-        throw AuthException();
-      }
-      if (e is ApiException) {
-        throw e; // rethrow as-is
-      }
-      throw ServerException();
-      // throw here i want to pass same exception which is send by catch();
-    }
-  }
-
-  @override
-  Future<CommonResponse> accountDelete(AccountDeleteParams params) async {
-    try {
-
-      var data = {
-        "clientCode": params.clientCode,
-      };
-
-      final response = await _helper.execute(
-        method: Method.post,
-        url: ApiUrl.accountDelete,
-        data: data
-      );
-
-      // logger.d('📨 Raw API response:');
-      // logger.d(response);
-
-      final user = CommonResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();
@@ -440,26 +478,25 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<CommonResponse> editProfile(EditProfileParams params) async {
+  Future<WishlistResponse> wishList(WishListParams params) async {
     try {
 
       var data = {
         "clientCode": params.clientCode,
-        "name": params.name,
-        "emailId": params.emailId,
+        "mainCategoryCode": params.mainCategoryCode,
         "cityCode": params.cityCode
       };
 
       final response = await _helper.execute(
           method: Method.post,
-          url: ApiUrl.editProfile,
+          url: ApiUrl.wishList,
           data: data
       );
 
       logger.d('📨 Raw API response:');
       logger.d(response);
 
-      final user = CommonResponse.fromJson(response);
+      final user = WishlistResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

@@ -27,12 +27,25 @@ class MyAccountScreen extends StatefulWidget {
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
   late SignInBloc _signInBloc;
+  late String clienCode;
+  late String citCode;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadClientCode();
     _signInBloc = getIt<SignInBloc>()..add(AuthCheckLoginStatusEvent());
+  }
+
+  void _loadClientCode() async {
+    final clientCode = await SessionManager.getClientCode();
+    final cityCode = await SessionManager.getCityCode();
+
+    setState(() {
+      clienCode = clientCode!;
+      citCode = cityCode!;
+    });
   }
 
   @override
@@ -99,7 +112,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             ),
                           ),
                           10.hS,
-                          MyWishlistCustomWidget(),
+                          MyWishlistCustomWidget(cityCode: citCode,clientCode: clienCode,),
                           20.hS,
                           Padding(
                             padding: EdgeInsets.only(left: 8.0),

@@ -6,6 +6,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_use
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
 import 'package:myvegiz_flutter/src/features/common/domain/usecase/city_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/wish_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/add_to_wishlist_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
@@ -130,6 +131,13 @@ void configureDepedencies() {
   );
   getIt.registerFactory(
         () => AddToWishListUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+  getIt.registerFactory(
+        () => WishListBloc(getIt<WishListUseCase>()),
+  );
+  getIt.registerFactory(
+        () => WishListUseCase(getIt<AuthRepositoryImpl>()),
   );
 
 

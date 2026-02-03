@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
+import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/product_by_category_list_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
@@ -15,7 +16,7 @@ class VegetablesProductList extends StatefulWidget {
   final String cityCode;
   final String categorySName;
 
-  const VegetablesProductList({super.key, required this.cityCode, required this.categorySName});
+  const VegetablesProductList({super.key, required this.cityCode, required this.categorySName,});
 
   @override
   State<VegetablesProductList> createState() => _VegetablesProductListState();
@@ -23,12 +24,21 @@ class VegetablesProductList extends StatefulWidget {
 
 class _VegetablesProductListState extends State<VegetablesProductList> {
   late ProductByCategoryBloc _productByCategoryBloc;
+  late String clienCode;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadClientCode();
     _productByCategoryBloc = getIt<ProductByCategoryBloc>()..add(ProductByCategoryGetEvent("0", "MCAT_1", widget.cityCode, widget.categorySName));
+  }
+
+  void _loadClientCode() async {
+    final clientCode = await SessionManager.getClientCode();
+    setState(() {
+      clienCode = clientCode!;
+    });
   }
 
   @override
@@ -51,7 +61,9 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  context.goNamed(AppRoute.homeContentScreen.name);
+                                  context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name,
+                                    extra: widget.cityCode
+                                  );
                                 },
                                 child: Image.asset(
                                   "assets/icons/back_arrow.png",
@@ -91,7 +103,7 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                           );
                         } else if (state is ProductByCategorySuccessState) {
                           final products = state.data.result.products;
-                          return ProductListWidget(products: products);
+                          return ProductListWidget(products: products,clientCode: clienCode,);
                         } else {
                           return const Center(
                             child: Text("No products found"),

@@ -98,7 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 BlocBuilder<CityListBloc, CityListState>(
                   builder: (context, state) {
                     if(state is CityListLoadingState){
-                      return Center(child: AppLoadingWidget(),);
+                      return Center(child: AppLoadingWidget(strokeWidth: 6,),);
                     }else if (state is CityListSuccessState) {
                       final cities = state.data.result!.cities;
 

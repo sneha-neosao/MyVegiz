@@ -35,6 +35,8 @@ class ApiUrl {
 
   static const productCategoryList = "Api/categoryAndProduct";
 
+  static const addProductToWishList = "Api/addToWishlist";
+
   static const editProfile = "Api/updateProfile";
 
 }

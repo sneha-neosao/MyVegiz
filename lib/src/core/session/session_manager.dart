@@ -33,6 +33,26 @@ class SessionManager {
     return UserModel.fromJson(json.decode(prefs.getString("userInfo")!));
   }
 
+  static Future<void> saveClientCode(String clientCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("clientCode", clientCode);
+  }
+
+  static Future<String?> getClientCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("clientCode");
+  }
+
+  static Future<void> saveCityCode(String cityCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("cityCode", cityCode);
+  }
+
+  static Future<String?> getCityCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("cityCode");
+  }
+
   static saveFirebaseToken(String? firebasetoken) async {
     final prefs =await SharedPreferences.getInstance();
     prefs.setString("firebasetoken", firebasetoken!);

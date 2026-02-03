@@ -5,8 +5,9 @@ import '../../../remote/models/category_by_product_model/category_by_product_res
 
 class ProductListWidget extends StatelessWidget {
   final List<Product> products;
+  final String clientCode;
 
-  const ProductListWidget({super.key, required this.products});
+  const ProductListWidget({super.key, required this.products, required this.clientCode});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class ProductListWidget extends StatelessWidget {
       itemCount: products.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
-        return CategoryProductCardWidget(product: products[index]);
+        return CategoryProductCardWidget(product: products[index],clientCode: clientCode,);
       },
     );
   }

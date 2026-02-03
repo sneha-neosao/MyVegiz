@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     builder: (context, state) {
                       if (state is GetOtpLoadingState) {
-                        return Center(child: AppLoadingWidget());
+                        return Center(child: AppLoadingWidget(strokeWidth: 6,));
                       }
 
                       return Padding(

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector_conf.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
+import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/login/widgets/otp_input_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_button_widget.dart';
@@ -116,20 +117,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               OtpInputWidget(otpController: otpController,),
               22.hS,
               BlocConsumer<SignInBloc, SignInState>(
-                listener: (_, state) {
+                listener: (_, state) async {
                   if (state is VerifyOtpFailureState) {
                     appSnackBar(context, AppColor.brightRed, state.message);
                     if(state.message=="OTP Verified but User does not exists"){
                       context.pushNamed(AppRoute.registerScreen.name);
                     }
                   } else if (state is VerifyOtpSuccessState) {
+
+                    final userData = state.data.result!.userData!;
+
+                    await SessionManager.saveClientCode(userData.code);
+                    await SessionManager.saveCityCode(userData.cityCode);
+
                     appSnackBar(context, AppColor.green, state.data.message);
                     context.pushNamed(AppRoute.homeContentScreen.name);
                   }
                 },
                 builder: (context, state) {
                   if (state is VerifyOtpLoadingState) {
-                    return Center(child: AppLoadingWidget());
+                    return Center(child: AppLoadingWidget(strokeWidth: 6,));
                   }
 
                   return AppButtonWidget(

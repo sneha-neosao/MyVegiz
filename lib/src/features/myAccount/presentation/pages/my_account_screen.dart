@@ -48,7 +48,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             child: BlocConsumer<SignInBloc,SignInState>(
               listener: (context, state) async {
                 if (state is AccountDeleteLoadingState || state is AuthLogOutLoadingState) {
-                  showDialog(context: context, builder: (_) => const AppLoadingWidget());
+                  showDialog(context: context, builder: (_) => const AppLoadingWidget(strokeWidth: 6,));
                 } else if (state is AccountDeleteSuccessState) {
                   if (Navigator.canPop(context)) context.pop();
                   await SessionManager.clear();

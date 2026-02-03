@@ -20,3 +20,4 @@ export '../../features/vegetablesAndGrocery/bloc/category_and_product_bloc/categ
 export '../../features/myAccount/bloc/edit_profile_bloc/edit_profile_bloc.dart';
 export '../../features/myAccount/bloc/edit_profile_form_bloc/edit_profile_form_bloc.dart';
 export '../../features/vegetablesAndGrocery/bloc/product_by_category_bloc/product_by_category_bloc.dart';
+export '../../features/vegetablesAndGrocery/bloc/add_to_wishlist_bloc/add_to_wishlist_bloc.dart';

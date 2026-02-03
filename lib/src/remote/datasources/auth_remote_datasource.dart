@@ -3,6 +3,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_use
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/add_to_wishlist_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_and_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
@@ -50,6 +51,9 @@ sealed class RemoteDataSource {
 
   /// Product By Category
   Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params);
+
+  /// Product By Category
+  Future<CommonResponse> addToWishList(AddToWishListParams params);
 
   /// Edit Profile
   Future<CommonResponse> editProfile(EditProfileParams params);
@@ -384,6 +388,41 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = ProductByCategoryResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CommonResponse> addToWishList(AddToWishListParams params) async {
+    try {
+
+      var data = {
+        "productCode": params.productCode,
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.addProductToWishList,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CommonResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

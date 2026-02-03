@@ -27,6 +27,8 @@ class ApiUrl {
 
   static const accountDelete = "Api/deleteUser";
 
+  static const profileDetails = "Api/userProfile";
+
   // static const mainCategoryList = "Api/getMainCategoryList";
 
   static const sliderImages = "Api/sliderImages";

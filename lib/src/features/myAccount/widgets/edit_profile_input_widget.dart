@@ -5,12 +5,14 @@ import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.d
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/bloc/edit_profile_form_bloc/edit_profile_form_bloc.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/widgets/edit_profile_text_field_widget.dart';
+import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 
 import '../../../configs/injector/injector.dart';
 
 class EditProfileInputWidget extends StatefulWidget {
+  final UserProfile? userData;
 
-  const EditProfileInputWidget({super.key});
+  const EditProfileInputWidget({super.key, required this.userData});
 
   @override
   State<EditProfileInputWidget> createState() => _EditProfileInputWidgetState();
@@ -50,7 +52,7 @@ class _EditProfileInputWidgetState extends State<EditProfileInputWidget> {
         EditProfileTextField<EditProfileFormBloc>(
             label: "name".tr(),
             hint: "enter_name".tr(),
-            initialValue: name,
+            initialValue: widget.userData!.name,
             onChanged: (val){
               print("name entered: ${val}");
               formBloc.add(EditProfileFormNameChangedEvent(val));
@@ -60,7 +62,7 @@ class _EditProfileInputWidgetState extends State<EditProfileInputWidget> {
         EditProfileTextField<EditProfileFormBloc>(
             label: "email".tr(),
             hint: "enter_email".tr(),
-            initialValue: email,
+            initialValue: widget.userData!.emailId,
             onChanged: (val){
               print("name entered: ${val}");
               formBloc.add(EditProfileFormEmailChangedEvent(val));

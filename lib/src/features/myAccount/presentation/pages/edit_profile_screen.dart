@@ -10,13 +10,16 @@ import 'package:myvegiz_flutter/src/features/myAccount/widgets/edit_profile_drop
 import 'package:myvegiz_flutter/src/features/myAccount/widgets/edit_profile_input_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_button_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
+import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 import '../../../../configs/injector/injector.dart';
 import '../../../../configs/injector/injector_conf.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final UserProfile? userData;
+
+  const EditProfileScreen({super.key, required this.userData});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -94,7 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(height: 28,width: 28,)
                   ],
                 ),
-                EditProfileInputWidget(),
+                EditProfileInputWidget(userData: widget.userData,),
                 BlocBuilder<CityListBloc, CityListState>(
                   builder: (context, state) {
                     if(state is CityListLoadingState){
@@ -109,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         // ✅ Convert CityModel → String
                         items: cities.map((e) => e.code ?? "").toList(),
 
-                        value: selectedCityCode,
+                        value: widget.userData!.cityCode ?? selectedCityCode,
 
                         // ✅ Convert code → city name
                         itemLabel: (code) {

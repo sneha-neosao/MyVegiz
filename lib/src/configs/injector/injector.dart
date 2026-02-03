@@ -22,3 +22,4 @@ export '../../features/myAccount/bloc/edit_profile_form_bloc/edit_profile_form_b
 export '../../features/vegetablesAndGrocery/bloc/product_by_category_bloc/product_by_category_bloc.dart';
 export '../../features/vegetablesAndGrocery/bloc/add_to_wishlist_bloc/add_to_wishlist_bloc.dart';
 export '../../features/myAccount/bloc/wishlist_bloc/wishlist_bloc.dart';
+export '../../features/myAccount/bloc/profile_details_bloc/profile_details_bloc.dart';

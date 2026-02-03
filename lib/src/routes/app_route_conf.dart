@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'app_route_path.dart';
 import 'routes.dart';
 
@@ -68,8 +69,12 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.editProfileScreen.path,
         name: AppRoute.editProfileScreen.name,
-        pageBuilder: (context, state) => _fadePage(const EditProfileScreen()),
-      ),
+        pageBuilder: (context, state) {
+          final userdata = state.extra as UserProfile;
+          return _fadePage(
+            EditProfileScreen(userData: userdata),
+          );
+        },      ),
 
       GoRoute(
         path: AppRoute.myWishlistScreen.path,

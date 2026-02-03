@@ -11,6 +11,7 @@ import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecas
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
+import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/profile_details_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/wish_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/add_to_wishlist_usecase.dart';
@@ -26,6 +27,7 @@ import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/cate
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
@@ -43,6 +45,7 @@ abstract class Repository {
   /// User
   Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
   Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
+  Future<Either<Failure, ProfileDetailsResponse>> profile_details(ProfileDetailsParams params);
 
   /// Home Slider
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params);
@@ -214,6 +217,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.accountDelete(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, ProfileDetailsResponse>> profile_details(ProfileDetailsParams params) {
+    return _networkInfo.check<ProfileDetailsResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.profileDetails(params);
 
           if (respData.status == "200") {
             return Right(respData);

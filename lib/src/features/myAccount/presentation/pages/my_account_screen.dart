@@ -27,6 +27,7 @@ class MyAccountScreen extends StatefulWidget {
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
   late SignInBloc _signInBloc;
+  late ProfileDetailsBloc _profileDetailsBloc;
   late String clienCode;
   late String citCode;
 
@@ -46,6 +47,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       clienCode = clientCode!;
       citCode = cityCode!;
     });
+    _profileDetailsBloc = getIt<ProfileDetailsBloc>()..add(ProfileDetailsGetEvent(clientCode!));
   }
 
   @override
@@ -53,6 +55,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => _signInBloc),
+        BlocProvider(create: (_) => _profileDetailsBloc),
       ],
       child: Scaffold(
         backgroundColor: AppColor.whiteShade,
@@ -86,7 +89,36 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          UserInfoCustomWidget(userData: state.userData,),
+                          BlocBuilder<ProfileDetailsBloc, ProfileDetailsState>(
+                            builder: (context, state) {
+                              if (state is ProfileDetailsLoadingState) {
+                                // show loader while API is fetching user info
+                                return Column(
+                                  children: [
+                                    12.hS,
+                                    const Center(
+                                      child: AppLoadingWidget(strokeWidth: 6),
+                                    ),
+                                    12.hS,
+                                  ],
+                                );
+                              } else if (state is ProfileDetailsSuccessState) {
+                                // show UI when data is loaded
+                                return UserInfoCustomWidget(userData: state.data.result.userProfile);
+                              } else if (state is ProfileDetailsFailureState) {
+                                // show error message if API fails
+                                return Center(
+                                  child: Text(
+                                    state.message,
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                          // UserInfoCustomWidget(userData: state.userData,),
                           20.hS,
                           Padding(
                             padding: EdgeInsets.only(left: 8.0),

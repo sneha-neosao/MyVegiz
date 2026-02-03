@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
+import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/user_model/user_model.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 class UserInfoCustomWidget extends StatelessWidget {
-  final UserModel? userData;
+  final UserProfile? userData;
 
   const UserInfoCustomWidget({super.key, required this.userData});
 
@@ -63,7 +64,9 @@ class UserInfoCustomWidget extends StatelessWidget {
                     ),
                   ),
                   onPressed: (){
-                    context.pushNamed(AppRoute.editProfileScreen.name);
+                    context.pushNamed(AppRoute.editProfileScreen.name,
+                      extra: userData
+                    );
                   },
                   child: Text(
                     "edit".tr(),

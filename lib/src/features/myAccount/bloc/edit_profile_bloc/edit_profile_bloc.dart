@@ -1,14 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
-import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/edit_profile_usecase.dart';
-import 'package:myvegiz_flutter/src/features/register/domain/usecase/registeration_usecase.dart';
-import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
-import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import '../../../../core/utils/logger.dart';
 
 part 'edit_profile_event.dart';

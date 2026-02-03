@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/home_slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
@@ -146,6 +148,20 @@ void configureDepedencies() {
   );
   getIt.registerFactory(
         () => ProfileDetailsUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+  getIt.registerFactory(
+        () => CartListBloc(getIt<CartListUseCase>()),
+  );
+  getIt.registerFactory(
+        () => CartListUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+  getIt.registerFactory(
+        () => CartCountBloc(getIt<VegetableGroceryCartCountUseCase>()),
+  );
+  getIt.registerFactory(
+        () => VegetableGroceryCartCountUseCase(getIt<AuthRepositoryImpl>()),
   );
 
 

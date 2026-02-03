@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
@@ -14,8 +13,6 @@ import 'package:myvegiz_flutter/src/features/home/widgets/restaurant_vegetable_w
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 
 import '../../../../configs/injector/injector_conf.dart';
 import '../../../../remote/models/user_model/user_model.dart';

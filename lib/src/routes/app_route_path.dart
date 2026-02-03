@@ -13,7 +13,8 @@ enum AppRoute {
   registerScreen(path: "/register_screen"),
   selectLocationScreen(path: "/select_location_screen"),
   confirmLocationScreen(path: "/confirmLocationScreen"),
-  vegetableProductListScreen(path: "/vegetableProductListScreen");
+  vegetableProductListScreen(path: "/vegetableProductListScreen"),
+  groceryProductListScreen(path: "/groceryProductListScreen");
 
   /// Enum defining all named app routes and their associated path patterns for navigation throughout the application.
 

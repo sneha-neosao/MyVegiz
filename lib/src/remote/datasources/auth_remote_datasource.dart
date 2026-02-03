@@ -1,3 +1,5 @@
+import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
@@ -12,6 +14,8 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_count_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/category_by_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
@@ -61,6 +65,10 @@ sealed class RemoteDataSource {
   /// Wish List
   Future<CommonResponse> addToWishList(AddToWishListParams params);
   Future<WishlistResponse> wishList(WishListParams params);
+
+  /// cart
+  Future<CartListResponse> cartList(CartListParams params);
+  Future<CartCountResponse> cartCount(VegetableGroceryCartCountParams params);
 
   Future<void> logout();
 }
@@ -534,6 +542,74 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       logger.d(response);
 
       final user = WishlistResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CartListResponse> cartList(CartListParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.wishList,
+          data: data
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = CartListResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
+      // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<CartCountResponse> cartCount(VegetableGroceryCartCountParams params) async {
+    try {
+
+      var data = {
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+          method: Method.post,
+          url: ApiUrl.vegetableGroceryCartCount,
+          data: data
+      );
+
+      // logger.d('📨 Raw API response:');
+      // logger.d(response);
+
+      final user = CartCountResponse.fromJson(response);
       return user;
     } on EmptyException {
       throw AuthException();

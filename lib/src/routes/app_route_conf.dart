@@ -140,6 +140,22 @@ class AppRouteConf {
         },
       ),
 
+      GoRoute(
+        path: AppRoute.groceryProductListScreen.path,
+        name: AppRoute.groceryProductListScreen.name,
+        pageBuilder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final cityCode = extras['cityCode'].toString();
+          final categorySName = extras['categorySName'] ?? '';
+          return _fadePage(
+            GroceryProductList(
+              cityCode: cityCode,
+              categorySName: categorySName,
+            ),
+          );
+        },
+      ),
+
     ],
   );
 }

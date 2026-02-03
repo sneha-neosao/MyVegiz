@@ -11,9 +11,9 @@ import '../../../core/themes/app_color.dart';
 
 class GroceryCategoryListWidget extends StatefulWidget {
   final CategoryResponse categoryResponse;
-  // final String cityCode;
+  final String cityCode;
 
-  const GroceryCategoryListWidget({super.key, required this.categoryResponse, /*required this.cityCode*/});
+  const GroceryCategoryListWidget({super.key, required this.categoryResponse, required this.cityCode});
 
   @override
   State<GroceryCategoryListWidget> createState() => _GroceryCategoryListWidgetState();
@@ -34,12 +34,13 @@ class _GroceryCategoryListWidgetState extends State<GroceryCategoryListWidget> {
           return GestureDetector(
             onTap: () {
 
-              // context.pushNamed(
-              //   AppRoute.vegetableProductListScreen.name,
-              //   extra: {
-              //     'cityCode': widget.cityCode
-              //   },
-              // );
+              context.pushNamed(
+                AppRoute.groceryProductListScreen.name,
+                extra: {
+                  'cityCode': widget.cityCode,
+                  'categorySName': widget.categoryResponse.result.categories[i].categorySName
+                },
+              );
 
             },
             child: Column(

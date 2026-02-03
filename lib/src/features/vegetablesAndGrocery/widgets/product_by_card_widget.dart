@@ -9,22 +9,22 @@ import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
 import '../../../configs/injector/injector_conf.dart';
 import '../../../remote/models/category_by_product_model/category_by_product_response.dart';
 
-class CategoryProductCardWidget extends StatefulWidget {
+class CategoryByProductCardWidget extends StatefulWidget {
   final Product product;
   final String clientCode;
 
-  const CategoryProductCardWidget({
+  const CategoryByProductCardWidget({
     super.key,
     required this.product,
     required this.clientCode,
   });
 
   @override
-  State<CategoryProductCardWidget> createState() =>
-      _CategoryProductCardWidgetState();
+  State<CategoryByProductCardWidget> createState() =>
+      _CategoryByProductCardWidgetState();
 }
 
-class _CategoryProductCardWidgetState extends State<CategoryProductCardWidget> {
+class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidget> {
   late bool _isInWishlist; // local state
 
   @override

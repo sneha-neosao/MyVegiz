@@ -10,6 +10,7 @@ import 'package:myvegiz_flutter/src/features/myAccount/widgets/edit_profile_drop
 import 'package:myvegiz_flutter/src/features/myAccount/widgets/edit_profile_input_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_button_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
+import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
@@ -36,7 +37,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
     _cityListBloc =getIt<CityListBloc>();
     _cityListBloc.add(CityListGetEvent());
-    _loadUserInfo();
   }
 
   void _editProfile(BuildContext context) {
@@ -45,24 +45,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     context.read<EditProfileBloc>().add(
       EditProfileGetEvent(
-          authForm.name.trim(),
           authForm.clientCode.trim(),
+          authForm.name.trim(),
           authForm.emailId.trim(),
           authForm.cityCode.trim()
       ),
     );
   }
 
-  Future<void> _loadUserInfo() async {
-    final user = await SessionManager.getUserSessionInfo(); // returns UserModel
-    if (user != null) {
-      // Prefill form bloc with saved values
-      setState(() {
-        clientCode = user.clientCode;
-        selectedCityCode = user.cityCode;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,12 +136,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   },
                 ),
                 24.hS,
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
-                  child: AppButtonWidget(
-                      onPressed: (){},
-                      label: "update_profile".tr()
-                  ),
+                BlocConsumer<EditProfileBloc,EditProfileState>(
+                  listener: (context, state){
+                    if(state is EditProfileFailureState){
+                      appSnackBar(context, AppColor.brightRed, state.message);
+                    }else if(state is EditProfileSuccessState){
+                      appSnackBar(context, AppColor.green, state.data.message!);
+                      context.goNamed(AppRoute.myAccountScreen.name);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is EditProfileLoadingState) {
+                      return Center(child: AppLoadingWidget(strokeWidth: 6,));
+                    }
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.0),
+                      child: AppButtonWidget(
+                          onPressed: (){
+                            _editProfile(context);
+                          },
+                          label: "update_profile".tr()
+                      ),
+                    );
+                  },
                 )
               ],
             ),

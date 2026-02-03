@@ -43,4 +43,8 @@ class ApiUrl {
 
   static const wishList = "Api/getWishList";
 
+  static const cartList = "Api/getCartList";
+
+  static const vegetableGroceryCartCount = "Api/getGroceryProductCartCount";
+
 }

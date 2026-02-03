@@ -7,6 +7,8 @@ import 'package:myvegiz_flutter/src/core/network/network_checker.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/myAccount/domain/usecase/account_delete_usecase.dart';
@@ -22,6 +24,8 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_count_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/category_by_product_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
@@ -68,6 +72,10 @@ abstract class Repository {
   /// Wish List
   Future<Either<Failure, CommonResponse>> add_to_wish_list(AddToWishListParams params);
   Future<Either<Failure, WishlistResponse>> wish_list(WishListParams params);
+
+  /// Cart
+  Future<Either<Failure, CartListResponse>> cart_list(CartListParams params);
+  Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params);
 
 }
 
@@ -530,4 +538,69 @@ class AuthRepositoryImpl implements Repository {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, CartListResponse>> cart_list(CartListParams params) {
+    return _networkInfo.check<CartListResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.cartList(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params) {
+    return _networkInfo.check<CartCountResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.cartCount(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
 }

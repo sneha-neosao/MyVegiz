@@ -22,7 +22,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   /// - **[_editProfile]:** Handles [EditProfileGetEvent] → calls [GetOtpUseCase]
 
   Future _editProfile(EditProfileGetEvent event, Emitter emit) async {
-    emit(EditProfileInitialState());
+    emit(EditProfileLoadingState());
 
     final result = await _editProfileUseCase.call(
       EditProfileParams(

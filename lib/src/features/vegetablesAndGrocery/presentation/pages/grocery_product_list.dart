@@ -12,17 +12,17 @@ import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import '../../../../configs/injector/injector_conf.dart';
 import '../../../../core/themes/app_color.dart';
 
-class VegetablesProductList extends StatefulWidget {
+class GroceryProductList extends StatefulWidget {
   final String cityCode;
   final String categorySName;
 
-  const VegetablesProductList({super.key, required this.cityCode, required this.categorySName,});
+  const GroceryProductList({super.key, required this.cityCode, required this.categorySName,});
 
   @override
-  State<VegetablesProductList> createState() => _VegetablesProductListState();
+  State<GroceryProductList> createState() => _GroceryProductListState();
 }
 
-class _VegetablesProductListState extends State<VegetablesProductList> {
+class _GroceryProductListState extends State<GroceryProductList> {
   late ProductByCategoryBloc _productByCategoryBloc;
   late String clienCode;
 
@@ -31,7 +31,7 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
     // TODO: implement initState
     super.initState();
     _loadClientCode();
-    _productByCategoryBloc = getIt<ProductByCategoryBloc>()..add(ProductByCategoryGetEvent("0", "MCAT_1", widget.cityCode, widget.categorySName));
+    _productByCategoryBloc = getIt<ProductByCategoryBloc>()..add(ProductByCategoryGetEvent("0", "MCAT_2", widget.cityCode, widget.categorySName));
   }
 
   void _loadClientCode() async {
@@ -44,9 +44,9 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => _productByCategoryBloc),
-      ],
+        providers: [
+          BlocProvider(create: (_) => _productByCategoryBloc),
+        ],
         child: Scaffold(
           backgroundColor: AppColor.whiteShade,
           body: SafeArea(
@@ -62,7 +62,7 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                               InkWell(
                                 onTap: () {
                                   context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name,
-                                    extra: widget.cityCode
+                                      extra: widget.cityCode
                                   );
                                 },
                                 child: Image.asset(

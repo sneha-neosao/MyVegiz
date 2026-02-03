@@ -23,3 +23,5 @@ export '../../features/vegetablesAndGrocery/bloc/product_by_category_bloc/produc
 export '../../features/vegetablesAndGrocery/bloc/add_to_wishlist_bloc/add_to_wishlist_bloc.dart';
 export '../../features/myAccount/bloc/wishlist_bloc/wishlist_bloc.dart';
 export '../../features/myAccount/bloc/profile_details_bloc/profile_details_bloc.dart';
+export '../../features/cart/bloc/cartlist_bloc/cartlist_bloc.dart';
+export '../../features/home/bloc/vegetable_grocery_cart_count_bloc/vegetable_grocery_cart_count_bloc.dart';

@@ -151,7 +151,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                       );
                     }
 
-                    return GroceryCategoryListWidget(categoryResponse: vegetableCategoryList);
+                    return GroceryCategoryListWidget(categoryResponse: vegetableCategoryList,cityCode: widget.cityCode,);
 
                   }
                   return const SizedBox.shrink();

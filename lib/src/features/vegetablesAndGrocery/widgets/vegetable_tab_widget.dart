@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/category_product_card_widget.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/product_by_card_widget.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_category_list_widgte.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_slider_selection_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';

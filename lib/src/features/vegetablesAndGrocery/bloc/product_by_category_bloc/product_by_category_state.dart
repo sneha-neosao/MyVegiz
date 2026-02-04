@@ -13,12 +13,12 @@ class ProductByCategoryInitialState extends ProductByCategoryState {}
 class ProductByCategoryLoadingState extends ProductByCategoryState {}
 
 class ProductByCategorySuccessState extends ProductByCategoryState {
-  final ProductByCategoryResponse data;
+  final Map<String, ProductByCategoryResponse> categoryProductMap;
 
-  const ProductByCategorySuccessState(this.data);
+  const ProductByCategorySuccessState(this.categoryProductMap);
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [categoryProductMap];
 }
 
 class ProductByCategoryFailureState extends ProductByCategoryState {

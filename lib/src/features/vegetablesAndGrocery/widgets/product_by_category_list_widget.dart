@@ -12,8 +12,7 @@ class ProductByCategoryListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       itemCount: products.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {

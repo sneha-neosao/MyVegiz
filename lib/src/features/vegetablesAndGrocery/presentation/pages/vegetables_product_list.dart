@@ -50,45 +50,45 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
         child: Scaffold(
           backgroundColor: AppColor.whiteShade,
           body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                context.pushNamed(AppRoute.vegetablesAndGroceryScreen.name,
                                     extra: widget.cityCode
-                                  );
-                                },
-                                child: Image.asset(
-                                  "assets/icons/back_arrow.png",
-                                  height: 28,
-                                  width: 28,
-                                ),
+                                );
+                              },
+                              child: Image.asset(
+                                "assets/icons/back_arrow.png",
+                                height: 28,
+                                width: 28,
                               ),
-                              const Spacer(),
-                              Text(
-                                'vegetables'.tr(),
-                                style: GoogleFonts.mavenPro(
-                                  color: AppColor.black,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              'vegetables'.tr(),
+                              style: GoogleFonts.mavenPro(
+                                color: AppColor.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                               ),
-                              const Spacer(),
-                              const SizedBox(height: 28, width: 28),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            const Spacer(),
+                            const SizedBox(height: 28, width: 28),
+                          ],
+                        ),
+                      ],
                     ),
-                    16.hS,
-                    BlocConsumer<ProductByCategoryBloc, ProductByCategoryState>(
+                  ),
+                  16.hS,
+                  Expanded(
+                    child: BlocConsumer<ProductByCategoryBloc, ProductByCategoryState>(
                       listener: (context, state) {
                         if (state is ProductByCategoryFailureState) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -102,7 +102,8 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                             child: CircularProgressIndicator(),
                           );
                         } else if (state is ProductByCategorySuccessState) {
-                          final products = state.data.result.products;
+                          final response = state.categoryProductMap[widget.categorySName]!;
+                          final products = response.result.products;
                           return ProductByCategoryListWidget(products: products,clientCode: clienCode,);
                         } else {
                           return const Center(
@@ -110,11 +111,11 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                           );
                         }
                       },
-                    )
-
-                  ],
-                ),
-              )
+                    ),
+                  ),
+                  16.hS,
+                ],
+              ),
           ),
         )
     );

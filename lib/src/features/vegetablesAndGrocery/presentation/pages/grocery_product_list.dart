@@ -7,6 +7,7 @@ import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/product_by_category_list_widget.dart';
+import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 import '../../../../configs/injector/injector_conf.dart';
@@ -99,7 +100,7 @@ class _GroceryProductListState extends State<GroceryProductList> {
                       builder: (context, state) {
                         if (state is ProductByCategoryLoadingState) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: AppLoadingWidget(strokeWidth: 6),
                           );
                         } else if (state is ProductByCategorySuccessState) {
                           final response = state.categoryProductMap[widget.categorySName]!;

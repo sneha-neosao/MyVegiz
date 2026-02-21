@@ -2,16 +2,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
+import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/grocery_category_list_widget.dart';
+import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/product_by_card_widget.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_slider_selection_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/search_text_field_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/vegetable_category_shimmer_widget.dart';
+import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
 import '../../../configs/injector/injector.dart';
 import '../../../configs/injector/injector_conf.dart';
 
@@ -28,14 +32,26 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
   late CategoryBloc _vegetableCategoryBloc;
   late SliderBloc _vegetableSliderBloc;
   late CategoryAndProductBloc _categoryAndProductBloc;
+  late ProductByCategoryBloc _productByCategoryBloc;
+  late String clienCode;
+  List<Category> _categories = [];
+  bool _productsLoaded = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _loadClientCode();
     _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_2"));
     _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_2"));
-    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_2", widget.cityCode));
+    _productByCategoryBloc = getIt<ProductByCategoryBloc>();
+  }
+
+  void _loadClientCode() async {
+    final clientCode = await SessionManager.getClientCode();
+    setState(() {
+      clienCode = clientCode!;
+    });
   }
 
   @override
@@ -44,7 +60,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
       providers: [
         BlocProvider(create: (_) => _vegetableSliderBloc),
         BlocProvider(create: (_) => _vegetableCategoryBloc),
-        BlocProvider(create: (_) => _categoryAndProductBloc)
+        BlocProvider(create: (_) => _productByCategoryBloc)
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),
@@ -151,11 +167,98 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                       );
                     }
 
+                    _categories = vegetableCategoryList.result.categories; // ✅ SAVE ORDER
+
+
+                    if (!_productsLoaded) {
+                      for (final cat in vegetableCategoryList.result.categories) {
+                        context.read<ProductByCategoryBloc>().add( ProductByCategoryGetEvent("0", cat.mainCategoryCode, widget.cityCode,cat.categorySName), );
+                      }
+                      _productsLoaded = true;
+                    }
+
+
                     return GroceryCategoryListWidget(categoryResponse: vegetableCategoryList,cityCode: widget.cityCode,);
 
                   }
                   return const SizedBox.shrink();
                 }
+            ),
+            16.hS,
+            BlocBuilder<ProductByCategoryBloc, ProductByCategoryState>(
+              builder: (context, state) {
+                if (state is ProductByCategorySuccessState) {
+                  return Column(
+                    children: _categories.map((cat) {
+                      final response =
+                      state.categoryProductMap[cat.categorySName];
+
+                      if (response == null ||
+                          response.result.products.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final products = response.result.products;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                cat.categoryName, // ✅ correct order
+                                style: GoogleFonts.mavenPro(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: (){
+                                  context.pushNamed(
+                                    AppRoute.vegetableProductListScreen.name,
+                                    extra: {
+                                      'cityCode': widget.cityCode,
+                                      'categorySName': cat.categorySName
+                                    },
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'view_all'.tr(),
+                                      style: GoogleFonts.mavenPro(
+                                          color: AppColor.orange,fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                    4.wS,
+                                    Image.asset("assets/icons/view_arrow.png"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          8.hS,
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: products.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              return CategoryByProductCardWidget(
+                                product: products[index],
+                                clientCode: clienCode,
+                              );
+                            },
+                          ),
+                          16.hS,
+                        ],
+                      );
+                    }).toList(),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             )
           ],
         ),

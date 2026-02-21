@@ -17,7 +17,7 @@ class ProductByCategoryBloc
   final Map<String, ProductByCategoryResponse> _cache = {};
 
   ProductByCategoryBloc(this._productByCategoryUseCase)
-      : super(ProductByCategoryInitialState()) {
+      : super(ProductByCategoryLoadingState()) {
     on<ProductByCategoryGetEvent>(_productByCategory);
   }
 

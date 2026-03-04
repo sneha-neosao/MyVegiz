@@ -7,6 +7,7 @@ import 'package:myvegiz_flutter/src/core/network/network_checker.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
@@ -77,6 +78,9 @@ abstract class Repository {
   /// Cart
   Future<Either<Failure, CartListResponse>> cart_list(CartListParams params);
   Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params);
+
+  /// Cart
+  Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params);
 
   /// Search
   Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(SearchProductParams params);
@@ -612,7 +616,8 @@ class AuthRepositoryImpl implements Repository {
     return _networkInfo.check<ProductByCategoryResponse>(
       connected: () async {
         try {
-          final respData = await _remoteDataSource.searchProductByKeyword(params);
+          final respData = await _remoteDataSource.searchProductByKeyword(
+              params);
 
           if (respData.status == "200") {
             return Right(respData);
@@ -625,6 +630,35 @@ class AuthRepositoryImpl implements Repository {
           if (e is ApiException) {
             return Left(ApiFailure(e.message)); // rethrow as-is
           }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.addToCart(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
           return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
         }
       },

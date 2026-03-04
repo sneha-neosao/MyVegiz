@@ -59,7 +59,7 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
       providers: [
         BlocProvider(create: (_) => _vegetableSliderBloc),
         BlocProvider(create: (_) => _vegetableCategoryBloc),
-        BlocProvider(create: (_) => _productByCategoryBloc)
+        BlocProvider(create: (_) => _productByCategoryBloc),
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),

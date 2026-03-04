@@ -26,3 +26,4 @@ export '../../features/myAccount/bloc/profile_details_bloc/profile_details_bloc.
 export '../../features/cart/bloc/cartlist_bloc/cartlist_bloc.dart';
 export '../../features/home/bloc/vegetable_grocery_cart_count_bloc/vegetable_grocery_cart_count_bloc.dart';
 export '../../features/search/presentation/bloc/search_product_bloc/search_product_bloc.dart';
+export '../../features/cart/bloc/add_to_cart_bloc/add_to_cart_bloc.dart';

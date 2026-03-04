@@ -1,3 +1,4 @@
+import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
@@ -75,6 +76,9 @@ sealed class RemoteDataSource {
 
   /// Search
   Future<ProductByCategoryResponse> searchProductByKeyword(SearchProductParams params);
+
+  /// Cart
+  Future<CommonResponse> addToCart(AddToCartParams params);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -663,6 +667,35 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       }
       if (e is ApiException) {
         throw e; // rethrow as-is
+      }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> addToCart(AddToCartParams params) async {
+    try {
+      var data = {
+        "clientCode": params.clientCode,
+        "price": params.price,
+        "productCode": params.productCode,
+        "productName": params.productName,
+        "quantity": params.quantity,
+        "sellingQuantity": params.sellingQuantity,
+        "unit": params.unit,
+        "unitId": params.unitId,
+      };
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.addProductToCart,
+        data: data,
+      );
+
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) {
+        throw e;
       }
       throw ServerException();
     }

@@ -138,36 +138,41 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                       ),
 
                       // Quantity + UOM
-                      Container(
-                        width: 105,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: AppColor.brightRed.withOpacity(0.1),
-                          border: Border.all(
-                            width: 1,
-                            color: AppColor.middleOrangeButton,
+                      InkWell(
+                        onTap: () {
+                          _showVariantDialog(context, widget.product);
+                        },
+                        child: Container(
+                          width: 105,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: AppColor.brightRed.withOpacity(0.1),
+                            border: Border.all(
+                              width: 1,
+                              color: AppColor.middleOrangeButton,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${widget.product.quantity} ${widget.product.sellingUnit}",
-                                style: GoogleFonts.mavenPro(
-                                  color: AppColor.gray,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${widget.product.quantity} ${widget.product.sellingUnit}",
+                                  style: GoogleFonts.mavenPro(
+                                    color: AppColor.gray,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                              const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColor.black,
-                                size: 22,
-                              ),
-                            ],
+                                const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColor.black,
+                                  size: 22,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -270,4 +275,88 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
       ),
     );
   }
+  void _showVariantDialog(BuildContext context, Product product) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.productName.replaceAll(RegExp(r'\s+'), ' ').trim(),
+                  style: GoogleFonts.mavenPro(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ...product.rateVariants.map((variant) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      // color: AppColor.brightRed.withOpacity(0.05),
+                      border: Border.all(
+                        color: AppColor.middleOrangeButton.withOpacity(0.5),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            "${variant.quantity} ${variant.sellingUnit}",
+                            style: GoogleFonts.mavenPro(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColor.black,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            "₹ ${variant.sellingPrice}",
+                            style: GoogleFonts.mavenPro(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.black,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            "₹ ${variant.regularPrice}",
+                            textAlign: TextAlign.right,
+                            style: GoogleFonts.mavenPro(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColor.grayShade,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+

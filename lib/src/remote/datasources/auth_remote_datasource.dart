@@ -12,6 +12,7 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_count_response.dart';
@@ -71,6 +72,9 @@ sealed class RemoteDataSource {
   Future<CartCountResponse> cartCount(VegetableGroceryCartCountParams params);
 
   Future<void> logout();
+
+  /// Search
+  Future<ProductByCategoryResponse> searchProductByKeyword(SearchProductParams params);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -625,6 +629,42 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       }
       throw ServerException();
       // throw here i want to pass same exception which is send by catch();
+    }
+  }
+
+  @override
+  Future<ProductByCategoryResponse> searchProductByKeyword(SearchProductParams params) async {
+    try {
+      var data = {
+        "keyword": params.keyword,
+        "offset": params.offset,
+        "mainCategoryCode": params.mainCategoryCode,
+        "cityCode": params.cityCode,
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.searchProductByKeyword,
+        data: data,
+      );
+
+      logger.d('📨 Raw API response:');
+      logger.d(response);
+
+      final user = ProductByCategoryResponse.fromJson(response);
+      return user;
+    } on EmptyException {
+      throw AuthException();
+    } catch (e) {
+      logger.e(e);
+      if (e.toString() == noElement) {
+        throw AuthException();
+      }
+      if (e is ApiException) {
+        throw e; // rethrow as-is
+      }
+      throw ServerException();
     }
   }
 

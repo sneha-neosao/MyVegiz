@@ -16,6 +16,7 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -162,6 +163,13 @@ void configureDepedencies() {
   );
   getIt.registerFactory(
         () => VegetableGroceryCartCountUseCase(getIt<AuthRepositoryImpl>()),
+  );
+
+  getIt.registerFactory(
+        () => SearchProductBloc(getIt<SearchProductUseCase>()),
+  );
+  getIt.registerFactory(
+        () => SearchProductUseCase(getIt<AuthRepositoryImpl>()),
   );
 
 

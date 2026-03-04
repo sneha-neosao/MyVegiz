@@ -21,6 +21,7 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/product_by_category_usecase.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
+import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/datasources/auth_remote_datasource.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
@@ -76,6 +77,9 @@ abstract class Repository {
   /// Cart
   Future<Either<Failure, CartListResponse>> cart_list(CartListParams params);
   Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params);
+
+  /// Search
+  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(SearchProductParams params);
 
 }
 
@@ -603,4 +607,35 @@ class AuthRepositoryImpl implements Repository {
     );
   }
 
+  @override
+  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(SearchProductParams params) {
+    return _networkInfo.check<ProductByCategoryResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.searchProductByKeyword(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        } catch (e) {
+          if (e is ApiException) {
+            return Left(ApiFailure(e.message)); // rethrow as-is
+          }
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+              InternetFailure("please_check_your_internet_connection".tr()));
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
 }

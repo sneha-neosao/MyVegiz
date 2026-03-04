@@ -61,7 +61,7 @@ class WishlistItem {
   final String isMainVariant;
   final bool isInCart;
   final bool isInWishlist;
-  final int cartQuantity;
+  final dynamic cartQuantity;
   final String cartCode;
   final String wishlistCode;
   final List<RateVariant> rateVariants;
@@ -149,7 +149,7 @@ class RateVariant {
   final String productDiscount;
   final String isMainVariant;
   final bool isInCart;
-  final int cartQuantity;
+  final dynamic cartQuantity;
   final String cartCode;
 
   RateVariant({

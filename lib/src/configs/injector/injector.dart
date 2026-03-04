@@ -25,3 +25,4 @@ export '../../features/myAccount/bloc/wishlist_bloc/wishlist_bloc.dart';
 export '../../features/myAccount/bloc/profile_details_bloc/profile_details_bloc.dart';
 export '../../features/cart/bloc/cartlist_bloc/cartlist_bloc.dart';
 export '../../features/home/bloc/vegetable_grocery_cart_count_bloc/vegetable_grocery_cart_count_bloc.dart';
+export '../../features/search/presentation/bloc/search_product_bloc/search_product_bloc.dart';

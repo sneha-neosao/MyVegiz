@@ -23,12 +23,14 @@ class ProductByCategoryUseCase implements UseCase<ProductByCategoryResponse, Pro
 
 class ProductByCategoryParams extends Equatable {
   final String offset;
+  final String limit;
   final String mainCategoryCode;
   final String cityCode;
   final String categorySName;
 
   const ProductByCategoryParams({
     required this.offset,
+    required this.limit,
     required this.mainCategoryCode,
     required this.cityCode,
     required this.categorySName
@@ -37,6 +39,7 @@ class ProductByCategoryParams extends Equatable {
   @override
   List<Object?> get props => [
     offset,
+    limit,
     mainCategoryCode,
     cityCode,
     categorySName

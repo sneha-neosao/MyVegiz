@@ -7,15 +7,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/session/session_manager.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/grocery_category_list_widget.dart';
-import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/product_by_card_widget.dart';
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/widgets/vegetable_slider_selection_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/search_text_field_widget.dart';
 import 'package:myvegiz_flutter/src/features/widgets/vegetable_category_shimmer_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart' as cat_res;
+import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
+import '../bloc/category_and_product_bloc/category_and_product_bloc.dart';
+import '../bloc/product_by_category_bloc/product_by_category_bloc.dart';
 import '../../../configs/injector/injector.dart';
 import '../../../configs/injector/injector_conf.dart';
 
@@ -34,7 +35,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
   late CategoryAndProductBloc _categoryAndProductBloc;
   late ProductByCategoryBloc _productByCategoryBloc;
   late String clienCode;
-  List<Category> _categories = [];
+  List<cat_res.Category> _categories = [];
   bool _productsLoaded = false;
 
   @override
@@ -43,7 +44,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
     super.initState();
     _loadClientCode();
     _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_2"));
-    _vegetableCategoryBloc = getIt<CategoryBloc>()..add(CategoryGetEvent("0", "MCAT_2"));
+    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_2", widget.cityCode));
     _productByCategoryBloc = getIt<ProductByCategoryBloc>();
   }
 
@@ -59,8 +60,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => _vegetableSliderBloc),
-        BlocProvider(create: (_) => _vegetableCategoryBloc),
-        BlocProvider(create: (_) => _productByCategoryBloc)
+        BlocProvider(create: (_) => _categoryAndProductBloc),
       ],
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),
@@ -127,141 +127,238 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
               },
             ),
             22.hS,
-            BlocConsumer<CategoryBloc, CategoryState>(
-                listener: (context, state) {
-                  if (state is CategoryFailureState) {
-                    appSnackBar(context, AppColor.brightRed, state.message);
-                  }
-                },
-                builder: (context, state) {
-                  if (state is CategoryLoadingState) {
-                    return SizedBox(
-                      height: 200.h,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        // padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        itemCount: 6, // number of shimmer placeholders
-                        itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
-                        separatorBuilder: (_, __) => SizedBox(width: 8.w), // same spacing as your listview
+            BlocConsumer<CategoryAndProductBloc, CategoryAndProductState>(
+              listener: (context, state) {
+                if (state is CategoryAndProductFailureState) {
+                  appSnackBar(context, AppColor.brightRed, state.message);
+                }
+              },
+              builder: (context, state) {
+                if (state is CategoryAndProductLoadingState) {
+                  return SizedBox(
+                    height: 200.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 6,
+                      itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
+                      separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                    ),
+                  );
+                } else if (state is CategoryAndProductSuccessState) {
+                  final categories = state.data.result.categories;
+
+                  if (categories.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'no_matching_data_found'.tr(),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     );
-                  } else if (state is CategorySuccessState) {
-                    final vegetableCategoryList = state.data;
-
-                    if (vegetableCategoryList.result.categories.isEmpty) {
-                      return Container(
-                        height: 30,
-                        child: Center(
-                          child: Text(
-                            'no_matching_data_found'.tr(),
-                            style: Theme
-                                .of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                              color: Colors.grey,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-
-                    _categories = vegetableCategoryList.result.categories; // ✅ SAVE ORDER
-
-
-                    if (!_productsLoaded) {
-                      for (final cat in vegetableCategoryList.result.categories) {
-                        context.read<ProductByCategoryBloc>().add( ProductByCategoryGetEvent("0", cat.mainCategoryCode, widget.cityCode,cat.categorySName), );
-                      }
-                      _productsLoaded = true;
-                    }
-
-
-                    return GroceryCategoryListWidget(categoryResponse: vegetableCategoryList,cityCode: widget.cityCode,);
-
                   }
-                  return const SizedBox.shrink();
-                }
-            ),
-            16.hS,
-            BlocBuilder<ProductByCategoryBloc, ProductByCategoryState>(
-              builder: (context, state) {
-                if (state is ProductByCategorySuccessState) {
+
                   return Column(
-                    children: _categories.map((cat) {
-                      final response =
-                      state.categoryProductMap[cat.categorySName];
-
-                      if (response == null ||
-                          response.result.products.isEmpty) {
-                        return const SizedBox.shrink();
-                      }
-
-                      final products = response.result.products;
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Horizontal Category List (Icons)
+                      _buildHorizontalCategoryList(categories),
+                      16.hS,
+                      // Vertical Category List with View All
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: categories.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                cat.categoryName, // ✅ correct order
-                                style: GoogleFonts.mavenPro(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: (){
-                                  context.pushNamed(
-                                    AppRoute.vegetableProductListScreen.name,
-                                    extra: {
-                                      'cityCode': widget.cityCode,
-                                      'categorySName': cat.categorySName
-                                    },
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'view_all'.tr(),
-                                      style: GoogleFonts.mavenPro(
-                                          color: AppColor.orange,fontSize: 12, fontWeight: FontWeight.bold),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    category.categoryName,
+                                    style: GoogleFonts.mavenPro(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.black,
                                     ),
-                                    4.wS,
-                                    Image.asset("assets/icons/view_arrow.png"),
-                                  ],
-                                ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      context.pushNamed(
+                                        AppRoute.groceryProductListScreen.name,
+                                        extra: {
+                                          'cityCode': widget.cityCode,
+                                          'categorySName': category.categorySName
+                                        },
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'view_all'.tr(),
+                                          style: GoogleFonts.mavenPro(
+                                            color: AppColor.orange,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        4.wS,
+                                        Image.asset(
+                                          "assets/icons/view_arrow.png",
+                                          height: 12,
+                                          color: AppColor.orange,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
+                              // If you want to show horizontal products below each category:
+                              if (category.productList != null && category.productList!.products.isNotEmpty)
+                                ...[
+                                  12.hS,
+                                  SizedBox(
+                                    height: 140, // Height for horizontal product cards
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: category.productList!.products.length,
+                                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                                      itemBuilder: (context, pIndex) {
+                                        final product = category.productList!.products[pIndex];
+                                        return _buildSmallProductCard(product);
+                                      },
+                                    ),
+                                  ),
+                                ]
                             ],
-                          ),
-                          8.hS,
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: products.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              return CategoryByProductCardWidget(
-                                product: products[index],
-                                clientCode: clienCode,
-                              );
-                            },
-                          ),
-                          16.hS,
-                        ],
-                      );
-                    }).toList(),
+                          );
+                        },
+                      ),
+                    ],
                   );
                 }
                 return const SizedBox.shrink();
               },
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHorizontalCategoryList(List<Category> categories) {
+    return SizedBox(
+      height: 110,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => SizedBox(width: 16.w),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return GestureDetector(
+            onTap: () {
+              context.pushNamed(
+                AppRoute.groceryProductListScreen.name,
+                extra: {
+                  'cityCode': widget.cityCode,
+                  'categorySName': category.categorySName
+                },
+              );
+            },
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    category.categoryImage,
+                    width: 75,
+                    height: 75,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 75,
+                        height: 75,
+                        color: Colors.grey[200],
+                      );
+                    },
+                    errorBuilder: (_, __, ___) => Container(
+                      width: 75,
+                      height: 75,
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.image_not_supported),
+                    ),
+                  ),
+                ),
+                8.hS,
+                Text(
+                  category.categoryName,
+                  style: GoogleFonts.mavenPro(
+                    color: AppColor.black,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSmallProductCard(Product product) {
+    return Container(
+      width: 140,
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              child: Image.network(
+                product.images.isNotEmpty ? product.images.first : '',
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const Icon(Icons.image),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.productName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.mavenPro(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "₹${product.sellingPrice}",
+                  style: GoogleFonts.mavenPro(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

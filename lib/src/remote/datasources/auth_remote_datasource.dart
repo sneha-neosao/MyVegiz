@@ -421,6 +421,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       var data = {
         "cityCode": params.cityCode,
         "offset": params.offset,
+        "limit": params.limit,
         "mainCategoryCode": params.mainCategoryCode
       };
 
@@ -456,6 +457,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       var data = {
         "offset": params.offset,
+        "limit": params.limit,
         "mainCategoryCode": params.mainCategoryCode,
         "cityCode": params.cityCode,
         "categorySName": params.categorySName

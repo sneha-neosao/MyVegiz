@@ -12,6 +12,7 @@ import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 
 import '../../../../configs/injector/injector_conf.dart';
 import '../../../../core/themes/app_color.dart';
+import 'package:myvegiz_flutter/src/features/widgets/no_product_found_widget.dart';
 
 class VegetablesProductList extends StatefulWidget {
   final String cityCode;
@@ -103,11 +104,23 @@ class _VegetablesProductListState extends State<VegetablesProductList> {
                             child: AppLoadingWidget(strokeWidth: 6),
                           );
                         } else if (state is ProductByCategorySuccessState) {
-                          final response = state.categoryProductMap[widget.categorySName]!;
+                          final response = state.categoryProductMap[widget.categorySName];
+                          if (response == null || response.result.products.isEmpty) {
+                            return NoDataFoundWidget(
+                              onContinueShopping: () {
+                                context.pop();
+                              },
+                            );
+                          }
                           final products = response.result.products;
                           return ProductByCategoryListWidget(products: products,clientCode: clienCode,);
+                        } else {
+                          return NoDataFoundWidget(
+                            onContinueShopping: () {
+                              context.pop();
+                            },
+                          );
                         }
-                        return const SizedBox.shrink();
                       },
                     ),
                   ),

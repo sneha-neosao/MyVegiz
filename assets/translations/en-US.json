@@ -66,6 +66,7 @@
   "invalid_mobile_number": "Please enter valid number",
   "vegetables_fruits": "Vegetables/Fruits",
   "grocery": "Grocery",
+  "groceries": "Groceries",
   "search_product_by_name": "Search product by name",
   "search_location_here": "Search Location Here",
   "current_location": "Current Location",
@@ -73,5 +74,7 @@
   "change": "Change",
   "view_cart": "View cart",
   "confirm_location": "CONFIRM LOCATION",
-  "vegetables": "Vegetables"
+  "vegetables": "Vegetables",
+  "no_product_added_in_category": "No product added in this category!",
+  "continue_shopping": "Continue Shopping"
 }

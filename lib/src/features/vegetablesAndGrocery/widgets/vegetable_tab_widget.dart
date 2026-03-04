@@ -193,11 +193,11 @@ class _VegetableTabWidgetState extends State<VegetableTabWidget> {
                         state.categoryProductMap[cat.categorySName];
 
                         if (response == null ||
-                            response.result.products.isEmpty) {
+                            response.result!.products.isEmpty) {
                           return const SizedBox.shrink();
                         }
 
-                        final products = response.result.products;
+                        final products = response.result!.products;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

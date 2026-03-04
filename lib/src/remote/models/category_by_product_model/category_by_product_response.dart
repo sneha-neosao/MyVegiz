@@ -16,7 +16,9 @@ class ProductByCategoryResponse {
       status: json['status'] ?? '',
       message: json["message"],
       totalRecords: json['totalRecords'] ?? 0,
-      result: ProductResult.fromJson(json['result']),
+      result: json['result'] != null 
+          ? ProductResult.fromJson(json['result'])
+          : ProductResult(products: []),
     );
   }
 
@@ -33,7 +35,8 @@ class ProductResult {
 
   ProductResult({required this.products});
 
-  factory ProductResult.fromJson(Map<String, dynamic> json) {
+  factory ProductResult.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return ProductResult(products: []);
     var list = json['products'] as List? ?? [];
     return ProductResult(
       products: list.map((e) => Product.fromJson(e)).toList(),

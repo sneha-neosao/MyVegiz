@@ -26,6 +26,7 @@ class CategoryAndProductBloc extends Bloc<CategoryAndProductEvent, CategoryAndPr
       CategoryAndProductParams(
         cityCode: event.cityCode,
         offset: event.offset,
+        limit: "100", // Hardcoded to fetch all at once
         mainCategoryCode: event.mainCategoryCode,
       ),
     );

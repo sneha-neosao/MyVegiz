@@ -31,6 +31,7 @@ class ProductByCategoryBloc
     final result = await _productByCategoryUseCase(
       ProductByCategoryParams(
         offset: event.offset,
+        limit: "100", // Hardcoded to fetch all at once
         mainCategoryCode: event.mainCategoryCode,
         cityCode: event.cityCode,
         categorySName: event.categorySName,

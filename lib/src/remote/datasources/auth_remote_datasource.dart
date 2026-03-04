@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
@@ -59,10 +60,14 @@ sealed class RemoteDataSource {
   Future<CategoryResponse> category(CategoryParams params);
 
   /// Category And Product
-  Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params);
+  Future<CategoryAndProductResponse> categoryAndProduct(
+    CategoryAndProductParams params,
+  );
 
   /// Product By Category
-  Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params);
+  Future<ProductByCategoryResponse> productByCategory(
+    ProductByCategoryParams params,
+  );
 
   /// Wish List
   Future<CommonResponse> addToWishList(AddToWishListParams params);
@@ -75,7 +80,9 @@ sealed class RemoteDataSource {
   Future<void> logout();
 
   /// Search
-  Future<ProductByCategoryResponse> searchProductByKeyword(SearchProductParams params);
+  Future<ProductByCategoryResponse> searchProductByKeyword(
+    SearchProductParams params,
+  );
 
   /// Cart
   Future<CommonResponse> addToCart(AddToCartParams params);
@@ -84,7 +91,7 @@ sealed class RemoteDataSource {
 class RemoteDataSourceImpl implements RemoteDataSource {
   final ApiHelper _helper;
 
-  const RemoteDataSourceImpl(this._helper,);
+  const RemoteDataSourceImpl(this._helper);
 
   @override
   Future<GetOtpResponse> getOtp(GetOtpParams params) async {
@@ -123,9 +130,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<OtpVerifyResponse> verifyOtp(VerifyOtpParams params) async {
     try {
-      var data = {
-        "contactNumber": params.contactNumber,
-      };
+      var data = {"contactNumber": params.contactNumber};
 
       final response = await _helper.execute(
         method: Method.post,
@@ -160,7 +165,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         "name": params.name,
         "contactNumber": params.contactNumber,
         "emailId": params.emailId,
-        "cityCode": params.cityCode
+        "cityCode": params.cityCode,
       };
 
       final response = await _helper.execute(
@@ -192,18 +197,17 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> editProfile(EditProfileParams params) async {
     try {
-
       var data = {
         "clientCode": params.clientCode,
         "name": params.name,
         "emailId": params.emailId,
-        "cityCode": params.cityCode
+        "cityCode": params.cityCode,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.editProfile,
-          data: data
+        method: Method.post,
+        url: ApiUrl.editProfile,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -229,15 +233,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> accountDelete(AccountDeleteParams params) async {
     try {
-
-      var data = {
-        "clientCode": params.clientCode,
-      };
+      var data = {"clientCode": params.clientCode};
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.accountDelete,
-          data: data
+        method: Method.post,
+        url: ApiUrl.accountDelete,
+        data: data,
       );
 
       // logger.d('📨 Raw API response:');
@@ -261,17 +262,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<ProfileDetailsResponse> profileDetails(ProfileDetailsParams params) async {
+  Future<ProfileDetailsResponse> profileDetails(
+    ProfileDetailsParams params,
+  ) async {
     try {
-
-      var data = {
-        "clientCode": params.clientCode,
-      };
+      var data = {"clientCode": params.clientCode};
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.profileDetails,
-          data: data
+        method: Method.post,
+        url: ApiUrl.profileDetails,
+        data: data,
       );
 
       // logger.d('📨 Raw API response:');
@@ -297,7 +297,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<HomeSliderResponse> homeSlider() async {
     try {
-
       final response = await _helper.execute(
         method: Method.get,
         url: ApiUrl.homeSliderImages,
@@ -326,7 +325,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CityListResponse> cityList() async {
     try {
-
       final response = await _helper.execute(
         method: Method.get,
         url: ApiUrl.cityList,
@@ -355,16 +353,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<SliderResponse> slider(SliderParams params) async {
     try {
-
       var data = {
         "cityCode": params.cityCode,
-        "mainCategoryCode": params.mainCategoryCode
+        "mainCategoryCode": params.mainCategoryCode,
       };
 
       final response = await _helper.execute(
         method: Method.post,
         url: ApiUrl.sliderImages,
-        data: data
+        data: data,
       );
 
       // logger.d('📨 Raw API response:');
@@ -390,16 +387,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CategoryResponse> category(CategoryParams params) async {
     try {
-
       var data = {
         "offset": params.offset,
-        "mainCategoryCode": params.mainCategoryCode
+        "mainCategoryCode": params.mainCategoryCode,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.categoriesList,
-          data: data
+        method: Method.post,
+        url: ApiUrl.categoriesList,
+        data: data,
       );
 
       // logger.d('📨 Raw API response:');
@@ -423,20 +419,21 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<CategoryAndProductResponse> categoryAndProduct(CategoryAndProductParams params) async {
+  Future<CategoryAndProductResponse> categoryAndProduct(
+    CategoryAndProductParams params,
+  ) async {
     try {
-
       var data = {
         "cityCode": params.cityCode,
         "offset": params.offset,
         "limit": params.limit,
-        "mainCategoryCode": params.mainCategoryCode
+        "mainCategoryCode": params.mainCategoryCode,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.productCategoryList,
-          data: data
+        method: Method.post,
+        url: ApiUrl.productCategoryList,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -460,21 +457,22 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<ProductByCategoryResponse> productByCategory(ProductByCategoryParams params) async {
+  Future<ProductByCategoryResponse> productByCategory(
+    ProductByCategoryParams params,
+  ) async {
     try {
-
       var data = {
         "offset": params.offset,
         "limit": params.limit,
         "mainCategoryCode": params.mainCategoryCode,
         "cityCode": params.cityCode,
-        "categorySName": params.categorySName
+        "categorySName": params.categorySName,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.productByCategory,
-          data: data
+        method: Method.post,
+        url: ApiUrl.productByCategory,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -500,16 +498,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> addToWishList(AddToWishListParams params) async {
     try {
-
       var data = {
         "productCode": params.productCode,
         "clientCode": params.clientCode,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.addProductToWishList,
-          data: data
+        method: Method.post,
+        url: ApiUrl.addProductToWishList,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -535,17 +532,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<WishlistResponse> wishList(WishListParams params) async {
     try {
-
       var data = {
         "clientCode": params.clientCode,
         "mainCategoryCode": params.mainCategoryCode,
-        "cityCode": params.cityCode
+        "cityCode": params.cityCode,
       };
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.wishList,
-          data: data
+        method: Method.post,
+        url: ApiUrl.wishList,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -571,15 +567,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CartListResponse> cartList(CartListParams params) async {
     try {
-
-      var data = {
-        "clientCode": params.clientCode,
-      };
+      final data = FormData.fromMap({"clientCode": params.clientCode});
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.wishList,
-          data: data
+        method: Method.post,
+        url: ApiUrl.cartList,
+        data: data,
       );
 
       logger.d('📨 Raw API response:');
@@ -603,17 +596,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<CartCountResponse> cartCount(VegetableGroceryCartCountParams params) async {
+  Future<CartCountResponse> cartCount(
+    VegetableGroceryCartCountParams params,
+  ) async {
     try {
-
-      var data = {
-        "clientCode": params.clientCode,
-      };
+      var data = {"clientCode": params.clientCode};
 
       final response = await _helper.execute(
-          method: Method.post,
-          url: ApiUrl.vegetableGroceryCartCount,
-          data: data
+        method: Method.post,
+        url: ApiUrl.vegetableGroceryCartCount,
+        data: data,
       );
 
       // logger.d('📨 Raw API response:');
@@ -637,7 +629,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<ProductByCategoryResponse> searchProductByKeyword(SearchProductParams params) async {
+  Future<ProductByCategoryResponse> searchProductByKeyword(
+    SearchProductParams params,
+  ) async {
     try {
       var data = {
         "keyword": params.keyword,

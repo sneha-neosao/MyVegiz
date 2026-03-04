@@ -42,16 +42,23 @@ import '../models/category_model/category_response.dart';
 /// Abstract Repository interface defining all data operations for the app
 
 abstract class Repository {
-
   /// Authentication
   Future<Either<Failure, GetOtpResponse>> get_otp(GetOtpParams params);
   Future<Either<Failure, OtpVerifyResponse>> verify_otp(VerifyOtpParams params);
-  Future<Either<Failure, RegistrationResponse>> registration(RegistrationParams params);
+  Future<Either<Failure, RegistrationResponse>> registration(
+    RegistrationParams params,
+  );
 
   /// User
-  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params);
-  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params);
-  Future<Either<Failure, ProfileDetailsResponse>> profile_details(ProfileDetailsParams params);
+  Future<Either<Failure, CommonResponse>> edit_profile(
+    EditProfileParams params,
+  );
+  Future<Either<Failure, CommonResponse>> account_delete(
+    AccountDeleteParams params,
+  );
+  Future<Either<Failure, ProfileDetailsResponse>> profile_details(
+    ProfileDetailsParams params,
+  );
 
   /// Home Slider
   Future<Either<Failure, HomeSliderResponse>> home_slider(NoParams params);
@@ -66,25 +73,34 @@ abstract class Repository {
   Future<Either<Failure, CategoryResponse>> category(CategoryParams params);
 
   /// Category And Product
-  Future<Either<Failure, CategoryAndProductResponse>> category_and_product(CategoryAndProductParams params);
+  Future<Either<Failure, CategoryAndProductResponse>> category_and_product(
+    CategoryAndProductParams params,
+  );
 
   /// Product By Category
-  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(ProductByCategoryParams params);
+  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(
+    ProductByCategoryParams params,
+  );
 
   /// Wish List
-  Future<Either<Failure, CommonResponse>> add_to_wish_list(AddToWishListParams params);
+  Future<Either<Failure, CommonResponse>> add_to_wish_list(
+    AddToWishListParams params,
+  );
   Future<Either<Failure, WishlistResponse>> wish_list(WishListParams params);
 
   /// Cart
   Future<Either<Failure, CartListResponse>> cart_list(CartListParams params);
-  Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params);
+  Future<Either<Failure, CartCountResponse>> cart_count(
+    VegetableGroceryCartCountParams params,
+  );
 
   /// Cart
   Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params);
 
   /// Search
-  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(SearchProductParams params);
-
+  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(
+    SearchProductParams params,
+  );
 }
 
 /// Implements Repository to handle authentication and user-related remote operations.
@@ -93,10 +109,7 @@ class AuthRepositoryImpl implements Repository {
   final RemoteDataSource _remoteDataSource;
   final NetworkInfo _networkInfo;
 
-  const AuthRepositoryImpl(
-    this._remoteDataSource,
-    this._networkInfo,
-  );
+  const AuthRepositoryImpl(this._remoteDataSource, this._networkInfo);
 
   @override
   Future<Either<Failure, GetOtpResponse>> get_otp(GetOtpParams params) {
@@ -118,7 +131,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -127,14 +141,15 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, OtpVerifyResponse>> verify_otp(VerifyOtpParams params) {
+  Future<Either<Failure, OtpVerifyResponse>> verify_otp(
+    VerifyOtpParams params,
+  ) {
     return _networkInfo.check<OtpVerifyResponse>(
       connected: () async {
         try {
           final respData = await _remoteDataSource.verifyOtp(params);
 
           if (respData.status == "200") {
-
             SessionManager.saveLoginStatus(true);
             SessionManager.saveUserSessionInfo(respData.result!.userData);
 
@@ -143,7 +158,6 @@ class AuthRepositoryImpl implements Repository {
             print("➡️ Saved Session Info: ${sessionInfo.toJson()}");
 
             return Right(respData);
-
           } else {
             return Left(ApiFailure(respData.message!));
           }
@@ -159,7 +173,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -168,7 +183,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, RegistrationResponse>> registration(RegistrationParams params) {
+  Future<Either<Failure, RegistrationResponse>> registration(
+    RegistrationParams params,
+  ) {
     return _networkInfo.check<RegistrationResponse>(
       connected: () async {
         try {
@@ -187,7 +204,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -196,7 +214,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CommonResponse>> edit_profile(EditProfileParams params) {
+  Future<Either<Failure, CommonResponse>> edit_profile(
+    EditProfileParams params,
+  ) {
     return _networkInfo.check<CommonResponse>(
       connected: () async {
         try {
@@ -219,7 +239,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -228,7 +249,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CommonResponse>> account_delete(AccountDeleteParams params) {
+  Future<Either<Failure, CommonResponse>> account_delete(
+    AccountDeleteParams params,
+  ) {
     return _networkInfo.check<CommonResponse>(
       connected: () async {
         try {
@@ -251,7 +274,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -260,7 +284,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, ProfileDetailsResponse>> profile_details(ProfileDetailsParams params) {
+  Future<Either<Failure, ProfileDetailsResponse>> profile_details(
+    ProfileDetailsParams params,
+  ) {
     return _networkInfo.check<ProfileDetailsResponse>(
       connected: () async {
         try {
@@ -283,7 +309,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -315,7 +342,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -347,7 +375,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -379,7 +408,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -411,7 +441,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -420,7 +451,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CategoryAndProductResponse>> category_and_product(CategoryAndProductParams params) {
+  Future<Either<Failure, CategoryAndProductResponse>> category_and_product(
+    CategoryAndProductParams params,
+  ) {
     return _networkInfo.check<CategoryAndProductResponse>(
       connected: () async {
         try {
@@ -443,7 +476,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -452,7 +486,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(ProductByCategoryParams params) {
+  Future<Either<Failure, ProductByCategoryResponse>> product_by_category(
+    ProductByCategoryParams params,
+  ) {
     return _networkInfo.check<ProductByCategoryResponse>(
       connected: () async {
         try {
@@ -475,7 +511,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -484,7 +521,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CommonResponse>> add_to_wish_list(AddToWishListParams params) {
+  Future<Either<Failure, CommonResponse>> add_to_wish_list(
+    AddToWishListParams params,
+  ) {
     return _networkInfo.check<CommonResponse>(
       connected: () async {
         try {
@@ -507,7 +546,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -539,7 +579,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -554,7 +595,7 @@ class AuthRepositoryImpl implements Repository {
         try {
           final respData = await _remoteDataSource.cartList(params);
 
-          if (respData.status == "200") {
+          if (respData.status.toString() == "200") {
             return Right(respData);
           } else {
             return Left(ApiFailure(respData.message!));
@@ -571,7 +612,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -580,7 +622,9 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CartCountResponse>> cart_count(VegetableGroceryCartCountParams params) {
+  Future<Either<Failure, CartCountResponse>> cart_count(
+    VegetableGroceryCartCountParams params,
+  ) {
     return _networkInfo.check<CartCountResponse>(
       connected: () async {
         try {
@@ -603,7 +647,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -612,12 +657,15 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(SearchProductParams params) {
+  Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(
+    SearchProductParams params,
+  ) {
     return _networkInfo.check<ProductByCategoryResponse>(
       connected: () async {
         try {
           final respData = await _remoteDataSource.searchProductByKeyword(
-              params);
+            params,
+          );
 
           if (respData.status == "200") {
             return Right(respData);
@@ -636,7 +684,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }
@@ -665,7 +714,8 @@ class AuthRepositoryImpl implements Repository {
       notConnected: () async {
         try {
           return Left(
-              InternetFailure("please_check_your_internet_connection".tr()));
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
         } on CacheException {
           return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
         }

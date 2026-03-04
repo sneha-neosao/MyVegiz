@@ -1,5 +1,5 @@
 class CartListResponse {
-  final int status;
+  final String status;
   final String? message;
   final int totalRecords;
   final String itemTotal;
@@ -88,7 +88,7 @@ class Product {
   final String quantity;
   final bool isInCart;
   final bool isInWishlist;
-  final String cartQuantity;
+  final dynamic cartQuantity;
   final String totalPrice;
   final List<String> images;
 

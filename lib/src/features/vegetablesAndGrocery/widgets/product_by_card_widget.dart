@@ -29,6 +29,7 @@ class _CategoryByProductCardWidgetState
   late bool _isInWishlist; // local state
   late RateVariant _selectedVariant;
   late bool _isCurrentlyInCart;
+  late int _cartQuantity;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _CategoryByProductCardWidgetState
       orElse: () => widget.product.rateVariants.first,
     );
     _isCurrentlyInCart = _selectedVariant.isInCart;
+    _cartQuantity = _selectedVariant.cartQuantity;
   }
 
   @override
@@ -53,14 +55,11 @@ class _CategoryByProductCardWidgetState
       child: BlocListener<AddToCartBloc, AddToCartState>(
         listener: (context, state) {
           if (state is AddToCartSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.response.message ?? "Added to cart"),
-              ),
-            );
-            setState(() {
-              _isCurrentlyInCart = true;
-            });
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text(state.response.message ?? "Added to cart"),
+            //   ),
+            // );
           } else if (state is AddToCartFailure) {
             ScaffoldMessenger.of(
               context,
@@ -278,9 +277,13 @@ class _CategoryByProductCardWidgetState
                             ),
                             BlocBuilder<AddToCartBloc, AddToCartState>(
                               builder: (context, state) {
-                                return InkWell(
-                                  onTap: () {
-                                    if (!_isCurrentlyInCart) {
+                                if (!_isCurrentlyInCart) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _isCurrentlyInCart = true;
+                                        _cartQuantity = 1;
+                                      });
                                       context.read<AddToCartBloc>().add(
                                         AddProductToCartEvent(
                                           AddToCartParams(
@@ -299,43 +302,178 @@ class _CategoryByProductCardWidgetState
                                           ),
                                         ),
                                       );
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 110,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: AppColor.middleOrangeButton,
+                                    },
+                                    child: Container(
+                                      width: 110,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          width: 1,
+                                          color: AppColor.middleOrangeButton,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 6.0,
+                                            horizontal: 8,
+                                          ),
+                                          child: state is AddToCartLoading
+                                              ? const SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: AppLoadingWidget(
+                                                    strokeWidth: 3,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  "ADD",
+                                                  style: GoogleFonts.mavenPro(
+                                                    color: AppColor.orange,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                        ),
                                       ),
                                     ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 6.0,
-                                          horizontal: 8,
-                                        ),
-                                        child: state is AddToCartLoading
-                                            ? const SizedBox(
-                                                height: 20,
-                                                width: 20,
-                                                child: AppLoadingWidget(
-                                                  strokeWidth: 3,
-                                                ),
-                                              )
-                                            : Text(
-                                                _isCurrentlyInCart
-                                                    ? "ICART"
-                                                    : "ADD",
-                                                style: GoogleFonts.mavenPro(
-                                                  color: AppColor.orange,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
+                                  );
+                                }
+
+                                // Quantity Selector (Counter)
+                                return Container(
+                                  width: 110,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                        AppColor.startOrangeButton,
+                                        AppColor.middleOrangeButton,
+                                        AppColor.endOrangeButton,
+                                      ],
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      IconButton(
+                                        visualDensity: VisualDensity.compact,
+                                        onPressed: () {
+                                          if (_cartQuantity > 1) {
+                                            setState(() {
+                                              _cartQuantity--;
+                                            });
+                                            context.read<AddToCartBloc>().add(
+                                              AddProductToCartEvent(
+                                                AddToCartParams(
+                                                  clientCode: widget.clientCode,
+                                                  price: _selectedVariant
+                                                      .sellingPrice,
+                                                  productCode:
+                                                      widget.product.code,
+                                                  productName: widget
+                                                      .product
+                                                      .productName,
+                                                  quantity: _cartQuantity
+                                                      .toString(),
+                                                  sellingQuantity:
+                                                      _selectedVariant.quantity,
+                                                  unit: _selectedVariant
+                                                      .sellingUnit,
+                                                  unitId: _selectedVariant
+                                                      .variantsCode,
                                                 ),
                                               ),
+                                            );
+                                          } else {
+                                            setState(() {
+                                              _isCurrentlyInCart = false;
+                                              _cartQuantity = 0;
+                                            });
+                                            context.read<AddToCartBloc>().add(
+                                              AddProductToCartEvent(
+                                                AddToCartParams(
+                                                  clientCode: widget.clientCode,
+                                                  price: _selectedVariant
+                                                      .sellingPrice,
+                                                  productCode:
+                                                      widget.product.code,
+                                                  productName: widget
+                                                      .product
+                                                      .productName,
+                                                  quantity: "0",
+                                                  sellingQuantity:
+                                                      _selectedVariant.quantity,
+                                                  unit: _selectedVariant
+                                                      .sellingUnit,
+                                                  unitId: _selectedVariant
+                                                      .variantsCode,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        icon: const Icon(
+                                          Icons.remove,
+                                          color: AppColor.white,
+                                          size: 18,
+                                        ),
                                       ),
-                                    ),
+                                      state is AddToCartLoading
+                                          ? const SizedBox(
+                                              height: 16,
+                                              width: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: AppColor.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              "$_cartQuantity",
+                                              style: GoogleFonts.mavenPro(
+                                                color: AppColor.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      IconButton(
+                                        visualDensity: VisualDensity.compact,
+                                        onPressed: () {
+                                          setState(() {
+                                            _cartQuantity++;
+                                          });
+                                          context.read<AddToCartBloc>().add(
+                                            AddProductToCartEvent(
+                                              AddToCartParams(
+                                                clientCode: widget.clientCode,
+                                                price: _selectedVariant
+                                                    .sellingPrice,
+                                                productCode:
+                                                    widget.product.code,
+                                                productName:
+                                                    widget.product.productName,
+                                                quantity: _cartQuantity
+                                                    .toString(),
+                                                sellingQuantity:
+                                                    _selectedVariant.quantity,
+                                                unit: _selectedVariant
+                                                    .sellingUnit,
+                                                unitId: _selectedVariant
+                                                    .variantsCode,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.add,
+                                          color: AppColor.white,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 );
                               },
@@ -385,6 +523,7 @@ class _CategoryByProductCardWidgetState
                       setState(() {
                         _selectedVariant = variant;
                         _isCurrentlyInCart = variant.isInCart;
+                        _cartQuantity = variant.cartQuantity;
                       });
                       Navigator.pop(context);
                     },

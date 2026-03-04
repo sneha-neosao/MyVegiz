@@ -26,11 +26,18 @@ class CategoryByProductCardWidget extends StatefulWidget {
 
 class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidget> {
   late bool _isInWishlist; // local state
+  late RateVariant _selectedVariant;
 
   @override
   void initState() {
     super.initState();
     _isInWishlist = widget.product.isInWishlist; // initialize from product
+    
+    // Initialize selected variant. Use main variant or first one available.
+    _selectedVariant = widget.product.rateVariants.firstWhere(
+      (v) => v.isMainVariant == "1",
+      orElse: () => widget.product.rateVariants.first,
+    );
   }
 
   @override
@@ -159,7 +166,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${widget.product.quantity} ${widget.product.sellingUnit}",
+                                  "${_selectedVariant.quantity} ${_selectedVariant.sellingUnit}",
                                   style: GoogleFonts.mavenPro(
                                     color: AppColor.gray,
                                     fontSize: 12,
@@ -185,7 +192,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "₹${widget.product.regularPrice}",
+                                "₹${_selectedVariant.regularPrice}",
                                 style: GoogleFonts.mavenPro(
                                   color: AppColor.grayShade,
                                   fontSize: 13,
@@ -196,7 +203,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                               Row(
                                 children: [
                                   Text(
-                                    "₹${widget.product.sellingPrice}",
+                                    "₹${_selectedVariant.sellingPrice}",
                                     style: GoogleFonts.mavenPro(
                                       color: AppColor.black,
                                       fontSize: 16,
@@ -204,7 +211,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                                     ),
                                   ),
                                   4.wS,
-                                  if (widget.product.rateVariants.isNotEmpty)
+                                  if (_selectedVariant.productDiscount.isNotEmpty && _selectedVariant.productDiscount != "0% Off")
                                     Container(
                                       width: 40,
                                       decoration: BoxDecoration(
@@ -224,8 +231,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                                         child: Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Text(
-                                            widget.product.rateVariants.first
-                                                .productDiscount,
+                                            _selectedVariant.productDiscount,
                                             style: GoogleFonts.mavenPro(
                                               color: AppColor.white,
                                               fontSize: 9,
@@ -253,7 +259,7 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 6.0, horizontal: 8),
                                 child: Text(
-                                  widget.product.isInCart ? "ICART" : "ADD",
+                                  _selectedVariant.isInCart ? "ICART" : "ADD",
                                   style: GoogleFonts.mavenPro(
                                     color: AppColor.orange,
                                     fontSize: 16,
@@ -297,57 +303,68 @@ class _CategoryByProductCardWidgetState extends State<CategoryByProductCardWidge
                 ),
                 const SizedBox(height: 20),
                 ...product.rateVariants.map((variant) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      // color: AppColor.brightRed.withOpacity(0.05),
-                      border: Border.all(
-                        color: AppColor.middleOrangeButton.withOpacity(0.5),
-                        width: 1,
+                  final isSelected = variant.variantsCode == _selectedVariant.variantsCode;
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedVariant = variant;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: isSelected 
+                              ? AppColor.colorPrimary 
+                              : AppColor.middleOrangeButton.withOpacity(0.5),
+                          width: isSelected ? 2 : 1,
+                        ),
+                        color: isSelected ? AppColor.colorPrimary.withOpacity(0.05) : null,
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "${variant.quantity} ${variant.sellingUnit}",
-                            style: GoogleFonts.mavenPro(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppColor.black,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "${variant.quantity} ${variant.sellingUnit}",
+                              style: GoogleFonts.mavenPro(
+                                fontSize: 14,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                color: AppColor.black,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "₹ ${variant.sellingPrice}",
-                            style: GoogleFonts.mavenPro(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.black,
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "₹ ${variant.sellingPrice}",
+                              style: GoogleFonts.mavenPro(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.black,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "₹ ${variant.regularPrice}",
-                            textAlign: TextAlign.right,
-                            style: GoogleFonts.mavenPro(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColor.grayShade,
-                              decoration: TextDecoration.lineThrough,
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "₹ ${variant.regularPrice}",
+                              textAlign: TextAlign.right,
+                              style: GoogleFonts.mavenPro(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColor.grayShade,
+                                decoration: TextDecoration.lineThrough,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 }).toList(),

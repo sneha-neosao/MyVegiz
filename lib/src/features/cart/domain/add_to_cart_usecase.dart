@@ -2,17 +2,19 @@ import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:myvegiz_flutter/src/core/errors/failures.dart';
 import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
-import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/add_to_cart_response.dart';
 
 import '../../../remote/repositories/repository_impl.dart';
 
-class AddToCartUseCase extends UseCase<CommonResponse, AddToCartParams> {
+class AddToCartUseCase extends UseCase<AddToCartResponse, AddToCartParams> {
   final Repository _repository;
 
   AddToCartUseCase(this._repository);
 
   @override
-  Future<Either<Failure, CommonResponse>> call(AddToCartParams params) async {
+  Future<Either<Failure, AddToCartResponse>> call(
+    AddToCartParams params,
+  ) async {
     return await _repository.addToCart(params);
   }
 }
@@ -47,6 +49,6 @@ class AddToCartParams extends Equatable {
     quantity,
     sellingQuantity,
     unit,
-    unitId
+    unitId,
   ];
 }

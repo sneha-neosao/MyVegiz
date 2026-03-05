@@ -34,6 +34,7 @@ import 'package:myvegiz_flutter/src/remote/models/category_by_product_model/cate
 import 'package:myvegiz_flutter/src/remote/models/city_model/city_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/common_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/home_slider_model/home_slider_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/add_to_cart_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
@@ -96,7 +97,7 @@ abstract class Repository {
   );
 
   /// Cart
-  Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params);
+  Future<Either<Failure, AddToCartResponse>> addToCart(AddToCartParams params);
 
   /// Delete Cart Item
   Future<Either<Failure, CommonResponse>> deleteCartItem(
@@ -700,13 +701,16 @@ class AuthRepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params) {
-    return _networkInfo.check<CommonResponse>(
+  Future<Either<Failure, AddToCartResponse>> addToCart(AddToCartParams params) {
+    return _networkInfo.check<AddToCartResponse>(
       connected: () async {
         try {
           final respData = await _remoteDataSource.addToCart(params);
 
           if (respData.status == "200") {
+            if (respData.cartCode != null) {
+              await SessionManager.saveCartCode(respData.cartCode!);
+            }
             return Right(respData);
           } else {
             return Left(ApiFailure(respData.message!));

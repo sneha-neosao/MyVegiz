@@ -8,16 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// session for managing the data locally
 class SessionManager {
-
   static Future<bool> checkIsKeyPresent(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(key);
   }
 
   static saveLoginStatus(bool isLoggedIn) async {
-    final prefs =await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     prefs.setBool("isLoggedIn", isLoggedIn);
   }
+
   static Future<bool?> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool("isLoggedIn");
@@ -53,8 +53,18 @@ class SessionManager {
     return prefs.getString("cityCode");
   }
 
+  static Future<void> saveCartCode(String cartCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("cartCode", cartCode);
+  }
+
+  static Future<String?> getCartCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("cartCode");
+  }
+
   static saveFirebaseToken(String? firebasetoken) async {
-    final prefs =await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     prefs.setString("firebasetoken", firebasetoken!);
   }
 
@@ -77,25 +87,24 @@ class SessionManager {
     await prefs.setString("latitude", latitude.toString());
     await prefs.setString("longitude", longitude.toString());
     await prefs.setString("address", address);
-    if (street != null)
-      await prefs.setString("street", street);
-    if (subLocality != null)
-      await prefs.setString("subLocality", subLocality);
-    if (locality != null)
-      await prefs.setString("locality", locality);
-    if (postalCode != null)
-      await prefs.setString("postalCode", postalCode);
+    if (street != null) await prefs.setString("street", street);
+    if (subLocality != null) await prefs.setString("subLocality", subLocality);
+    if (locality != null) await prefs.setString("locality", locality);
+    if (postalCode != null) await prefs.setString("postalCode", postalCode);
   }
 
   /// Get saved live location
-  static Future<({
-  double? lat,
-  double? lng,
-  String? address,
-  String? street,
-  String? subLocality,
-  String? locality,
-  String? postalCode})>
+  static Future<
+    ({
+      double? lat,
+      double? lng,
+      String? address,
+      String? street,
+      String? subLocality,
+      String? locality,
+      String? postalCode,
+    })
+  >
   getLiveLocation() async {
     final prefs = await SharedPreferences.getInstance();
     final latStr = prefs.getString("latitude");
@@ -103,23 +112,21 @@ class SessionManager {
     final address = prefs.getString("address");
 
     return (
-    lat: latStr != null ? double.tryParse(latStr) : null,
-    lng: lngStr != null ? double.tryParse(lngStr) : null,
-    address: address ,
-    street: prefs.getString("street"),
-    subLocality: prefs.getString("subLocality"),
-    locality: prefs.getString("locality"),
-    postalCode: prefs.getString("postalCode"),
+      lat: latStr != null ? double.tryParse(latStr) : null,
+      lng: lngStr != null ? double.tryParse(lngStr) : null,
+      address: address,
+      street: prefs.getString("street"),
+      subLocality: prefs.getString("subLocality"),
+      locality: prefs.getString("locality"),
+      postalCode: prefs.getString("postalCode"),
     );
   }
 
   static Future<Either<Failure, void>> clear() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if(await preferences.clear())
-      {
-       return Right(true);
-      }
-    else{
+    if (await preferences.clear()) {
+      return Right(true);
+    } else {
       return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
     }
   }

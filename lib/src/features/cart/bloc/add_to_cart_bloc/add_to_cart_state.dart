@@ -12,7 +12,7 @@ class AddToCartInitial extends AddToCartState {}
 class AddToCartLoading extends AddToCartState {}
 
 class AddToCartSuccess extends AddToCartState {
-  final CommonResponse response;
+  final AddToCartResponse response;
 
   const AddToCartSuccess(this.response);
 

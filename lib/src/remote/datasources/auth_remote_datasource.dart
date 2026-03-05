@@ -18,6 +18,7 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/get_otp_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/auth_models/otp_verify_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/cart_model/add_to_cart_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_count_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/cart_model/cart_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
@@ -86,7 +87,7 @@ sealed class RemoteDataSource {
   );
 
   /// Cart
-  Future<CommonResponse> addToCart(AddToCartParams params);
+  Future<AddToCartResponse> addToCart(AddToCartParams params);
 
   /// Delete Cart Item
   Future<CommonResponse> deleteCartItem(DeleteCartItemParams params);
@@ -671,7 +672,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Future<CommonResponse> addToCart(AddToCartParams params) async {
+  Future<AddToCartResponse> addToCart(AddToCartParams params) async {
     try {
       var data = {
         "clientCode": params.clientCode,
@@ -690,7 +691,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         data: data,
       );
 
-      return CommonResponse.fromJson(response);
+      return AddToCartResponse.fromJson(response);
     } catch (e) {
       if (e is ApiException) {
         throw e;

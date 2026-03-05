@@ -91,6 +91,7 @@ class Product {
   final dynamic cartQuantity;
   final String totalPrice;
   final List<String> images;
+  final List<RateVariant> rateVariants;
 
   Product({
     required this.id,
@@ -108,6 +109,7 @@ class Product {
     required this.cartQuantity,
     required this.totalPrice,
     required this.images,
+    required this.rateVariants,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -127,6 +129,56 @@ class Product {
       cartQuantity: json['cartQuantity'],
       totalPrice: json['totalPrice'],
       images: List<String>.from(json['images']),
+      rateVariants: (json['rate_variants'] as List? ?? [])
+          .map((e) => RateVariant.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class RateVariant {
+  final String variantsCode;
+  final String cityCode;
+  final String sellingUnit;
+  final String quantity;
+  final String productStatus;
+  final String sellingPrice;
+  final String regularPrice;
+  final String productDiscount;
+  final String isMainVariant;
+  final bool isInCart;
+  final int cartQuantity;
+  final String cartCode;
+
+  RateVariant({
+    required this.variantsCode,
+    required this.cityCode,
+    required this.sellingUnit,
+    required this.quantity,
+    required this.productStatus,
+    required this.sellingPrice,
+    required this.regularPrice,
+    required this.productDiscount,
+    required this.isMainVariant,
+    required this.isInCart,
+    required this.cartQuantity,
+    required this.cartCode,
+  });
+
+  factory RateVariant.fromJson(Map<String, dynamic> json) {
+    return RateVariant(
+      variantsCode: json['variantsCode'] ?? '',
+      cityCode: json['cityCode'] ?? '',
+      sellingUnit: json['sellingUnit'] ?? '',
+      quantity: json['quantity'] ?? '',
+      productStatus: json['productStatus'] ?? '',
+      sellingPrice: json['sellingPrice'] ?? '',
+      regularPrice: json['regularPrice'] ?? '',
+      productDiscount: json['productDiscount'] ?? '',
+      isMainVariant: json['isMainVariant'] ?? '',
+      isInCart: json['isInCart'] ?? false,
+      cartQuantity: json['cartQuantity'] ?? 0,
+      cartCode: json['cartCode'] ?? '',
     );
   }
 }

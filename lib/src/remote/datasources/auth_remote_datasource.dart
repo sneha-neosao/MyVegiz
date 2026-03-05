@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
@@ -86,6 +87,9 @@ sealed class RemoteDataSource {
 
   /// Cart
   Future<CommonResponse> addToCart(AddToCartParams params);
+
+  /// Delete Cart Item
+  Future<CommonResponse> deleteCartItem(DeleteCartItemParams params);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -688,6 +692,30 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       return CommonResponse.fromJson(response);
     } catch (e) {
+      if (e is ApiException) {
+        throw e;
+      }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> deleteCartItem(DeleteCartItemParams params) async {
+    try {
+      final data = FormData.fromMap({"clientCode": params.clientCode});
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.deleteCartItem,
+        data: data,
+      );
+
+      logger.d('📨 Raw deleteCartItem API response:');
+      logger.d(response);
+
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      logger.e(e);
       if (e is ApiException) {
         throw e;
       }

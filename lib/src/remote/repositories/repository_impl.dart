@@ -9,6 +9,7 @@ import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/verify_otp_usecase.dart';
@@ -96,6 +97,11 @@ abstract class Repository {
 
   /// Cart
   Future<Either<Failure, CommonResponse>> addToCart(AddToCartParams params);
+
+  /// Delete Cart Item
+  Future<Either<Failure, CommonResponse>> deleteCartItem(
+    DeleteCartItemParams params,
+  );
 
   /// Search
   Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(
@@ -699,6 +705,38 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.addToCart(params);
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> deleteCartItem(
+    DeleteCartItemParams params,
+  ) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.deleteCartItem(params);
 
           if (respData.status == "200") {
             return Right(respData);

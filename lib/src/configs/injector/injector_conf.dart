@@ -18,201 +18,137 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
 
 /// Configures all dependencies (Blocs, UseCases, Repositories, Services, API helpers)
 void configureDepedencies() {
-
   /// App Essentials
 
   getIt.registerLazySingleton<InternetConnectionChecker>(
-        () => InternetConnectionChecker.createInstance(),
+    () => InternetConnectionChecker.createInstance(),
   );
 
-  getIt.registerLazySingleton(
-        () => ThemeBloc(),
-  );
+  getIt.registerLazySingleton(() => ThemeBloc());
 
-  getIt.registerLazySingleton(
-        () => TranslateBloc(),
-  );
+  getIt.registerLazySingleton(() => TranslateBloc());
 
-  getIt.registerLazySingleton(
-        () => AppRouteConf(),
-  );
+  getIt.registerLazySingleton(() => AppRouteConf());
 
   // getIt.registerFactory(
   //       () => BottomNavFourBloc(),
   // );
 
-  getIt.registerFactory(
-        () => SplashBloc(),
-  );
+  getIt.registerFactory(() => SplashBloc());
 
   /// Other API Configuration
 
   getIt.registerFactory(
-        () => SignInBloc(getIt<GetOtpUseCase>(),getIt<VerifyOtpUseCase>(),getIt<AccountDeleteUseCase>()),
+    () => SignInBloc(
+      getIt<GetOtpUseCase>(),
+      getIt<VerifyOtpUseCase>(),
+      getIt<AccountDeleteUseCase>(),
+    ),
   );
+  getIt.registerFactory(() => GetOtpUseCase(getIt<AuthRepositoryImpl>()));
+  getIt.registerFactory(() => VerifyOtpUseCase(getIt<AuthRepositoryImpl>()));
   getIt.registerFactory(
-        () => GetOtpUseCase(getIt<AuthRepositoryImpl>()),
+    () => AccountDeleteUseCase(getIt<AuthRepositoryImpl>()),
   );
-  getIt.registerFactory(
-        () => VerifyOtpUseCase(getIt<AuthRepositoryImpl>()),
-  );
-  getIt.registerFactory(
-        () => AccountDeleteUseCase(getIt<AuthRepositoryImpl>()),
-  );
-  getIt.registerFactory(
-        () => GetOtpFormBloc(),
-  );
+  getIt.registerFactory(() => GetOtpFormBloc());
+
+  getIt.registerFactory(() => HomeSliderBloc(getIt<HomeSliderUseCase>()));
+  getIt.registerFactory(() => HomeSliderUseCase(getIt<AuthRepositoryImpl>()));
+
+  getIt.registerFactory(() => CityListBloc(getIt<CityListUseCase>()));
+  getIt.registerFactory(() => CityListUseCase(getIt<AuthRepositoryImpl>()));
+
+  getIt.registerFactory(() => RegistrationBloc(getIt<RegistrationUseCase>()));
+  getIt.registerFactory(() => RegistrationUseCase(getIt<AuthRepositoryImpl>()));
+  getIt.registerFactory(() => RegistrationFormBloc());
+
+  getIt.registerFactory(() => SliderBloc(getIt<SliderUseCase>()));
+  getIt.registerFactory(() => SliderUseCase(getIt<AuthRepositoryImpl>()));
+
+  getIt.registerFactory(() => CategoryBloc(getIt<CategoryUseCase>()));
+  getIt.registerFactory(() => CategoryUseCase(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(
-        () => HomeSliderBloc(getIt<HomeSliderUseCase>()),
+    () => CategoryAndProductBloc(getIt<CategoryAndProductUseCase>()),
   );
   getIt.registerFactory(
-        () => HomeSliderUseCase(getIt<AuthRepositoryImpl>()),
+    () => CategoryAndProductUseCase(getIt<AuthRepositoryImpl>()),
   );
 
-  getIt.registerFactory(
-        () => CityListBloc(getIt<CityListUseCase>()),
-  );
-  getIt.registerFactory(
-        () => CityListUseCase(getIt<AuthRepositoryImpl>()),
-  );
+  getIt.registerFactory(() => EditProfileBloc(getIt<EditProfileUseCase>()));
+  getIt.registerFactory(() => EditProfileUseCase(getIt<AuthRepositoryImpl>()));
+  getIt.registerFactory(() => EditProfileFormBloc());
 
   getIt.registerFactory(
-        () => RegistrationBloc(getIt<RegistrationUseCase>()),
+    () => ProductByCategoryBloc(getIt<ProductByCategoryUseCase>()),
   );
   getIt.registerFactory(
-        () => RegistrationUseCase(getIt<AuthRepositoryImpl>()),
-  );
-  getIt.registerFactory(
-        () => RegistrationFormBloc(),
+    () => ProductByCategoryUseCase(getIt<AuthRepositoryImpl>()),
   );
 
+  getIt.registerFactory(() => AddToWishListBloc(getIt<AddToWishListUseCase>()));
   getIt.registerFactory(
-        () => SliderBloc(getIt<SliderUseCase>()),
-  );
-  getIt.registerFactory(
-        () => SliderUseCase(getIt<AuthRepositoryImpl>()),
+    () => AddToWishListUseCase(getIt<AuthRepositoryImpl>()),
   );
 
-  getIt.registerFactory(
-        () => CategoryBloc(getIt<CategoryUseCase>()),
-  );
-  getIt.registerFactory(
-        () => CategoryUseCase(getIt<AuthRepositoryImpl>()),
-  );
+  getIt.registerFactory(() => WishListBloc(getIt<WishListUseCase>()));
+  getIt.registerFactory(() => WishListUseCase(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(
-        () => CategoryAndProductBloc(getIt<CategoryAndProductUseCase>()),
+    () => ProfileDetailsBloc(getIt<ProfileDetailsUseCase>()),
   );
   getIt.registerFactory(
-        () => CategoryAndProductUseCase(getIt<AuthRepositoryImpl>()),
+    () => ProfileDetailsUseCase(getIt<AuthRepositoryImpl>()),
   );
 
-  getIt.registerFactory(
-        () => EditProfileBloc(getIt<EditProfileUseCase>()),
-  );
-  getIt.registerFactory(
-        () => EditProfileUseCase(getIt<AuthRepositoryImpl>()),
-  );
-  getIt.registerFactory(
-        () => EditProfileFormBloc(),
-  );
+  getIt.registerFactory(() => CartListBloc(getIt<CartListUseCase>()));
+  getIt.registerFactory(() => CartListUseCase(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(
-        () => ProductByCategoryBloc(getIt<ProductByCategoryUseCase>()),
+    () => CartCountBloc(getIt<VegetableGroceryCartCountUseCase>()),
   );
   getIt.registerFactory(
-        () => ProductByCategoryUseCase(getIt<AuthRepositoryImpl>()),
+    () => VegetableGroceryCartCountUseCase(getIt<AuthRepositoryImpl>()),
   );
 
+  getIt.registerFactory(() => SearchProductBloc(getIt<SearchProductUseCase>()));
   getIt.registerFactory(
-        () => AddToWishListBloc(getIt<AddToWishListUseCase>()),
-  );
-  getIt.registerFactory(
-        () => AddToWishListUseCase(getIt<AuthRepositoryImpl>()),
+    () => SearchProductUseCase(getIt<AuthRepositoryImpl>()),
   );
 
-  getIt.registerFactory(
-        () => WishListBloc(getIt<WishListUseCase>()),
-  );
-  getIt.registerFactory(
-        () => WishListUseCase(getIt<AuthRepositoryImpl>()),
-  );
+  getIt.registerFactory(() => AddToCartBloc(getIt<AddToCartUseCase>()));
+  getIt.registerFactory(() => AddToCartUseCase(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(
-        () => ProfileDetailsBloc(getIt<ProfileDetailsUseCase>()),
+    () => DeleteCartItemBloc(getIt<DeleteCartItemUseCase>()),
   );
   getIt.registerFactory(
-        () => ProfileDetailsUseCase(getIt<AuthRepositoryImpl>()),
+    () => DeleteCartItemUseCase(getIt<AuthRepositoryImpl>()),
   );
-
-  getIt.registerFactory(
-        () => CartListBloc(getIt<CartListUseCase>()),
-  );
-  getIt.registerFactory(
-        () => CartListUseCase(getIt<AuthRepositoryImpl>()),
-  );
-
-  getIt.registerFactory(
-        () => CartCountBloc(getIt<VegetableGroceryCartCountUseCase>()),
-  );
-  getIt.registerFactory(
-        () => VegetableGroceryCartCountUseCase(getIt<AuthRepositoryImpl>()),
-  );
-
-  getIt.registerFactory(
-        () => SearchProductBloc(getIt<SearchProductUseCase>()),
-  );
-  getIt.registerFactory(
-        () => SearchProductUseCase(getIt<AuthRepositoryImpl>()),
-  );
-
-  getIt.registerFactory(
-        () => AddToCartBloc(getIt<AddToCartUseCase>()),
-  );
-  getIt.registerFactory(
-        () => AddToCartUseCase(getIt<AuthRepositoryImpl>()),
-  );
-
-
-
-
-
-
-
 
   /// API Helper
 
-  getIt.registerLazySingleton(
-        () => NetworkInfo(),
-  );
+  getIt.registerLazySingleton(() => NetworkInfo());
 
   getIt.registerLazySingleton(
-        () =>
+    () =>
         AuthRepositoryImpl(getIt<RemoteDataSourceImpl>(), getIt<NetworkInfo>()),
   );
 
-  getIt.registerLazySingleton(
-        () => RemoteDataSourceImpl(getIt<ApiHelper>()),
-  );
+  getIt.registerLazySingleton(() => RemoteDataSourceImpl(getIt<ApiHelper>()));
+
+  getIt.registerLazySingleton(() => ApiHelper(getIt<Dio>()));
 
   getIt.registerLazySingleton(
-        () => ApiHelper(getIt<Dio>(),),
+    () => Dio()..interceptors.add(getIt<ApiInterceptor>()),
   );
 
-  getIt.registerLazySingleton(
-        () =>
-    Dio()
-      ..interceptors.add(getIt<ApiInterceptor>(),),
-  );
-
-  getIt.registerLazySingleton(
-        () => ApiInterceptor(),
-  );
+  getIt.registerLazySingleton(() => ApiInterceptor());
 }

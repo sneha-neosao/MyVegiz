@@ -76,5 +76,21 @@
   "confirm_location": "CONFIRM LOCATION",
   "vegetables": "Vegetables",
   "no_product_added_in_category": "No product added in this category!",
-  "continue_shopping": "Continue Shopping"
+  "continue_shopping": "Continue Shopping",
+  "bill_details": "Bill Details",
+  "item_total": "Item Total",
+  "discount": "Discount",
+  "sub_total": "Sub Total",
+  "tax": "Tax",
+  "packaging_charges": "Packaging Charges",
+  "delivery_charges": "Delivery Charges",
+  "total_payable": "Total Payable",
+  "note": "Note",
+  "proceed_to_pay": "Proceed to Pay",
+  "apply_coupon": "Apply Coupon",
+  "delivery_fee": "Delivery Fee",
+  "gst_and_taxes": "GST and Taxes",
+  "to_pay": "To Pay",
+  "empty_cart": "Empty Cart",
+  "are_you_sure_you_want_to_empty_cart": "Are you sure you want to empty your cart?"
 }

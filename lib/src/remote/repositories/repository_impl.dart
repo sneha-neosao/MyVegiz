@@ -9,6 +9,7 @@ import 'package:myvegiz_flutter/src/core/usecases/usecase.dart';
 import 'package:myvegiz_flutter/src/core/utils/failure_converter.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
 import 'package:myvegiz_flutter/src/features/login/domain/usecase/get_otp_usecase.dart';
@@ -98,6 +99,7 @@ abstract class Repository {
 
   /// Cart
   Future<Either<Failure, AddToCartResponse>> addToCart(AddToCartParams params);
+  Future<Either<Failure, CommonResponse>> updateCart(UpdateCartParams params);
 
   /// Delete Cart Item
   Future<Either<Failure, CommonResponse>> deleteCartItem(
@@ -711,6 +713,36 @@ class AuthRepositoryImpl implements Repository {
             if (respData.cartCode != null) {
               await SessionManager.saveCartCode(respData.cartCode!);
             }
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message!));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> updateCart(UpdateCartParams params) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.updateCart(params);
+
+          if (respData.status == "200" || respData.status == "deletetrue") {
             return Right(respData);
           } else {
             return Left(ApiFailure(respData.message!));

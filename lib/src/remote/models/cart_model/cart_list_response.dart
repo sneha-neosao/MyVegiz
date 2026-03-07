@@ -86,9 +86,9 @@ class Product {
   final String regularPrice;
   final String sellingPrice;
   final String quantity;
-  final bool isInCart;
+  bool isInCart;
   final bool isInWishlist;
-  final dynamic cartQuantity;
+  dynamic cartQuantity;
   final String totalPrice;
   final List<String> images;
   final List<RateVariant> rateVariants;
@@ -146,9 +146,9 @@ class RateVariant {
   final String regularPrice;
   final String productDiscount;
   final String isMainVariant;
-  final bool isInCart;
-  final int cartQuantity;
-  final String cartCode;
+  bool isInCart;
+  int cartQuantity;
+  String cartCode;
 
   RateVariant({
     required this.variantsCode,

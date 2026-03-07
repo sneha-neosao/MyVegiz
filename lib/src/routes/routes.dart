@@ -17,3 +17,5 @@ export '../features/location/presentation/pages/select_location_screen.dart';
 export '../features/location/presentation/pages/confirm_location_screen.dart';
 export '../features/vegetablesAndGrocery/presentation/pages/vegetables_product_list.dart';
 export '../features/vegetablesAndGrocery/presentation/pages/grocery_product_list.dart';
+export '../features/myAccount/presentation/pages/app_info_screen.dart';
+export '../features/myAccount/presentation/pages/webview_screen.dart';

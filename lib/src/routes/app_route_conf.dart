@@ -156,6 +156,28 @@ class AppRouteConf {
         },
       ),
 
+      GoRoute(
+        path: AppRoute.appInfoScreen.path,
+        name: AppRoute.appInfoScreen.name,
+        pageBuilder: (context, state) => _fadePage(const AppInfoScreen()),
+      ),
+
+      GoRoute(
+        path: AppRoute.webViewScreen.path,
+        name: AppRoute.webViewScreen.name,
+        pageBuilder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final title = extras['title'].toString();
+          final url = extras['url'] ?? '';
+          return _fadePage(
+            WebViewScreen(
+              title: title,
+              url: url,
+            ),
+          );
+        },
+      ),
+
     ],
   );
 }

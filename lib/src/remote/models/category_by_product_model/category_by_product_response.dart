@@ -16,7 +16,7 @@ class ProductByCategoryResponse {
       status: json['status'] ?? '',
       message: json["message"],
       totalRecords: json['totalRecords'] ?? 0,
-      result: json['result'] != null 
+      result: json['result'] != null
           ? ProductResult.fromJson(json['result'])
           : ProductResult(products: []),
     );
@@ -71,9 +71,9 @@ class Product {
   final String variantsCode;
   final String isMainVariant;
   final String subCategoryId;
-  final bool isInCart;
-  final int cartQuantity;
-  final String cartCode;
+  bool isInCart;
+  int cartQuantity;
+  String cartCode;
   final bool isInWishlist;
   final String sellingPrice;
   final List<String> images;
@@ -190,9 +190,9 @@ class RateVariant {
   final String regularPrice;
   final String productDiscount;
   final String isMainVariant;
-  final bool isInCart;
-  final int cartQuantity;
-  final String cartCode;
+  bool isInCart;
+  int cartQuantity;
+  String cartCode;
 
   RateVariant({
     required this.variantsCode,

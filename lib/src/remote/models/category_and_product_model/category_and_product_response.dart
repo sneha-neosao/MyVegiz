@@ -37,9 +37,7 @@ class Result {
 
   factory Result.fromJson(Map<String, dynamic> json) {
     var list = json['categories'] as List? ?? [];
-    return Result(
-      categories: list.map((e) => Category.fromJson(e)).toList(),
-    );
+    return Result(categories: list.map((e) => Category.fromJson(e)).toList());
   }
 
   Map<String, dynamic> toJson() => {
@@ -98,9 +96,7 @@ class ProductList {
 
   factory ProductList.fromJson(Map<String, dynamic> json) {
     var list = json['products'] as List? ?? [];
-    return ProductList(
-      products: list.map((e) => Product.fromJson(e)).toList(),
-    );
+    return ProductList(products: list.map((e) => Product.fromJson(e)).toList());
   }
 
   Map<String, dynamic> toJson() => {
@@ -162,9 +158,9 @@ class RateVariant {
   final int regularPrice;
   final int productDiscount;
   final String isMainVariant;
-  final bool isInCart;
-  final int cartQuantity;
-  final String cartCode;
+  bool isInCart;
+  int cartQuantity;
+  String cartCode;
 
   RateVariant({
     required this.variantsCode,
@@ -213,5 +209,3 @@ class RateVariant {
     'cartCode': cartCode,
   };
 }
-
-

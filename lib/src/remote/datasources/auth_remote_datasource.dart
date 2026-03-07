@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/cart_list_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'package:myvegiz_flutter/src/features/home/domain/usecase/vegetable_grocery_cart_count_usecase.dart';
@@ -88,6 +89,7 @@ sealed class RemoteDataSource {
 
   /// Cart
   Future<AddToCartResponse> addToCart(AddToCartParams params);
+  Future<CommonResponse> updateCart(UpdateCartParams params);
 
   /// Delete Cart Item
   Future<CommonResponse> deleteCartItem(DeleteCartItemParams params);
@@ -692,6 +694,39 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       );
 
       return AddToCartResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) {
+        throw e;
+      }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> updateCart(UpdateCartParams params) async {
+    try {
+      final data = FormData.fromMap({
+        "cartCode": params.cartCode,
+        "quantity": params.quantity,
+        "clientCode": params.clientCode,
+        "productCode": params.productCode,
+        "variantsCode": params.variantsCode,
+        "cityCode": params.cityCode,
+        "unit": params.unit,
+        "unitId": params.unitId,
+        "sellingQuantity": params.sellingQuantity,
+        "productName": params.productName,
+        "price": params.price,
+        "count": params.count,
+      });
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.updateCart,
+        data: data,
+      );
+
+      return CommonResponse.fromJson(response);
     } catch (e) {
       if (e is ApiException) {
         throw e;

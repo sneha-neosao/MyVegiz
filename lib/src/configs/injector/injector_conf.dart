@@ -18,6 +18,7 @@ import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase
 import 'package:myvegiz_flutter/src/features/vegetablesAndGrocery/domain/usecase/slider_usecase.dart';
 import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_product_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
+import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'injector.dart';
 
@@ -125,6 +126,9 @@ void configureDepedencies() {
 
   getIt.registerFactory(() => AddToCartBloc(getIt<AddToCartUseCase>()));
   getIt.registerFactory(() => AddToCartUseCase(getIt<AuthRepositoryImpl>()));
+
+  getIt.registerFactory(() => UpdateCartBloc(getIt<UpdateCartUseCase>()));
+  getIt.registerFactory(() => UpdateCartUseCase(getIt<AuthRepositoryImpl>()));
 
   getIt.registerFactory(
     () => DeleteCartItemBloc(getIt<DeleteCartItemUseCase>()),

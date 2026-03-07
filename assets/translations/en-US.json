@@ -92,5 +92,14 @@
   "gst_and_taxes": "GST and Taxes",
   "to_pay": "To Pay",
   "empty_cart": "Empty Cart",
-  "are_you_sure_you_want_to_empty_cart": "Are you sure you want to empty your cart?"
+  "are_you_sure_you_want_to_empty_cart": "Are you sure you want to empty your cart?",
+  "application_name": "Application Name",
+  "my_vegiz": "My Vegiz",
+  "privacy_and_policy": "Privacy And Policy",
+  "privacy_policy_disclaimer": "Privacy Policy Disclaimer",
+  "terms_and_conditions": "Terms And Conditions",
+  "tap_for_more_details": "Tap For More Details",
+  "copyright": "Copyright",
+  "copyright_text": "All rights reserved by Copyright © 2019 MyVegiz. Designed and Developed by Neosao Services Pvt. Ltd.",
+  "contact_details": "Contact Details"
 }

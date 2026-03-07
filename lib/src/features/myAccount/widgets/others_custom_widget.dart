@@ -7,7 +7,9 @@ import 'package:myvegiz_flutter/src/configs/injector/injector.dart';
 import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
 import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/remote/models/user_model/user_model.dart';
+import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OthersCustomWidget extends StatefulWidget {
   final UserModel? userData;
@@ -200,6 +202,17 @@ class _OthersCustomWidgetState extends State<OthersCustomWidget> {
     );
   }
 
+  Future<void> openPlayStore() async {
+    final Uri url = Uri.parse(
+      "https://play.google.com/store/apps/details?id=com.example.myvegiz_flutter",
+    );
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -244,24 +257,31 @@ class _OthersCustomWidgetState extends State<OthersCustomWidget> {
                 color: AppColor.hintText,
               ),
               14.hS,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+              InkWell(
+                onTap: (){
+                  openPlayStore();
+                },
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset("assets/icons/rate_icon.png",height:24,width: 24,),
-                      8.wS,
-                      Text(
-                        "rate_app".tr(),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColor.black,
-                            fontWeight: FontWeight.normal,fontSize: 14
-                        ),
+                      Row(
+                        children: [
+                          Image.asset("assets/icons/rate_icon.png",height:24,width: 24,),
+                          8.wS,
+                          Text(
+                            "rate_app".tr(),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColor.black,
+                                fontWeight: FontWeight.normal,fontSize: 14
+                            ),
+                          ),
+                        ],
                       ),
+                      Image.asset("assets/icons/right_arrow_icon.png",height:16,width: 16,)
                     ],
                   ),
-                  Image.asset("assets/icons/right_arrow_icon.png",height:16,width: 16,)
-                ],
+                ),
               ),
               14.hS,
               Container(
@@ -269,24 +289,31 @@ class _OthersCustomWidgetState extends State<OthersCustomWidget> {
                 color: AppColor.hintText,
               ),
               14.hS,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+              InkWell(
+                onTap: (){
+                  context.pushNamed(AppRoute.appInfoScreen.name);
+                },
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset("assets/icons/help_icon.png",height:24,width: 24,),
-                      8.wS,
-                      Text(
-                        "app_info".tr(),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColor.black,
-                            fontWeight: FontWeight.normal,fontSize: 14
-                        ),
+                      Row(
+                        children: [
+                          Image.asset("assets/icons/help_icon.png",height:24,width: 24,),
+                          8.wS,
+                          Text(
+                            "app_info".tr(),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColor.black,
+                                fontWeight: FontWeight.normal,fontSize: 14
+                            ),
+                          ),
+                        ],
                       ),
+                      Image.asset("assets/icons/right_arrow_icon.png",height:16,width: 16,)
                     ],
                   ),
-                  Image.asset("assets/icons/right_arrow_icon.png",height:16,width: 16,)
-                ],
+                ),
               ),
               14.hS,
               Container(

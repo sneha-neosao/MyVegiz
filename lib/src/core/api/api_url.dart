@@ -8,9 +8,13 @@ class ApiUrl {
 
   static const domainUrl = "https://myvegiz.com";
 
-  static const privacyUrl = "";
+  static const privacyUrl = "/Home/privacypolicy";
 
-  static const termsConditionUrl = "";
+  static const termsConditionUrl = "/Home/termsandcondition";
+
+  static const copyRightUrl = "https://www.neosao.com";
+
+  static const contactDetailsUrl = "/Home/contactdetails";
 
   static const getOtp = "Api/sendRegisterOTP";
 
@@ -47,6 +51,7 @@ class ApiUrl {
   static const vegetableGroceryCartCount = "Api/getGroceryProductCartCount";
 
   static const addProductToCart = "Api/addToCart";
+  static const updateCart = "Api/updateCart";
   static const searchProductByKeyword = "Api/searchProductByKeyword";
   static const deleteCartItem = "Api/deleteCartItem";
 }

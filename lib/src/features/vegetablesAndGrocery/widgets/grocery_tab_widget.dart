@@ -13,7 +13,8 @@ import 'package:myvegiz_flutter/src/features/widgets/search_text_field_widget.da
 import 'package:myvegiz_flutter/src/features/widgets/vegetable_category_shimmer_widget.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart' as cat_res;
+import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart'
+    as cat_res;
 import 'package:myvegiz_flutter/src/remote/models/category_and_product_model/category_and_product_response.dart';
 import '../bloc/category_and_product_bloc/category_and_product_bloc.dart';
 import '../bloc/product_by_category_bloc/product_by_category_bloc.dart';
@@ -43,8 +44,10 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
     // TODO: implement initState
     super.initState();
     _loadClientCode();
-    _vegetableSliderBloc = getIt<SliderBloc>()..add(SliderGetEvent(widget.cityCode, "MCAT_2"));
-    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()..add(CategoryAndProductGetEvent("0", "MCAT_2", widget.cityCode));
+    _vegetableSliderBloc = getIt<SliderBloc>()
+      ..add(SliderGetEvent(widget.cityCode, "MCAT_2"));
+    _categoryAndProductBloc = getIt<CategoryAndProductBloc>()
+      ..add(CategoryAndProductGetEvent("0", "MCAT_2", widget.cityCode));
     _productByCategoryBloc = getIt<ProductByCategoryBloc>();
   }
 
@@ -63,19 +66,22 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
         BlocProvider(create: (_) => _categoryAndProductBloc),
       ],
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.0,vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 14),
         child: Column(
-          crossAxisAlignment : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'grocery'.tr(),
               style: GoogleFonts.mavenPro(
-                  color: AppColor.black,fontSize: 24, fontWeight: FontWeight.bold),
+                color: AppColor.black,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             16.hS,
             SearchTextField(
-                hint: "search_product_by_name".tr(),
-                onChanged: (val){}
+              hint: "search_product_by_name".tr(),
+              onChanged: (val) {},
             ),
             16.hS,
             BlocConsumer<SliderBloc, SliderState>(
@@ -120,7 +126,9 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                   }
 
                   // Convert List<HomeSliderImage> → List<String>
-                  final bannerUrls = result.sliderImages.map((e) => e.imagePath).toList();
+                  final bannerUrls = result.sliderImages
+                      .map((e) => e.imagePath)
+                      .toList();
                   return VegetableBannerCarouselSection(bannerUrls: bannerUrls);
                 }
                 return const SizedBox.shrink();
@@ -140,7 +148,8 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: 6,
-                      itemBuilder: (_, __) => const VegetableCategoryShimmerWidget(),
+                      itemBuilder: (_, __) =>
+                          const VegetableCategoryShimmerWidget(),
                       separatorBuilder: (_, __) => SizedBox(width: 8.w),
                     ),
                   );
@@ -176,7 +185,8 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     category.categoryName,
@@ -192,7 +202,8 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                                         AppRoute.groceryProductListScreen.name,
                                         extra: {
                                           'cityCode': widget.cityCode,
-                                          'categorySName': category.categorySName
+                                          'categorySName':
+                                              category.categorySName,
                                         },
                                       );
                                     },
@@ -218,22 +229,30 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                                 ],
                               ),
                               // If you want to show horizontal products below each category:
-                              if (category.productList != null && category.productList!.products.isNotEmpty)
-                                ...[
-                                  12.hS,
-                                  SizedBox(
-                                    height: 140, // Height for horizontal product cards
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: category.productList!.products.length,
-                                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                                      itemBuilder: (context, pIndex) {
-                                        final product = category.productList!.products[pIndex];
-                                        return _buildSmallProductCard(product);
-                                      },
-                                    ),
+                              if (category.productList != null &&
+                                  category
+                                      .productList!
+                                      .products
+                                      .isNotEmpty) ...[
+                                12.hS,
+                                SizedBox(
+                                  height:
+                                      140, // Height for horizontal product cards
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        category.productList!.products.length,
+                                    separatorBuilder: (_, __) =>
+                                        const SizedBox(width: 12),
+                                    itemBuilder: (context, pIndex) {
+                                      final product = category
+                                          .productList!
+                                          .products[pIndex];
+                                      return _buildSmallProductCard(product);
+                                    },
                                   ),
-                                ]
+                                ),
+                              ],
                             ],
                           );
                         },
@@ -265,7 +284,7 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
                 AppRoute.groceryProductListScreen.name,
                 extra: {
                   'cityCode': widget.cityCode,
-                  'categorySName': category.categorySName
+                  'categorySName': category.categorySName,
                 },
               );
             },
@@ -312,53 +331,68 @@ class _GroceryTabWidgetState extends State<GroceryTabWidget> {
   }
 
   Widget _buildSmallProductCard(Product product) {
-    return Container(
-      width: 140,
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-              child: Image.network(
-                product.images.isNotEmpty ? product.images.first : '',
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Icon(Icons.image),
+    return InkWell(
+      onTap: () {
+        context.pushNamed(
+          AppRoute.productDetailsScreen.name,
+          extra: {
+            'productCode': product.code,
+            'mainCategoryCode': "",
+            'cityCode': widget.cityCode,
+            'clientCode': clienCode,
+          },
+        );
+      },
+      child: Container(
+        width: 140,
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(10),
+                ),
+                child: Image.network(
+                  product.images.isNotEmpty ? product.images.first : '',
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const Icon(Icons.image),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.productName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.mavenPro(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.productName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.mavenPro(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-                Text(
-                  "₹${product.sellingPrice}",
-                  style: GoogleFonts.mavenPro(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.black,
+                  Text(
+                    "₹${product.sellingPrice}",
+                    style: GoogleFonts.mavenPro(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.black,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -45,6 +45,8 @@ import '../../remote/models/category_model/category_response.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/add_address_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/update_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/common/domain/usecase/product_details_usecase.dart';
+import 'package:myvegiz_flutter/src/remote/models/product_details_model/product_details_response.dart';
 
 /// Abstract Repository interface defining all data operations for the app
 
@@ -113,6 +115,11 @@ abstract class Repository {
   /// Search
   Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(
     SearchProductParams params,
+  );
+
+  /// Product By Id
+  Future<Either<Failure, ProductDetailsResponse>> productById(
+    ProductDetailsParams params,
   );
 
   /// Address
@@ -920,6 +927,37 @@ class AuthRepositoryImpl implements Repository {
       connected: () async {
         try {
           final respData = await _remoteDataSource.updateClientAddress(params);
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message ?? ''));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, ProductDetailsResponse>> productById(
+    ProductDetailsParams params,
+  ) {
+    return _networkInfo.check<ProductDetailsResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.productById(params);
           if (respData.status == "200") {
             return Right(respData);
           } else {

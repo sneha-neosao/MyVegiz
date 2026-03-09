@@ -30,3 +30,4 @@ export '../../features/cart/bloc/add_to_cart_bloc/add_to_cart_bloc.dart';
 export '../../features/cart/bloc/update_cart_bloc/update_cart_bloc.dart';
 export '../../features/cart/bloc/delete_cart_item_bloc/delete_cart_item_bloc.dart';
 export '../../features/address/bloc/addresses_bloc/addresses_bloc.dart';
+export '../../features/common/bloc/get_product_details_bloc/get_product_details_bloc.dart';

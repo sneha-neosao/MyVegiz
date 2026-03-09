@@ -40,6 +40,8 @@ class ApiUrl {
 
   static const productByCategory = "Api/productByCategory";
 
+  static const productById = "Api/productById";
+
   static const productCategoryList = "Api/categoryAndProduct";
 
   static const addProductToWishList = "Api/addToWishlist";

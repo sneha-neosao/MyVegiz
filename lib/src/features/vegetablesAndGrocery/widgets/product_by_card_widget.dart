@@ -9,6 +9,8 @@ import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dar
 import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
 import '../../../configs/injector/injector_conf.dart';
 import '../../../remote/models/category_by_product_model/category_by_product_response.dart';
+import '../../../routes/app_route_path.dart';
+import 'package:go_router/go_router.dart';
 
 class CategoryByProductCardWidget extends StatefulWidget {
   final Product product;
@@ -99,183 +101,323 @@ class _CategoryByProductCardWidgetState
             },
           ),
         ],
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColor.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Left image box
-                Container(
-                  height: 85,
-                  width: 85,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColor.black,
-                    image: widget.product.images.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(widget.product.images.first),
-                            fit: BoxFit.fill,
-                          )
-                        : null,
+        child: InkWell(
+          onTap: () {
+            context.pushNamed(
+              AppRoute.productDetailsScreen.name,
+              extra: {
+                'productCode': widget.product.code,
+                'mainCategoryCode': "MCAT_1", // It depends where it's called from but we might not have it. Let's pass empty, or pass it from parent. Wait, product has category info? Yes: subCategoryId but often needed is mainCategoryCode. Let's leave empty if not present.
+                'cityCode': widget.product.cityCode,
+                'clientCode': widget.clientCode,
+              },
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 10,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Left image box
+                  Container(
+                    height: 85,
+                    width: 85,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColor.black,
+                      image: widget.product.images.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(widget.product.images.first),
+                              fit: BoxFit.fill,
+                            )
+                          : null,
+                    ),
                   ),
-                ),
 
-                // Right side content
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.product.productName
-                                    .replaceAll(RegExp(r'\s+'), ' ')
-                                    .trim(),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.mavenPro(
-                                  color: AppColor.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
+                  // Right side content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  widget.product.productName
+                                      .replaceAll(RegExp(r'\s+'), ' ')
+                                      .trim(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.mavenPro(
+                                    color: AppColor.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                            ),
 
-                            const SizedBox(width: 8),
+                              const SizedBox(width: 8),
 
-                            BlocConsumer<AddToWishListBloc, AddToWishListState>(
-                              listener: (context, state) {
-                                if (state is AddToWishListFailureState) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(state.message)),
-                                  );
-                                } else if (state is AddToWishListSuccessState) {
-                                  setState(() {
-                                    _isInWishlist = !_isInWishlist;
-                                  });
-                                }
-                              },
-                              builder: (context, state) {
-                                if (state is AddToWishListLoadingState) {
-                                  return const SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: AppLoadingWidget(strokeWidth: 4),
-                                  );
-                                }
-
-                                return InkWell(
-                                  onTap: () {
-                                    context.read<AddToWishListBloc>().add(
-                                      AddToWishListGetEvent(
-                                        widget.product.code,
-                                        widget.clientCode,
-                                      ),
+                              BlocConsumer<
+                                AddToWishListBloc,
+                                AddToWishListState
+                              >(
+                                listener: (context, state) {
+                                  if (state is AddToWishListFailureState) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(state.message)),
                                     );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Image.asset(
-                                      "assets/icons/filled_heart_icon.png",
-                                      color: _isInWishlist
-                                          ? AppColor.brightRed
-                                          : AppColor.hintText,
-                                      height: 20,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                                  } else if (state
+                                      is AddToWishListSuccessState) {
+                                    setState(() {
+                                      _isInWishlist = !_isInWishlist;
+                                    });
+                                  }
+                                },
+                                builder: (context, state) {
+                                  if (state is AddToWishListLoadingState) {
+                                    return const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: AppLoadingWidget(strokeWidth: 4),
+                                    );
+                                  }
 
-                        // Quantity + UOM
-                        InkWell(
-                          onTap: () {
-                            _showVariantDialog(context, widget.product);
-                          },
-                          child: Container(
-                            width: 105,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: AppColor.brightRed.withOpacity(0.1),
-                              border: Border.all(
-                                width: 1,
-                                color: AppColor.middleOrangeButton,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 2,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${_selectedVariant.quantity} ${_selectedVariant.sellingUnit}",
-                                    style: GoogleFonts.mavenPro(
-                                      color: AppColor.gray,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
+                                  return InkWell(
+                                    onTap: () {
+                                      context.read<AddToWishListBloc>().add(
+                                        AddToWishListGetEvent(
+                                          widget.product.code,
+                                          widget.clientCode,
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: Image.asset(
+                                        "assets/icons/filled_heart_icon.png",
+                                        color: _isInWishlist
+                                            ? AppColor.brightRed
+                                            : AppColor.hintText,
+                                        height: 20,
+                                      ),
                                     ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColor.black,
-                                    size: 22,
-                                  ),
-                                ],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+
+                          // Quantity + UOM
+                          InkWell(
+                            onTap: () {
+                              _showVariantDialog(context, widget.product);
+                            },
+                            child: Container(
+                              width: 105,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColor.brightRed.withOpacity(0.1),
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColor.middleOrangeButton,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                  vertical: 2,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${_selectedVariant.quantity} ${_selectedVariant.sellingUnit}",
+                                      style: GoogleFonts.mavenPro(
+                                        color: AppColor.gray,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColor.black,
+                                      size: 22,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        // Price + discount + add button
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "₹${_selectedVariant.regularPrice}",
-                                  style: GoogleFonts.mavenPro(
-                                    color: AppColor.grayShade,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "₹${_selectedVariant.sellingPrice}",
-                                      style: GoogleFonts.mavenPro(
-                                        color: AppColor.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                          // Price + discount + add button
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "₹${_selectedVariant.regularPrice}",
+                                    style: GoogleFonts.mavenPro(
+                                      color: AppColor.grayShade,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.lineThrough,
                                     ),
-                                    4.wS,
-                                    if (_selectedVariant
-                                            .productDiscount
-                                            .isNotEmpty &&
-                                        _selectedVariant.productDiscount !=
-                                            "0% Off")
-                                      Container(
-                                        width: 40,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "₹${_selectedVariant.sellingPrice}",
+                                        style: GoogleFonts.mavenPro(
+                                          color: AppColor.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      4.wS,
+                                      if (_selectedVariant
+                                              .productDiscount
+                                              .isNotEmpty &&
+                                          _selectedVariant.productDiscount !=
+                                              "0% Off")
+                                        Container(
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
+                                            gradient: const LinearGradient(
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              colors: [
+                                                AppColor.startOrangeButton,
+                                                AppColor.middleOrangeButton,
+                                                AppColor.endOrangeButton,
+                                              ],
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                2.0,
+                                              ),
+                                              child: Text(
+                                                _selectedVariant
+                                                    .productDiscount,
+                                                style: GoogleFonts.mavenPro(
+                                                  color: AppColor.white,
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              BlocBuilder<UpdateCartBloc, UpdateCartState>(
+                                builder: (context, updateState) {
+                                  return BlocBuilder<
+                                    AddToCartBloc,
+                                    AddToCartState
+                                  >(
+                                    builder: (context, addState) {
+                                      final isLoading =
+                                          addState is AddToCartLoading ||
+                                          updateState is UpdateCartLoading;
+                                      if (!_isCurrentlyInCart) {
+                                        return InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _isCurrentlyInCart = true;
+                                              _cartQuantity = 1;
+                                            });
+                                            context.read<AddToCartBloc>().add(
+                                              AddProductToCartEvent(
+                                                AddToCartParams(
+                                                  clientCode: widget.clientCode,
+                                                  price: _selectedVariant
+                                                      .sellingPrice,
+                                                  productCode:
+                                                      widget.product.code,
+                                                  productName: widget
+                                                      .product
+                                                      .productName,
+                                                  quantity: "1",
+                                                  sellingQuantity:
+                                                      _selectedVariant.quantity,
+                                                  unit: _selectedVariant
+                                                      .sellingUnit,
+                                                  unitId: _selectedVariant
+                                                      .variantsCode,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 110,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              border: Border.all(
+                                                width: 1,
+                                                color:
+                                                    AppColor.middleOrangeButton,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 6.0,
+                                                      horizontal: 8,
+                                                    ),
+                                                child: isLoading
+                                                    ? const SizedBox(
+                                                        height: 20,
+                                                        width: 20,
+                                                        child: AppLoadingWidget(
+                                                          strokeWidth: 3,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        "ADD",
+                                                        style:
+                                                            GoogleFonts.mavenPro(
+                                                              color: AppColor
+                                                                  .orange,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                      ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+
+                                      // Quantity Selector (Counter)
+                                      return Container(
+                                        width: 110,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             6,
@@ -290,132 +432,123 @@ class _CategoryByProductCardWidgetState
                                             ],
                                           ),
                                         ),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Text(
-                                              _selectedVariant.productDiscount,
-                                              style: GoogleFonts.mavenPro(
-                                                color: AppColor.white,
-                                                fontSize: 9,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            BlocBuilder<UpdateCartBloc, UpdateCartState>(
-                              builder: (context, updateState) {
-                                return BlocBuilder<
-                                  AddToCartBloc,
-                                  AddToCartState
-                                >(
-                                  builder: (context, addState) {
-                                    final isLoading =
-                                        addState is AddToCartLoading ||
-                                        updateState is UpdateCartLoading;
-                                    if (!_isCurrentlyInCart) {
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _isCurrentlyInCart = true;
-                                            _cartQuantity = 1;
-                                          });
-                                          context.read<AddToCartBloc>().add(
-                                            AddProductToCartEvent(
-                                              AddToCartParams(
-                                                clientCode: widget.clientCode,
-                                                price: _selectedVariant
-                                                    .sellingPrice,
-                                                productCode:
-                                                    widget.product.code,
-                                                productName:
-                                                    widget.product.productName,
-                                                quantity: "1",
-                                                sellingQuantity:
-                                                    _selectedVariant.quantity,
-                                                unit: _selectedVariant
-                                                    .sellingUnit,
-                                                unitId: _selectedVariant
-                                                    .variantsCode,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 110,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              6,
-                                            ),
-                                            border: Border.all(
-                                              width: 1,
-                                              color:
-                                                  AppColor.middleOrangeButton,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 6.0,
-                                                    horizontal: 8,
-                                                  ),
-                                              child: isLoading
-                                                  ? const SizedBox(
-                                                      height: 20,
-                                                      width: 20,
-                                                      child: AppLoadingWidget(
-                                                        strokeWidth: 3,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                              visualDensity:
+                                                  VisualDensity.compact,
+                                              onPressed: () {
+                                                if (_cartQuantity > 1) {
+                                                  setState(() {
+                                                    _cartQuantity--;
+                                                  });
+                                                  context.read<UpdateCartBloc>().add(
+                                                    UpdateCartQunatyEvent(
+                                                      UpdateCartParams(
+                                                        cartCode:
+                                                            _selectedVariant
+                                                                .cartCode,
+                                                        quantity: _cartQuantity
+                                                            .toString(),
+                                                        clientCode:
+                                                            widget.clientCode,
+                                                        productCode:
+                                                            widget.product.code,
+                                                        variantsCode:
+                                                            _selectedVariant
+                                                                .variantsCode,
+                                                        cityCode: widget
+                                                            .product
+                                                            .cityCode,
+                                                        unit: _selectedVariant
+                                                            .sellingUnit,
+                                                        unitId: _selectedVariant
+                                                            .variantsCode,
+                                                        sellingQuantity:
+                                                            _selectedVariant
+                                                                .quantity,
+                                                        productName: widget
+                                                            .product
+                                                            .productName,
+                                                        price: _selectedVariant
+                                                            .sellingPrice,
+                                                        count: "",
                                                       ),
-                                                    )
-                                                  : Text(
-                                                      "ADD",
-                                                      style:
-                                                          GoogleFonts.mavenPro(
-                                                            color:
-                                                                AppColor.orange,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                          ),
                                                     ),
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    _isCurrentlyInCart = false;
+                                                    _cartQuantity = 0;
+                                                  });
+                                                  context.read<UpdateCartBloc>().add(
+                                                    UpdateCartQunatyEvent(
+                                                      UpdateCartParams(
+                                                        cartCode:
+                                                            _selectedVariant
+                                                                .cartCode,
+                                                        quantity: "0",
+                                                        clientCode:
+                                                            widget.clientCode,
+                                                        productCode:
+                                                            widget.product.code,
+                                                        variantsCode:
+                                                            _selectedVariant
+                                                                .variantsCode,
+                                                        cityCode: widget
+                                                            .product
+                                                            .cityCode,
+                                                        unit: _selectedVariant
+                                                            .sellingUnit,
+                                                        unitId: _selectedVariant
+                                                            .variantsCode,
+                                                        sellingQuantity:
+                                                            _selectedVariant
+                                                                .quantity,
+                                                        productName: widget
+                                                            .product
+                                                            .productName,
+                                                        price: _selectedVariant
+                                                            .sellingPrice,
+                                                        count: "",
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              icon: const Icon(
+                                                Icons.remove,
+                                                color: AppColor.white,
+                                                size: 18,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-
-                                    // Quantity Selector (Counter)
-                                    return Container(
-                                      width: 110,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(6),
-                                        gradient: const LinearGradient(
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.centerRight,
-                                          colors: [
-                                            AppColor.startOrangeButton,
-                                            AppColor.middleOrangeButton,
-                                            AppColor.endOrangeButton,
-                                          ],
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          IconButton(
-                                            visualDensity:
-                                                VisualDensity.compact,
-                                            onPressed: () {
-                                              if (_cartQuantity > 1) {
+                                            isLoading
+                                                ? const SizedBox(
+                                                    height: 16,
+                                                    width: 16,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                          color: AppColor.white,
+                                                        ),
+                                                  )
+                                                : Text(
+                                                    "$_cartQuantity",
+                                                    style: GoogleFonts.mavenPro(
+                                                      color: AppColor.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                            IconButton(
+                                              visualDensity:
+                                                  VisualDensity.compact,
+                                              onPressed: () {
                                                 setState(() {
-                                                  _cartQuantity--;
+                                                  _cartQuantity++;
                                                 });
                                                 context
                                                     .read<UpdateCartBloc>()
@@ -457,139 +590,28 @@ class _CategoryByProductCardWidgetState
                                                         ),
                                                       ),
                                                     );
-                                              } else {
-                                                setState(() {
-                                                  _isCurrentlyInCart = false;
-                                                  _cartQuantity = 0;
-                                                });
-                                                context
-                                                    .read<UpdateCartBloc>()
-                                                    .add(
-                                                      UpdateCartQunatyEvent(
-                                                        UpdateCartParams(
-                                                          cartCode:
-                                                              _selectedVariant
-                                                                  .cartCode,
-                                                          quantity: "0",
-                                                          clientCode:
-                                                              widget.clientCode,
-                                                          productCode: widget
-                                                              .product
-                                                              .code,
-                                                          variantsCode:
-                                                              _selectedVariant
-                                                                  .variantsCode,
-                                                          cityCode: widget
-                                                              .product
-                                                              .cityCode,
-                                                          unit: _selectedVariant
-                                                              .sellingUnit,
-                                                          unitId:
-                                                              _selectedVariant
-                                                                  .variantsCode,
-                                                          sellingQuantity:
-                                                              _selectedVariant
-                                                                  .quantity,
-                                                          productName: widget
-                                                              .product
-                                                              .productName,
-                                                          price:
-                                                              _selectedVariant
-                                                                  .sellingPrice,
-                                                          count: "",
-                                                        ),
-                                                      ),
-                                                    );
-                                              }
-                                            },
-                                            icon: const Icon(
-                                              Icons.remove,
-                                              color: AppColor.white,
-                                              size: 18,
+                                              },
+                                              icon: const Icon(
+                                                Icons.add,
+                                                color: AppColor.white,
+                                                size: 18,
+                                              ),
                                             ),
-                                          ),
-                                          isLoading
-                                              ? const SizedBox(
-                                                  height: 16,
-                                                  width: 16,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                        color: AppColor.white,
-                                                      ),
-                                                )
-                                              : Text(
-                                                  "$_cartQuantity",
-                                                  style: GoogleFonts.mavenPro(
-                                                    color: AppColor.white,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                          IconButton(
-                                            visualDensity:
-                                                VisualDensity.compact,
-                                            onPressed: () {
-                                              setState(() {
-                                                _cartQuantity++;
-                                              });
-                                              context
-                                                  .read<UpdateCartBloc>()
-                                                  .add(
-                                                    UpdateCartQunatyEvent(
-                                                      UpdateCartParams(
-                                                        cartCode:
-                                                            _selectedVariant
-                                                                .cartCode,
-                                                        quantity: _cartQuantity
-                                                            .toString(),
-                                                        clientCode:
-                                                            widget.clientCode,
-                                                        productCode:
-                                                            widget.product.code,
-                                                        variantsCode:
-                                                            _selectedVariant
-                                                                .variantsCode,
-                                                        cityCode: widget
-                                                            .product
-                                                            .cityCode,
-                                                        unit: _selectedVariant
-                                                            .sellingUnit,
-                                                        unitId: _selectedVariant
-                                                            .variantsCode,
-                                                        sellingQuantity:
-                                                            _selectedVariant
-                                                                .quantity,
-                                                        productName: widget
-                                                            .product
-                                                            .productName,
-                                                        price: _selectedVariant
-                                                            .sellingPrice,
-                                                        count: "",
-                                                      ),
-                                                    ),
-                                                  );
-                                            },
-                                            icon: const Icon(
-                                              Icons.add,
-                                              color: AppColor.white,
-                                              size: 18,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

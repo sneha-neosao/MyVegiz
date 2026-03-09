@@ -20,3 +20,4 @@ export '../features/myAccount/presentation/pages/app_info_screen.dart';
 export '../features/myAccount/presentation/pages/webview_screen.dart';
 export '../features/address/presentation/pages/addresses_screen.dart';
 export '../features/address/presentation/pages/add_edit_address_screen.dart';
+export '../features/common/presentation/pages/product_details_screen.dart';

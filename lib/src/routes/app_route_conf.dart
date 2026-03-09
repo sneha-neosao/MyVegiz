@@ -183,6 +183,26 @@ class AppRouteConf {
           return _fadePage(AddEditAddressScreen(addressToEdit: addressToEdit));
         },
       ),
+
+      GoRoute(
+        path: AppRoute.productDetailsScreen.path,
+        name: AppRoute.productDetailsScreen.name,
+        pageBuilder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>;
+          final productCode = extras['productCode'] ?? '';
+          final mainCategoryCode = extras['mainCategoryCode'] ?? '';
+          final cityCode = extras['cityCode'] ?? '';
+          final clientCode = extras['clientCode'] ?? '';
+          return _fadePage(
+            ProductDetailsScreen(
+              productCode: productCode,
+              mainCategoryCode: mainCategoryCode,
+              cityCode: cityCode,
+              clientCode: clientCode,
+            ),
+          );
+        },
+      ),
     ],
   );
 }

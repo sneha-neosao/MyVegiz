@@ -18,7 +18,8 @@ enum AppRoute {
   appInfoScreen(path: "/appInfoScreen"),
   webViewScreen(path: "/webViewScreen"),
   addressesScreen(path: "/addressesScreen"),
-  addEditAddressScreen(path: "/addEditAddressScreen");
+  addEditAddressScreen(path: "/addEditAddressScreen"),
+  productDetailsScreen(path: "/productDetailsScreen");
 
   /// Enum defining all named app routes and their associated path patterns for navigation throughout the application.
 

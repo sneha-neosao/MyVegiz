@@ -138,7 +138,9 @@ class Product {
       isMainVariant: json['isMainVariant'] ?? '',
       subCategoryId: json['subCategoryId'] ?? '',
       isInCart: json['isInCart'] ?? false,
-      cartQuantity: json['cartQuantity'] ?? 0,
+      cartQuantity: json['cartQuantity'] != null
+          ? int.tryParse(json['cartQuantity'].toString()) ?? 0
+          : 0,
       cartCode: json['cartCode'] ?? '',
       isInWishlist: json['isInWishlist'] ?? false,
       sellingPrice: json['sellingPrice'] ?? '',
@@ -221,7 +223,9 @@ class RateVariant {
       productDiscount: json['productDiscount'] ?? '',
       isMainVariant: json['isMainVariant'] ?? '',
       isInCart: json['isInCart'] ?? false,
-      cartQuantity: json['cartQuantity'] ?? 0,
+      cartQuantity: json['cartQuantity'] != null
+          ? int.tryParse(json['cartQuantity'].toString()) ?? 0
+          : 0,
       cartCode: json['cartCode'] ?? '',
     );
   }

@@ -36,6 +36,8 @@ import 'package:myvegiz_flutter/src/remote/models/address_model/address_response
 import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/add_address_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/update_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/common/domain/usecase/product_details_usecase.dart';
+import 'package:myvegiz_flutter/src/remote/models/product_details_model/product_details_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -90,6 +92,9 @@ sealed class RemoteDataSource {
   Future<ProductByCategoryResponse> searchProductByKeyword(
     SearchProductParams params,
   );
+
+  /// Product By Id
+  Future<ProductDetailsResponse> productById(ProductDetailsParams params);
 
   /// Cart
   Future<AddToCartResponse> addToCart(AddToCartParams params);
@@ -792,10 +797,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> deleteClientAddress(DeleteAddressParams params) async {
     try {
-      final data = FormData.fromMap({
+      var data = {
         'id': params.id,
         'clientCode': params.clientCode,
-      });
+      };
 
       final response = await _helper.execute(
         method: Method.post,
@@ -815,7 +820,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> addClientAddress(AddAddressParams params) async {
     try {
-      final data = FormData.fromMap({
+      var data = {
         'clientCode': params.clientCode,
         'address': params.address,
         'latitude': params.latitude,
@@ -826,7 +831,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         'directionToReach': params.directionToReach,
         'areaCode': params.areaCode,
         'cityCode': params.cityCode,
-      });
+      };
 
       final response = await _helper.execute(
         method: Method.post,
@@ -844,7 +849,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<CommonResponse> updateClientAddress(UpdateAddressParams params) async {
     try {
-      final data = FormData.fromMap({
+      var data = {
         'id': params.id,
         'clientCode': params.clientCode,
         'address': params.address,
@@ -856,7 +861,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         'directionToReach': params.directionToReach,
         'areaCode': params.areaCode,
         'cityCode': params.cityCode,
-      });
+      };
 
       final response = await _helper.execute(
         method: Method.post,
@@ -874,5 +879,30 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<void> logout() {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<ProductDetailsResponse> productById(
+    ProductDetailsParams params,
+  ) async {
+    try {
+      var data = {
+        "productCode": params.productCode,
+        "mainCategoryCode": params.mainCategoryCode,
+        "cityCode": params.cityCode,
+        "clientCode": params.clientCode,
+      };
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.productById,
+        data: data,
+      );
+
+      return ProductDetailsResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) throw e;
+      throw ServerException();
+    }
   }
 }

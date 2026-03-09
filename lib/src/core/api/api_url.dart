@@ -59,4 +59,5 @@ class ApiUrl {
   static const deleteCartItem = "Api/deleteCartItem";
 
   static const getAddressesList = "Api/getAddressesByclienCode";
+  static const deleteClientAddress = "Api/deleteClientAddress";
 }

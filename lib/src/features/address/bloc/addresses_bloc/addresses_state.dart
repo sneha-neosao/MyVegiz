@@ -28,3 +28,23 @@ final class AddressError extends AddressState {
   @override
   List<Object> get props => [message];
 }
+
+final class DeleteAddressLoading extends AddressState {}
+
+final class DeleteAddressSuccess extends AddressState {
+  final String message;
+
+  const DeleteAddressSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class DeleteAddressError extends AddressState {
+  final String message;
+
+  const DeleteAddressError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

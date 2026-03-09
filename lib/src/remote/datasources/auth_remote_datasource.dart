@@ -33,6 +33,7 @@ import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.d
 import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -97,6 +98,7 @@ sealed class RemoteDataSource {
 
   /// Address
   Future<AddressResponse> getAddressesByClientCode(String clientCode);
+  Future<CommonResponse> deleteClientAddress(DeleteAddressParams params);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -775,6 +777,29 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       );
 
       return AddressResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) {
+        throw e;
+      }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> deleteClientAddress(DeleteAddressParams params) async {
+    try {
+      final data = FormData.fromMap({
+        'id': params.id,
+        'clientCode': params.clientCode,
+      });
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.deleteClientAddress,
+        data: data,
+      );
+
+      return CommonResponse.fromJson(response);
     } catch (e) {
       if (e is ApiException) {
         throw e;

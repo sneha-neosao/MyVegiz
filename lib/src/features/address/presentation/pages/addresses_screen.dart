@@ -9,6 +9,9 @@ import 'package:myvegiz_flutter/src/core/themes/app_color.dart';
 import 'package:myvegiz_flutter/src/features/address/bloc/addresses_bloc/addresses_bloc.dart';
 import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import 'package:myvegiz_flutter/src/routes/app_route_path.dart';
+import 'package:myvegiz_flutter/src/core/extensions/integer_sizedbox_extension.dart';
+import 'package:myvegiz_flutter/src/features/widgets/app_loading_widget.dart';
+import 'package:myvegiz_flutter/src/features/widgets/app_snackbar_widget.dart';
 
 class AddressesScreen extends StatefulWidget {
   const AddressesScreen({super.key});
@@ -50,9 +53,21 @@ class _AddressesScreenState extends State<AddressesScreen> {
                     BlocListener<AddressBloc, AddressState>(
                       listener: (context, state) {
                         if (state is AddressError) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(state.message)),
+                          appSnackBar(context, Colors.red, state.message);
+                        } else if (state is DeleteAddressLoading) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                                const AppLoadingWidget(strokeWidth: 6),
                           );
+                        } else if (state is DeleteAddressSuccess) {
+                          if (Navigator.canPop(context)) context.pop();
+                          appSnackBar(context, Colors.green, state.message);
+                          _loadAddresses(); // Refresh list
+                        } else if (state is DeleteAddressError) {
+                          if (Navigator.canPop(context)) context.pop();
+                          appSnackBar(context, Colors.red, state.message);
                         }
                       },
                     ),
@@ -210,8 +225,15 @@ class _AddressesScreenState extends State<AddressesScreen> {
                     ),
                     const SizedBox(width: 32),
                     InkWell(
-                      onTap: () {
-                        // Delete logic
+                      onTap: () async {
+                        final clientCode = await SessionManager.getClientCode();
+                        if (clientCode != null) {
+                          _showDeleteConfirmationDialog(
+                            context,
+                            address.id,
+                            clientCode,
+                          );
+                        }
                       },
                       child: Text(
                         'DELETE',
@@ -230,6 +252,92 @@ class _AddressesScreenState extends State<AddressesScreen> {
         );
       },
     );
+  }
+
+  void _showDeleteConfirmationDialog(
+    BuildContext context,
+    String addressId,
+    String clientCode,
+  ) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Theme.of(dialogContext).cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.error_outline_rounded,
+                  color: Colors.orange,
+                  size: 50,
+                ),
+                8.hS,
+                Text(
+                  "Are you sure, you want to delete this address?",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(dialogContext).textTheme.bodyMedium,
+                ),
+                16.hS,
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.colorPrimary,
+                        ),
+                        onPressed: () {
+                          dialogContext.pop(false);
+                        },
+                        child: Text(
+                          'cancel'.tr(),
+                          style: GoogleFonts.mavenPro(
+                            color: AppColor.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    12.wS,
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.colorPrimary,
+                        ),
+                        onPressed: () {
+                          dialogContext.pop(true);
+                        },
+                        child: Text(
+                          'yes'.tr(),
+                          style: GoogleFonts.mavenPro(
+                            color: AppColor.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((confirmed) {
+      if (confirmed == true) {
+        _addressBloc.add(
+          DeleteAddressEvent(id: addressId, clientCode: clientCode),
+        );
+      }
+    });
   }
 
   Widget _buildEmptyState() {

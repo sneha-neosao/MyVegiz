@@ -42,6 +42,7 @@ import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.d
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import '../../remote/models/category_model/category_response.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
 
 /// Abstract Repository interface defining all data operations for the app
 
@@ -115,6 +116,9 @@ abstract class Repository {
   /// Address
   Future<Either<Failure, AddressResponse>> getAddressesByClientCode(
     String clientCode,
+  );
+  Future<Either<Failure, CommonResponse>> deleteClientAddress(
+    DeleteAddressParams params,
   );
 }
 
@@ -813,6 +817,38 @@ class AuthRepositoryImpl implements Repository {
           final respData = await _remoteDataSource.getAddressesByClientCode(
             clientCode,
           );
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message ?? ''));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> deleteClientAddress(
+    DeleteAddressParams params,
+  ) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.deleteClientAddress(params);
 
           if (respData.status == "200") {
             return Right(respData);

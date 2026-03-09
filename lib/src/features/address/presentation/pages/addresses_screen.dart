@@ -33,7 +33,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
   Future<void> _loadAddresses() async {
     final clientCode = await SessionManager.getClientCode();
     if (clientCode != null) {
-      _addressBloc.add(FetchAddressesEvent("CLNT23_2010"));
+      _addressBloc.add(FetchAddressesEvent(clientCode/*"CLNT23_2010"*/));
     }
   }
 
@@ -128,8 +128,13 @@ class _AddressesScreenState extends State<AddressesScreen> {
           ),
           const Spacer(),
           OutlinedButton(
-            onPressed: () {
-              // context.pushNamed(AppRoute.addAddressScreen.name);
+            onPressed: () async {
+              final result = await context.pushNamed<bool>(
+                AppRoute.addEditAddressScreen.name,
+              );
+              if (result == true) {
+                _loadAddresses();
+              }
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColor.startOrangeButton),
@@ -211,8 +216,14 @@ class _AddressesScreenState extends State<AddressesScreen> {
                 Row(
                   children: [
                     InkWell(
-                      onTap: () {
-                        // Edit logic
+                      onTap: () async {
+                        final result = await context.pushNamed<bool>(
+                          AppRoute.addEditAddressScreen.name,
+                          extra: address,
+                        );
+                        if (result == true) {
+                          _loadAddresses();
+                        }
                       },
                       child: Text(
                         'EDIT',

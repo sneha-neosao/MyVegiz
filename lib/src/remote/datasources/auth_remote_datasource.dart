@@ -34,6 +34,8 @@ import 'package:myvegiz_flutter/src/remote/models/category_model/category_respon
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/add_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/update_address_usecase.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -99,6 +101,8 @@ sealed class RemoteDataSource {
   /// Address
   Future<AddressResponse> getAddressesByClientCode(String clientCode);
   Future<CommonResponse> deleteClientAddress(DeleteAddressParams params);
+  Future<CommonResponse> addClientAddress(AddAddressParams params);
+  Future<CommonResponse> updateClientAddress(UpdateAddressParams params);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -804,6 +808,65 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       if (e is ApiException) {
         throw e;
       }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> addClientAddress(AddAddressParams params) async {
+    try {
+      final data = FormData.fromMap({
+        'clientCode': params.clientCode,
+        'address': params.address,
+        'latitude': params.latitude,
+        'longitude': params.longitude,
+        'addressType': params.addressType,
+        'flat': params.flat,
+        'landMark': params.landMark,
+        'directionToReach': params.directionToReach,
+        'areaCode': params.areaCode,
+        'cityCode': params.cityCode,
+      });
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.addClientAddress,
+        data: data,
+      );
+
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) throw e;
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<CommonResponse> updateClientAddress(UpdateAddressParams params) async {
+    try {
+      final data = FormData.fromMap({
+        'id': params.id,
+        'clientCode': params.clientCode,
+        'address': params.address,
+        'latitude': params.latitude,
+        'longitude': params.longitude,
+        'addressType': params.addressType,
+        'flat': params.flat,
+        'landMark': params.landMark,
+        'directionToReach': params.directionToReach,
+        'areaCode': params.areaCode,
+        'cityCode': params.cityCode,
+      });
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.updateClientAddress,
+        data: data,
+      );
+
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      if (e is ApiException) throw e;
       throw ServerException();
     }
   }

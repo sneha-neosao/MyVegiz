@@ -43,6 +43,8 @@ import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_resp
 import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import '../../remote/models/category_model/category_response.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/add_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/update_address_usecase.dart';
 
 /// Abstract Repository interface defining all data operations for the app
 
@@ -119,6 +121,12 @@ abstract class Repository {
   );
   Future<Either<Failure, CommonResponse>> deleteClientAddress(
     DeleteAddressParams params,
+  );
+  Future<Either<Failure, CommonResponse>> addClientAddress(
+    AddAddressParams params,
+  );
+  Future<Either<Failure, CommonResponse>> updateClientAddress(
+    UpdateAddressParams params,
   );
 }
 
@@ -850,6 +858,68 @@ class AuthRepositoryImpl implements Repository {
         try {
           final respData = await _remoteDataSource.deleteClientAddress(params);
 
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message ?? ''));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> addClientAddress(
+    AddAddressParams params,
+  ) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.addClientAddress(params);
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message ?? ''));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> updateClientAddress(
+    UpdateAddressParams params,
+  ) {
+    return _networkInfo.check<CommonResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.updateClientAddress(params);
           if (respData.status == "200") {
             return Right(respData);
           } else {

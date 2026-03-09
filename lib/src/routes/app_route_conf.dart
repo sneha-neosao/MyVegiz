@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_details_response.dart';
 import 'app_route_path.dart';
 import 'routes.dart';
@@ -13,6 +14,7 @@ class AppRouteConf {
   late final _router = GoRouter(
     initialLocation: "/",
     debugLogDiagnostics: true,
+
     /// Each GoRoute defines a route path, name, and a page builder
     routes: [
       GoRoute(
@@ -32,38 +34,37 @@ class AppRouteConf {
         name: AppRoute.otpVerificationScreen.name,
         pageBuilder: (context, state) {
           final contactNumber = state.extra as String;
-          return _fadePage(
-            OtpVerificationScreen(contactNumber: contactNumber),
-          );
+          return _fadePage(OtpVerificationScreen(contactNumber: contactNumber));
         },
       ),
 
       ShellRoute(
-          builder: (context, state, child) {
-            return HomeScreen(child: child,);
-          },
-          routes: [
-            GoRoute(
-              path: AppRoute.homeContentScreen.path,
-              name: AppRoute.homeContentScreen.name,
-              pageBuilder: (context, state) => _fadePage(const HomeContentScreen()),
-            ),
-            GoRoute(
-              path: AppRoute.searchScreen.path,
-              name: AppRoute.searchScreen.name,
-              pageBuilder: (context, state) => _fadePage(const SearchScreen()),
-            ),
-            GoRoute(
-              path: AppRoute.cartScreen.path,
-              name: AppRoute.cartScreen.name,
-              pageBuilder: (context, state) => _fadePage(const CartScreen()),
-            ),
-            GoRoute(
-              path: AppRoute.myAccountScreen.path,
-              name: AppRoute.myAccountScreen.name,
-              pageBuilder: (context, state) => _fadePage(const MyAccountScreen()),
-            ),
-          ]
+        builder: (context, state, child) {
+          return HomeScreen(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: AppRoute.homeContentScreen.path,
+            name: AppRoute.homeContentScreen.name,
+            pageBuilder: (context, state) =>
+                _fadePage(const HomeContentScreen()),
+          ),
+          GoRoute(
+            path: AppRoute.searchScreen.path,
+            name: AppRoute.searchScreen.name,
+            pageBuilder: (context, state) => _fadePage(const SearchScreen()),
+          ),
+          GoRoute(
+            path: AppRoute.cartScreen.path,
+            name: AppRoute.cartScreen.name,
+            pageBuilder: (context, state) => _fadePage(const CartScreen()),
+          ),
+          GoRoute(
+            path: AppRoute.myAccountScreen.path,
+            name: AppRoute.myAccountScreen.name,
+            pageBuilder: (context, state) => _fadePage(const MyAccountScreen()),
+          ),
+        ],
       ),
 
       GoRoute(
@@ -71,10 +72,9 @@ class AppRouteConf {
         name: AppRoute.editProfileScreen.name,
         pageBuilder: (context, state) {
           final userdata = state.extra as UserProfile;
-          return _fadePage(
-            EditProfileScreen(userData: userdata),
-          );
-        },      ),
+          return _fadePage(EditProfileScreen(userData: userdata));
+        },
+      ),
 
       GoRoute(
         path: AppRoute.myWishlistScreen.path,
@@ -84,10 +84,7 @@ class AppRouteConf {
           final cityCode = extras['cityCode'].toString();
           final clientcode = extras['clientcode'] ?? '';
           return _fadePage(
-            MyWishListScreen(
-              clientCode: clientcode,
-              cityCode: cityCode,
-            ),
+            MyWishListScreen(clientCode: clientcode, cityCode: cityCode),
           );
         },
       ),
@@ -96,8 +93,8 @@ class AppRouteConf {
         path: AppRoute.vegetablesAndGroceryScreen.path,
         name: AppRoute.vegetablesAndGroceryScreen.name,
         pageBuilder: (context, state) {
-          final cityCode = state.extra as String ;
-          return _fadePage( VegetablesAndGroceryScreen(cityCode: cityCode,));
+          final cityCode = state.extra as String;
+          return _fadePage(VegetablesAndGroceryScreen(cityCode: cityCode));
         },
       ),
 
@@ -110,7 +107,8 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.selectLocationScreen.path,
         name: AppRoute.selectLocationScreen.name,
-        pageBuilder: (context, state) => _fadePage(const SelectLocationScreen()),
+        pageBuilder: (context, state) =>
+            _fadePage(const SelectLocationScreen()),
       ),
 
       GoRoute(
@@ -118,9 +116,7 @@ class AppRouteConf {
         name: AppRoute.confirmLocationScreen.name,
         pageBuilder: (context, state) {
           final latLng = state.extra as LatLng?;
-          return _fadePage(
-            ConfirmLocationScreen(initialLatLng: latLng),
-          );
+          return _fadePage(ConfirmLocationScreen(initialLatLng: latLng));
         },
       ),
 
@@ -169,12 +165,7 @@ class AppRouteConf {
           final extras = state.extra as Map<String, dynamic>;
           final title = extras['title'].toString();
           final url = extras['url'] ?? '';
-          return _fadePage(
-            WebViewScreen(
-              title: title,
-              url: url,
-            ),
-          );
+          return _fadePage(WebViewScreen(title: title, url: url));
         },
       ),
 
@@ -184,6 +175,14 @@ class AppRouteConf {
         pageBuilder: (context, state) => _fadePage(const AddressesScreen()),
       ),
 
+      GoRoute(
+        path: AppRoute.addEditAddressScreen.path,
+        name: AppRoute.addEditAddressScreen.name,
+        pageBuilder: (context, state) {
+          final addressToEdit = state.extra as AddressResult?;
+          return _fadePage(AddEditAddressScreen(addressToEdit: addressToEdit));
+        },
+      ),
     ],
   );
 }
@@ -191,32 +190,29 @@ class AppRouteConf {
 /// Fade transition page helper
 
 CustomTransitionPage _fadePage(Widget child) => CustomTransitionPage(
-      transitionDuration: const Duration(milliseconds: 800),
-      // Duration of the animation
-      child: child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeInOut, // Smooth in-out fade
-        );
-
-        return FadeTransition(
-          opacity: curvedAnimation,
-          child: child,
-        );
-      },
+  transitionDuration: const Duration(milliseconds: 800),
+  // Duration of the animation
+  child: child,
+  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    final curvedAnimation = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeInOut, // Smooth in-out fade
     );
+
+    return FadeTransition(opacity: curvedAnimation, child: child);
+  },
+);
 
 /// Slide transition page helper (optional usage)
 
 CustomTransitionPage _slidePage(Widget child) => CustomTransitionPage(
-      child: child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final offsetAnimation = Tween<Offset>(
-          begin: const Offset(1.0, 0.0),
-          end: Offset.zero,
-        ).animate(animation);
+  child: child,
+  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    final offsetAnimation = Tween<Offset>(
+      begin: const Offset(1.0, 0.0),
+      end: Offset.zero,
+    ).animate(animation);
 
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
-    );
+    return SlideTransition(position: offsetAnimation, child: child);
+  },
+);

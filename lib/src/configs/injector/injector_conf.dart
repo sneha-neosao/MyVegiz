@@ -22,6 +22,8 @@ import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dar
 import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/get_addresses_usecase.dart';
 import 'package:myvegiz_flutter/src/features/address/domain/delete_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/add_address_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/update_address_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -143,11 +145,17 @@ void configureDepedencies() {
     () => AddressBloc(
       getIt<GetAddressesUseCase>(),
       getIt<DeleteAddressUseCase>(),
+      getIt<AddAddressUseCase>(),
+      getIt<UpdateAddressUseCase>(),
     ),
   );
   getIt.registerFactory(() => GetAddressesUseCase(getIt<AuthRepositoryImpl>()));
   getIt.registerFactory(
     () => DeleteAddressUseCase(getIt<AuthRepositoryImpl>()),
+  );
+  getIt.registerFactory(() => AddAddressUseCase(getIt<AuthRepositoryImpl>()));
+  getIt.registerFactory(
+    () => UpdateAddressUseCase(getIt<AuthRepositoryImpl>()),
   );
 
   /// API Helper

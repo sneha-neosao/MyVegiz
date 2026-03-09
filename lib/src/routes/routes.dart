@@ -1,4 +1,3 @@
-
 export '../../main.dart';
 export '../configs/injector/injector_conf.dart';
 export '../features/splash/presentation/pages/splash_screen.dart';
@@ -20,3 +19,4 @@ export '../features/vegetablesAndGrocery/presentation/pages/grocery_product_list
 export '../features/myAccount/presentation/pages/app_info_screen.dart';
 export '../features/myAccount/presentation/pages/webview_screen.dart';
 export '../features/address/presentation/pages/addresses_screen.dart';
+export '../features/address/presentation/pages/add_edit_address_screen.dart';

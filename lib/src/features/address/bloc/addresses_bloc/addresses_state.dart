@@ -48,3 +48,43 @@ final class DeleteAddressError extends AddressState {
   @override
   List<Object> get props => [message];
 }
+
+final class AddAddressLoading extends AddressState {}
+
+final class AddAddressSuccess extends AddressState {
+  final String message;
+
+  const AddAddressSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class AddAddressError extends AddressState {
+  final String message;
+
+  const AddAddressError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class UpdateAddressLoading extends AddressState {}
+
+final class UpdateAddressSuccess extends AddressState {
+  final String message;
+
+  const UpdateAddressSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class UpdateAddressError extends AddressState {
+  final String message;
+
+  const UpdateAddressError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

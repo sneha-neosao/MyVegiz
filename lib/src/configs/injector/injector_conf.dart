@@ -20,6 +20,7 @@ import 'package:myvegiz_flutter/src/features/search/domain/usecase/search_produc
 import 'package:myvegiz_flutter/src/features/cart/domain/add_to_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/update_cart_usecase.dart';
 import 'package:myvegiz_flutter/src/features/cart/domain/delete_cart_item_usecase.dart';
+import 'package:myvegiz_flutter/src/features/address/domain/get_addresses_usecase.dart';
 import 'injector.dart';
 
 final getIt = GetIt.I;
@@ -136,6 +137,9 @@ void configureDepedencies() {
   getIt.registerFactory(
     () => DeleteCartItemUseCase(getIt<AuthRepositoryImpl>()),
   );
+
+  getIt.registerFactory(() => AddressBloc(getIt<GetAddressesUseCase>()));
+  getIt.registerFactory(() => GetAddressesUseCase(getIt<AuthRepositoryImpl>()));
 
   /// API Helper
 

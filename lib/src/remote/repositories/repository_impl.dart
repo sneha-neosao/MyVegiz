@@ -40,7 +40,8 @@ import 'package:myvegiz_flutter/src/remote/models/profile_details_model/profile_
 import 'package:myvegiz_flutter/src/remote/models/registration_model/registration_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
-import '../models/category_model/category_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
+import '../../remote/models/category_model/category_response.dart';
 
 /// Abstract Repository interface defining all data operations for the app
 
@@ -109,6 +110,11 @@ abstract class Repository {
   /// Search
   Future<Either<Failure, ProductByCategoryResponse>> searchProductByKeyword(
     SearchProductParams params,
+  );
+
+  /// Address
+  Future<Either<Failure, AddressResponse>> getAddressesByClientCode(
+    String clientCode,
   );
 }
 
@@ -778,6 +784,40 @@ class AuthRepositoryImpl implements Repository {
             return Right(respData);
           } else {
             return Left(ApiFailure(respData.message!));
+          }
+        } on ApiException catch (e) {
+          return Left(ApiFailure(e.message));
+        } on ServerException {
+          return Left(ServerFailure(mapFailureToMessage(ServerFailure(""))));
+        }
+      },
+      notConnected: () async {
+        try {
+          return Left(
+            InternetFailure("please_check_your_internet_connection".tr()),
+          );
+        } on CacheException {
+          return Left(CacheFailure(mapFailureToMessage(CacheFailure(""))));
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, AddressResponse>> getAddressesByClientCode(
+    String clientCode,
+  ) {
+    return _networkInfo.check<AddressResponse>(
+      connected: () async {
+        try {
+          final respData = await _remoteDataSource.getAddressesByClientCode(
+            clientCode,
+          );
+
+          if (respData.status == "200") {
+            return Right(respData);
+          } else {
+            return Left(ApiFailure(respData.message ?? ''));
           }
         } on ApiException catch (e) {
           return Left(ApiFailure(e.message));

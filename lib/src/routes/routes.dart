@@ -19,3 +19,4 @@ export '../features/vegetablesAndGrocery/presentation/pages/vegetables_product_l
 export '../features/vegetablesAndGrocery/presentation/pages/grocery_product_list.dart';
 export '../features/myAccount/presentation/pages/app_info_screen.dart';
 export '../features/myAccount/presentation/pages/webview_screen.dart';
+export '../features/address/presentation/pages/addresses_screen.dart';

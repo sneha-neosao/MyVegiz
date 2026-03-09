@@ -178,6 +178,12 @@ class AppRouteConf {
         },
       ),
 
+      GoRoute(
+        path: AppRoute.addressesScreen.path,
+        name: AppRoute.addressesScreen.name,
+        pageBuilder: (context, state) => _fadePage(const AddressesScreen()),
+      ),
+
     ],
   );
 }

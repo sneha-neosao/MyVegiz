@@ -51,7 +51,12 @@ class ApiUrl {
   static const vegetableGroceryCartCount = "Api/getGroceryProductCartCount";
 
   static const addProductToCart = "Api/addToCart";
+
   static const updateCart = "Api/updateCart";
+
   static const searchProductByKeyword = "Api/searchProductByKeyword";
+
   static const deleteCartItem = "Api/deleteCartItem";
+
+  static const getAddressesList = "Api/getAddressesByclienCode";
 }

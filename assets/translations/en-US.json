@@ -101,5 +101,7 @@
   "tap_for_more_details": "Tap For More Details",
   "copyright": "Copyright",
   "copyright_text": "All rights reserved by Copyright © 2019 MyVegiz. Designed and Developed by Neosao Services Pvt. Ltd.",
-  "contact_details": "Contact Details"
+  "contact_details": "Contact Details",
+  "address": "Addresses",
+  "no_address_found": "No Address Found"
 }

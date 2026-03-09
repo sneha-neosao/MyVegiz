@@ -32,6 +32,7 @@ import 'package:myvegiz_flutter/src/remote/models/registration_model/registratio
 import 'package:myvegiz_flutter/src/remote/models/slider_model/slider_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/category_model/category_response.dart';
 import 'package:myvegiz_flutter/src/remote/models/wish_list_model/wish_list_response.dart';
+import 'package:myvegiz_flutter/src/remote/models/address_model/address_response.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/api/api_helper.dart';
 import '../../core/api/api_url.dart';
@@ -93,6 +94,9 @@ sealed class RemoteDataSource {
 
   /// Delete Cart Item
   Future<CommonResponse> deleteCartItem(DeleteCartItemParams params);
+
+  /// Address
+  Future<AddressResponse> getAddressesByClientCode(String clientCode);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -752,6 +756,26 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       return CommonResponse.fromJson(response);
     } catch (e) {
       logger.e(e);
+      if (e is ApiException) {
+        throw e;
+      }
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<AddressResponse> getAddressesByClientCode(String clientCode) async {
+    try {
+      final data = FormData.fromMap({"clientCode": clientCode});
+
+      final response = await _helper.execute(
+        method: Method.post,
+        url: ApiUrl.getAddressesList,
+        data: data,
+      );
+
+      return AddressResponse.fromJson(response);
+    } catch (e) {
       if (e is ApiException) {
         throw e;
       }
